@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Firebase Test</title>
+<style>
+body{font-family:Arial,sans-serif;padding:20px;background:#f7f5f2;color:#141414;line-height:1.6}
+.box{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #eee7dd}
+h1{font-size:20px;margin-bottom:8px}
+button{padding:14px 24px;background:#141414;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;width:100%;margin-top:10px;cursor:pointer}
+button:active{background:#b8894b}
+.success{color:#22a558;font-weight:700}
+.error{color:#e83c3c;font-weight:700}
+pre{background:#f7f5f2;padding:12px;border-radius:8px;font-size:12px;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.status{padding:12px;border-radius:8px;margin-top:12px;font-size:14px}
+.status.ok{background:rgba(34,165,88,.1);color:#166a36}
+.status.err{background:rgba(232,60,60,.1);color:#a30e4f}
+.status.wait{background:rgba(184,137,75,.1);color:#96703a}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>🔥 Firebase Test</h1>
+  <p style="color:#7c766f;font-size:14px">Lomura Wear — Connection চেক</p>
+</div>
+
+<div class="box">
+  <h2 style="font-size:16px;margin-bottom:10px">১. Firebase লোড</h2>
+  <div id="status1" class="status wait">⏳ লোড হচ্ছে...</div>
+</div>
+
+<div class="box">
+  <h2 style="font-size:16px;margin-bottom:10px">২. Firestore কানেকশন</h2>
+  <div id="status2" class="status wait">⏳ টেস্ট করা হয়নি</div>
+</div>
+
+<div class="box">
+  <h2 style="font-size:16px;margin-bottom:10px">৩. ডেটা লেখা ও পড়া</h2>
+  <button onclick="testWriteRead()">🧪 টেস্ট চালাও</button>
+  <div id="status3" class="status wait" style="margin-top:12px">⏳ অপেক্ষা করছে</div>
+</div>
+
+<div class="box">
+  <h2 style="font-size:16px;margin-bottom:10px">📋 বিস্তারিত</h2>
+  <pre id="log">লগ খালি...</pre>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+var logEl = document.getElementById('log');
+function log(msg){
+  logEl.textContent += '\n' + new Date().toLocaleTimeString() + ' — ' + msg;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBpIRN4uBkb-ewBPo67tUdfn1T7Uma-8g",
+  authDomain: "lomura-wear-f5157.firebaseapp.com",
+  projectId: "lomura-wear-f5157",
+  storageBucket: "lomura-wear-f5157.firebasestorage.app",
+  messagingSenderId: "46498753874",
+  appId: "1:46498753874:web:ad6348f8a097d8ea64c2bb"
+};
+
+var db = null;
+
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  document.getElementById('status1').className = 'status ok';
+  document.getElementById('status1').textContent = '✅ Firebase সফলভাবে লোড হয়েছে';
+  log('Firebase initialized');
+  log('Project: ' + firebaseConfig.projectId);
+} catch(e){
+  document.getElementById('status1').className = 'status err';
+  document.getElementById('status1').textContent = '❌ Firebase লোড হয়নি';
+  log('ERROR: ' + e.message);
+}
+</script>
+
+<script>
+function testWriteRead(){
+  if(!db){
+    document.getElementById('status3').className = 'status err';
+    document.getElementById('status3').textContent = '❌ Firebase নেই';
+    return;
+  }
+  var s3 = document.getElementById('status3');
+  s3.className = 'status wait';
+  s3.textContent = '⏳ টেস্ট চলছে...';
+  log('Test started');
+
+  var testRef = db.collection('_test').doc('connection');
+
+  testRef.set({
+    message: 'Lomura Wear Firebase Connected!',
+    timestamp: new Date().toISOString(),
+    testNumber: Math.floor(Math.random() * 10000)
+  })
+  .then(function(){
+    log('✅ Write successful');
+    document.getElementById('status2').className = 'status ok';
+    document.getElementById('status2').textContent = '✅ Firestore কানেকশন সফল';
+
+    return testRef.get();
+  })
+  .then(function(doc){
+    if(doc.exists){
+      var data = doc.data();
+      log('✅ Read successful: ' + JSON.stringify(data));
+      s3.className = 'status ok';
+      s3.textContent = '🎉 সব ঠিক আছে! Firebase কাজ করছে।';
+    } else {
+      s3.className = 'status err';
+      s3.textContent = '❌ ডেটা পড়া যায়নি';
+    }
+  })
+  .catch(function(err){
+    log('❌ ERROR: ' + err.message);
+    s3.className = 'status err';
+    s3.textContent = '❌ ' + err.message;
+    document.getElementById('status2').className = 'status err';
+    document.getElementById('status2').textContent = '❌ কানেকশন ব্যর্থ';
+  });
+}
+</script>
+</body>
+</html>
