@@ -96,6 +96,7 @@ tr:hover td{background:var(--bg)}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-group.full{grid-column:1/-1}
 .form-group label{font-size:13px;font-weight:600;color:var(--ink2)}
+.form-group small{font-size:11.5px;color:var(--muted);margin-top:2px}
 .form-group input,.form-group select,.form-group textarea{padding:12px 15px;border:1.5px solid var(--line);border-radius:10px;font-size:14.5px;background:var(--white);width:100%;color:var(--ink)}
 .form-group textarea{resize:vertical;min-height:80px;font-family:inherit}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(184,137,75,.1)}
@@ -154,6 +155,7 @@ tr:hover td{background:var(--bg)}
 .oc-action{padding:8px 12px;border-radius:8px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--white);color:var(--ink2);display:inline-flex;align-items:center;gap:5px;text-decoration:none}
 .oc-action.call{background:var(--green);border-color:var(--green);color:#fff}
 .oc-action.wa{background:#25D366;border-color:#25D366;color:#fff}
+.oc-action.msg{background:#0084FF;border-color:#0084FF;color:#fff}
 .oc-action.view{background:var(--ink);border-color:var(--ink);color:var(--white)}
 [data-theme="dark"] .oc-action.view{background:var(--accent);color:#fff}
 .oc-status-select{padding:7px 12px;border-radius:8px;border:1.5px solid var(--line);font-size:12.5px;font-weight:600;background:var(--white);color:var(--ink)}
@@ -213,6 +215,12 @@ tr:hover td{background:var(--bg)}
 .toast.success{background:#166a36}
 .toast.error{background:var(--sale)}
 
+.info-banner{background:linear-gradient(135deg,#e0f2fe,#bae6fd);border:1px solid #7dd3fc;border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:13.5px;color:#075985;line-height:1.7;display:flex;gap:12px;align-items:flex-start}
+[data-theme="dark"] .info-banner{background:linear-gradient(135deg,#0c4a6e,#082f49);color:#bae6fd;border-color:#0ea5e9}
+.info-banner .em{font-size:22px;flex-shrink:0}
+.info-banner b{color:#0369a1}
+[data-theme="dark"] .info-banner b{color:#7dd3fc}
+
 @media (max-width:1024px){
   .app.show{grid-template-columns:1fr}
   .sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:400;transform:translateX(-100%);transition:transform .3s}
@@ -264,6 +272,7 @@ tr:hover td{background:var(--bg)}
       <a data-section="categories"><span class="ico">📂</span> ক্যাটাগরি</a>
       <a data-section="coupons"><span class="ico">🏷️</span> কুপন</a>
       <a data-section="orders"><span class="ico">🛒</span> অর্ডার <span class="badge-num" id="navOrderBadge" style="display:none">0</span></a>
+      <a data-section="customers"><span class="ico">👥</span> কাস্টমার</a>
       <a data-section="reviews"><span class="ico">⭐</span> রিভিউ</a>
       <a data-section="reports"><span class="ico">📈</span> রিপোর্ট</a>
       <a data-section="settings"><span class="ico">⚙️</span> সেটিংস</a>
@@ -341,6 +350,13 @@ tr:hover td{background:var(--bg)}
       </div>
     </section>
 
+    <section class="section" id="section-customers">
+      <div class="panel">
+        <div class="panel-head"><h2>👥 কাস্টমার লিস্ট</h2></div>
+        <div class="panel-body table-wrap" id="customersWrap"></div>
+      </div>
+    </section>
+
     <section class="section" id="section-reviews">
       <div class="panel">
         <div class="panel-head">
@@ -369,30 +385,85 @@ tr:hover td{background:var(--bg)}
     </section>
 
     <section class="section" id="section-settings">
+      <div class="info-banner">
+        <div class="em">💡</div>
+        <div>এখানে <b>তোমার দোকানের সব তথ্য</b> বসাও। সাইটে এই তথ্যগুলোই কাস্টমার দেখবে। <b>Messenger লিংক</b> দেওয়ার জন্য Facebook Page ID দাও।</div>
+      </div>
+
       <div class="panel">
-        <div class="panel-head"><h2>⚙️ সাইট সেটিংস</h2></div>
+        <div class="panel-head"><h2>🏪 দোকানের তথ্য</h2></div>
         <div class="panel-body" style="padding:24px">
-          <form id="settingsForm">
-            <div class="form-grid">
-              <div class="form-group"><label>সাইটের নাম</label><input type="text" id="setSiteName"></div>
-              <div class="form-group"><label>যোগাযোগ ইমেইল</label><input type="email" id="setEmail"></div>
-              <div class="form-group"><label>ফোন নম্বর</label><input type="text" id="setPhone"></div>
-              <div class="form-group"><label>ঠিকানা</label><input type="text" id="setAddress"></div>
-              <div class="form-group"><label>ফ্রি ডেলিভারি লিমিট (৳)</label><input type="number" id="setFreeShip"></div>
-              <div class="form-group"><label>ঢাকার ভিতরে (৳)</label><input type="number" id="setDhakaInside"></div>
-              <div class="form-group"><label>ঢাকার বাইরে (৳)</label><input type="number" id="setDhakaOutside"></div>
-              <div class="form-group"><label>bKash নম্বর</label><input type="text" id="setBkash"></div>
-              <div class="form-group"><label>Nagad নম্বর</label><input type="text" id="setNagad"></div>
-              <div class="form-group full"><label>অ্যাডমিন পাসওয়ার্ড</label><input type="text" id="setPassword"></div>
-            </div>
-            <div class="form-actions"><button type="submit" class="btn btn-primary">💾 সেটিংস সংরক্ষণ</button></div>
-          </form>
+          <div class="form-grid">
+            <div class="form-group full"><label>সাইটের নাম</label><input type="text" id="setSiteName" placeholder="Lomura Wear"></div>
+            <div class="form-group"><label>📞 ফোন নম্বর</label><input type="text" id="setPhone" placeholder="01700000000"></div>
+            <div class="form-group"><label>✉️ ইমেইল</label><input type="email" id="setEmail" placeholder="support@lomurawear.com"></div>
+            <div class="form-group full"><label>📍 ঠিকানা</label><input type="text" id="setAddress" placeholder="১২৩, নিউমার্কেট, ঢাকা"></div>
+          </div>
         </div>
       </div>
+
       <div class="panel">
+        <div class="panel-head"><h2>💬 সোশ্যাল মিডিয়া কন্টাক্ট</h2></div>
+        <div class="panel-body" style="padding:24px">
+          <div class="info-banner" style="margin-bottom:16px">
+            <div class="em">📘</div>
+            <div>তোমার Messenger লিংক: <b>https://m.me/61590750957468</b><br>তাই Facebook Page ID হলো: <b>61590750957468</b></div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>📘 Facebook Page ID / Username</label>
+              <input type="text" id="setFbPage" placeholder="61590750957468">
+              <small>তোমার Page ID: <b>61590750957468</b> — এটাই এখানে বসাও</small>
+            </div>
+            <div class="form-group full">
+              <label>💚 WhatsApp নম্বর (দেশ কোড সহ, + ছাড়া)</label>
+              <input type="text" id="setWhatsApp" placeholder="8801700000000">
+              <small>উদাহরণ: <b>8801700000000</b> (৮৮ + ১১ ডিজিট)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>🚚 ডেলিভারি চার্জ</h2></div>
+        <div class="panel-body" style="padding:24px">
+          <div class="form-grid">
+            <div class="form-group"><label>ফ্রি ডেলিভারি লিমিট (৳)</label><input type="number" id="setFreeShip" placeholder="2000"></div>
+            <div class="form-group"><label>ঢাকার ভিতরে (৳)</label><input type="number" id="setDhakaInside" placeholder="100"></div>
+            <div class="form-group"><label>ঢাকার বাইরে (৳)</label><input type="number" id="setDhakaOutside" placeholder="120"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>💳 পেমেন্ট নম্বর</h2></div>
+        <div class="panel-body" style="padding:24px">
+          <div class="form-grid">
+            <div class="form-group"><label>🔴 bKash নম্বর</label><input type="text" id="setBkash" placeholder="01700000000"></div>
+            <div class="form-group"><label>🟠 Nagad নম্বর</label><input type="text" id="setNagad" placeholder="01700000000"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>🔐 অ্যাডমিন পাসওয়ার্ড</h2></div>
+        <div class="panel-body" style="padding:24px">
+          <div class="form-group">
+            <label>অ্যাডমিন পাসওয়ার্ড</label>
+            <input type="text" id="setPassword" placeholder="admin123">
+            <small>⚠️ প্রথমেই এটা বদলে ফেলো!</small>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="saveAllSettings()" style="padding:14px 32px;font-size:15px">💾 সব সেটিংস সংরক্ষণ</button>
+      </div>
+
+      <div class="panel" style="margin-top:24px">
         <div class="panel-head"><h2>⚠️ ডেঞ্জার জোন</h2></div>
         <div class="panel-body" style="padding:24px">
-          <p style="color:var(--muted);font-size:14px;margin-bottom:16px">সব ডাটা রিসেট করলে সব পণ্য, অর্ডার, রিভিউ চলে যাবে।</p>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:16px">সব ডেটা রিসেট করলে সব পণ্য, অর্ডার, রিভিউ চলে যাবে।</p>
           <button class="btn btn-danger" onclick="resetAll()">🗑️ সব ডেটা রিসেট</button>
         </div>
       </div>
@@ -402,10 +473,7 @@ tr:hover td{background:var(--bg)}
 
 <div class="modal-overlay" id="productModal">
   <div class="modal">
-    <div class="modal-head">
-      <h2 id="productModalTitle">নতুন পণ্য</h2>
-      <button class="modal-close" onclick="closeModal('productModal')">×</button>
-    </div>
+    <div class="modal-head"><h2 id="productModalTitle">নতুন পণ্য</h2><button class="modal-close" onclick="closeModal('productModal')">×</button></div>
     <form id="productForm">
       <input type="hidden" id="prodId">
       <div class="form-grid">
@@ -462,7 +530,7 @@ tr:hover td{background:var(--bg)}
     <div class="modal-head"><h2 id="couponModalTitle">নতুন কুপন</h2><button class="modal-close" onclick="closeModal('couponModal')">×</button></div>
     <form id="couponForm">
       <input type="hidden" id="cpOldCode">
-      <div class="form-group" style="margin-bottom:14px"><label>কুপন কোড * (বড় হাতের)</label><input type="text" id="cpCode" required placeholder="EID20" style="text-transform:uppercase;font-family:monospace;letter-spacing:1px;font-weight:700"></div>
+      <div class="form-group" style="margin-bottom:14px"><label>কুপন কোড *</label><input type="text" id="cpCode" required placeholder="EID20" style="text-transform:uppercase;font-family:monospace;letter-spacing:1px;font-weight:700"></div>
       <div class="form-grid">
         <div class="form-group"><label>ছাড়ের ধরন *</label>
           <select id="cpType" required><option value="percent">শতকরা (%)</option><option value="fixed">নির্দিষ্ট টাকা (৳)</option></select>
@@ -519,7 +587,21 @@ var CATEGORIES = [];
 var COUPONS = [];
 var ORDERS = [];
 var REVIEWS = [];
-var SETTINGS = { siteName:'Lomura Wear', phone:'01700000000', email:'', address:'', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'', adminPassword:'admin123' };
+var CUSTOMERS = [];
+var SETTINGS = {
+  siteName:'Lomura Wear',
+  phone:'',
+  email:'',
+  address:'',
+  facebookPage:'61590750957468',
+  whatsApp:'',
+  freeShipLimit:2000,
+  dhakaInside:100,
+  dhakaOutside:120,
+  bkashNumber:'',
+  nagadNumber:'',
+  adminPassword:'admin123'
+};
 var currentOrderFilter = 'all';
 var pendingImages = [];
 var confirmCallback = null;
@@ -577,7 +659,7 @@ function doLogout(){
 }
 $('#loginPass').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
 
-var TITLES = { dashboard:'ড্যাশবোর্ড', products:'পণ্যসমূহ', categories:'ক্যাটাগরি', coupons:'কুপন কোড', orders:'অর্ডার', reviews:'কাস্টমার রিভিউ', reports:'রিপোর্ট', settings:'সেটিংস' };
+var TITLES = { dashboard:'ড্যাশবোর্ড', products:'পণ্যসমূহ', categories:'ক্যাটাগরি', coupons:'কুপন কোড', orders:'অর্ডার', customers:'কাস্টমার', reviews:'রিভিউ', reports:'রিপোর্ট', settings:'সেটিংস' };
 $$('.side-nav a').forEach(function(link){
   link.addEventListener('click', function(){
     var sec = link.dataset.section;
@@ -592,6 +674,7 @@ $$('.side-nav a').forEach(function(link){
     if(sec === 'categories') renderCategories();
     if(sec === 'coupons') renderCoupons();
     if(sec === 'orders') renderOrdersSection();
+    if(sec === 'customers') renderCustomers();
     if(sec === 'reviews') renderReviewsSection();
     if(sec === 'reports') renderReportsSection();
     if(sec === 'settings') renderSettingsForm();
@@ -604,6 +687,7 @@ function initAdmin(){
   loadCoupons();
   loadOrders();
   loadReviews();
+  loadCustomers();
   loadSettings();
 }
 
@@ -677,11 +761,30 @@ function loadReviews(){
     if($('#section-reviews').classList.contains('active')) renderReviewsSection();
   });
 }
+function loadCustomers(){
+  db.collection('users').onSnapshot(function(snap){
+    CUSTOMERS = [];
+    snap.forEach(function(doc){
+      var u = doc.data();
+      u.uid = doc.id;
+      CUSTOMERS.push(u);
+    });
+    CUSTOMERS.sort(function(a, b){
+      var ta = a.createdAt ? a.createdAt.seconds : 0;
+      var tb = b.createdAt ? b.createdAt.seconds : 0;
+      return tb - ta;
+    });
+    if($('#section-customers').classList.contains('active')) renderCustomers();
+  });
+}
 function loadSettings(){
   db.collection('settings').doc('main').get().then(function(doc){
     if(doc.exists){
       var s = doc.data();
       for(var k in s){ SETTINGS[k] = s[k]; }
+    } else {
+      // First time — set defaults with Facebook ID
+      db.collection('settings').doc('main').set(SETTINGS).catch(function(){});
     }
   });
 }
@@ -708,7 +811,6 @@ function formatDateTime(ts){
   } catch(e){ return '—'; }
 }
 
-/* DASHBOARD */
 function renderDashboard(){
   var revenue = ORDERS.filter(function(o){ return o.status !== 'cancelled'; }).reduce(function(s, o){ return s + (o.total || 0); }, 0);
   var pending = ORDERS.filter(function(o){ return o.status === 'pending'; }).length;
@@ -740,7 +842,6 @@ function renderDashboard(){
   wrap.innerHTML = html;
 }
 
-/* PRODUCTS */
 function renderProducts(){
   var search = ($('#productSearch').value || '').toLowerCase().trim();
   var list = PRODUCTS;
@@ -755,13 +856,8 @@ function renderProducts(){
     wrap.innerHTML = '<div class="empty"><div class="big">📦</div><b>কোনো পণ্য নেই</b><p>নতুন পণ্য যোগ করুন</p></div>';
     return;
   }
-  var orders = ORDERS.filter(function(o){ return o.status !== 'cancelled'; });
-  var html = '<table><thead><tr><th>ছবি</th><th>নাম</th><th>ক্যাটাগরি</th><th>দাম</th><th>স্টক</th><th>বিক্রি</th><th>অ্যাকশন</th></tr></thead><tbody>';
+  var html = '<table><thead><tr><th>ছবি</th><th>নাম</th><th>ক্যাটাগরি</th><th>দাম</th><th>স্টক</th><th>ব্যাজ</th><th>অ্যাকশন</th></tr></thead><tbody>';
   list.forEach(function(p){
-    var sold = 0;
-    orders.forEach(function(o){
-      (o.items || []).forEach(function(i){ if(i.id === p.id) sold += i.qty; });
-    });
     html += '<tr>';
     html += '<td><img src="' + esc(p.img) + '" class="product-thumb" onerror="this.src=\'https://picsum.photos/seed/' + esc(p.id) + '/100/120\'"></td>';
     html += '<td><b>' + esc(p.name) + '</b></td>';
@@ -770,12 +866,11 @@ function renderProducts(){
     if(p.old) html += '<br><small style="color:var(--muted);text-decoration:line-through">' + money(p.old) + '</small>';
     html += '</td>';
     html += '<td>' + (p.stock || '—') + '</td>';
-    html += '<td><span class="badge-pill green">' + sold + ' টি</span></td>';
+    html += '<td>' + (p.badge ? '<span class="badge-pill ' + (p.badgeType === 'new' ? 'gold' : 'red') + '">' + esc(p.badge) + '</span>' : '—') + '</td>';
     html += '<td><div class="actions-cell">';
     html += '<button class="icon-action" onclick="editProduct(\'' + esc(p.id) + '\')">✏️</button>';
     html += '<button class="icon-action danger" onclick="deleteProduct(\'' + esc(p.id) + '\')">🗑️</button>';
-    html += '</div></td>';
-    html += '</tr>';
+    html += '</div></td></tr>';
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
@@ -817,11 +912,10 @@ $('#prodImgFile').addEventListener('change', async function(e){
   var files = Array.from(e.target.files || []);
   if(!files.length) return;
   var progress = $('#uploadProgress');
-  var ok = 0;
-  var fail = 0;
+  var ok = 0, fail = 0;
   for(var i = 0; i < files.length; i++){
     var file = files[i];
-    progress.textContent = '⏳ প্রসেস হচ্ছে ' + (i + 1) + '/' + files.length;
+    progress.textContent = '⏳ ' + (i + 1) + '/' + files.length;
     if(!file.type || file.type.indexOf('image/') !== 0){ fail++; continue; }
     if(file.size > 15 * 1024 * 1024){ fail++; continue; }
     try {
@@ -833,7 +927,7 @@ $('#prodImgFile').addEventListener('change', async function(e){
   e.target.value = '';
   progress.textContent = '';
   renderImagePreviews();
-  if(ok > 0) toast('✅ ' + ok + 'টি ছবি যোগ' + (fail ? ' (' + fail + ' ব্যর্থ)' : ''), 'success');
+  if(ok > 0) toast('✅ ' + ok + 'টি ছবি যোগ', 'success');
   else toast('❌ ছবি যোগ হয়নি', 'error');
 });
 
@@ -942,14 +1036,13 @@ $('#productForm').addEventListener('submit', function(e){
 function editProduct(id){ openProductModal(id); }
 function deleteProduct(id){
   var p = PRODUCTS.find(function(x){ return x.id === id; });
-  showConfirm('পণ্য মুছবেন?', '"' + (p ? p.name : '') + '" স্থায়ীভাবে মুছে যাবে।', function(){
+  showConfirm('পণ্য মুছবেন?', '"' + (p ? p.name : '') + '" মুছে যাবে।', function(){
     db.collection('products').doc(id).delete().then(function(){
       toast('🗑️ মুছে ফেলা হয়েছে', 'error');
     });
   });
 }
 
-/* CATEGORIES */
 function renderCategories(){
   var wrap = $('#categoriesWrap');
   if(!CATEGORIES.length){
@@ -972,7 +1065,6 @@ function renderCategories(){
   html += '</tbody></table>';
   wrap.innerHTML = html;
 }
-
 function openCategoryModal(){
   $('#categoryModalTitle').textContent = 'নতুন ক্যাটাগরি';
   $('#categoryForm').reset();
@@ -997,7 +1089,6 @@ function deleteCategory(slug){
     });
   });
 }
-
 $('#categoryForm').addEventListener('submit', function(e){
   e.preventDefault();
   var oldSlug = $('#catOldSlug').value;
@@ -1007,28 +1098,25 @@ $('#categoryForm').addEventListener('submit', function(e){
   if(!name || !slug) return;
 
   var data = { name: name, icon: icon };
-  toast('⏳ সংরক্ষণ হচ্ছে...');
-
   if(oldSlug && oldSlug !== slug){
     db.collection('categories').doc(oldSlug).delete().then(function(){
       return db.collection('categories').doc(slug).set(data);
     }).then(function(){
       closeModal('categoryModal');
       toast('✅ আপডেট হয়েছে', 'success');
-    }).catch(function(err){ toast('❌ ' + err.message, 'error'); });
+    });
   } else {
     db.collection('categories').doc(slug).set(data).then(function(){
       closeModal('categoryModal');
       toast('✅ সংরক্ষণ হয়েছে', 'success');
-    }).catch(function(err){ toast('❌ ' + err.message, 'error'); });
+    });
   }
 });
 
-/* COUPONS */
 function renderCoupons(){
   var wrap = $('#couponsWrap');
   if(!COUPONS.length){
-    wrap.innerHTML = '<div class="empty"><div class="big">🏷️</div><b>কোনো কুপন নেই</b><p>নতুন কুপন যোগ করুন</p></div>';
+    wrap.innerHTML = '<div class="empty"><div class="big">🏷️</div><b>কোনো কুপন নেই</b></div>';
     return;
   }
   var html = '';
@@ -1039,11 +1127,8 @@ function renderCoupons(){
     html += '<div class="coupon-code-box">' + esc(c.code) + '</div>';
     html += '<div class="coupon-info">';
     html += '<h4>' + valueText + '</h4>';
-    html += '<p>';
-    if(c.minOrder > 0) html += 'সর্বনিম্ন: ' + money(c.minOrder) + ' • ';
-    html += 'ব্যবহৃত: ' + (c.used || 0) + '/' + (c.maxUses || 100);
-    html += '</p>';
-    html += inactive ? '<p style="color:var(--sale);font-weight:600">❌ নিষ্ক্রিয়</p>' : '<p style="color:var(--green);font-weight:600">✅ সক্রিয়</p>';
+    html += '<p>' + (c.minOrder > 0 ? 'সর্বনিম্ন: ' + money(c.minOrder) + ' • ' : '') + 'ব্যবহৃত: ' + (c.used || 0) + '/' + (c.maxUses || 100) + '</p>';
+    html += inactive ? '<p style="color:var(--sale)">❌ নিষ্ক্রিয়</p>' : '<p style="color:var(--green)">✅ সক্রিয়</p>';
     html += '</div>';
     html += '<div class="coupon-actions">';
     html += '<button onclick="toggleCoupon(\'' + esc(c.code) + '\')">' + (c.active === false ? '✅' : '🚫') + '</button>';
@@ -1064,15 +1149,14 @@ function openCouponModal(){
 function toggleCoupon(code){
   db.collection('coupons').doc(code).get().then(function(doc){
     if(doc.exists){
-      var active = doc.data().active;
-      db.collection('coupons').doc(code).update({ active: !active }).then(function(){
-        toast(!active ? '✅ সক্রিয়' : '🚫 নিষ্ক্রিয়', 'success');
+      db.collection('coupons').doc(code).update({ active: !doc.data().active }).then(function(){
+        toast('✅ আপডেট', 'success');
       });
     }
   });
 }
 function deleteCoupon(code){
-  showConfirm('কুপন মুছবেন?', '"' + code + '" মুছে যাবে।', function(){
+  showConfirm('কুপন মুছবেন?', code + ' মুছে যাবে।', function(){
     db.collection('coupons').doc(code).delete().then(function(){
       toast('🗑️ মুছে ফেলা হয়েছে', 'error');
     });
@@ -1087,18 +1171,15 @@ $('#couponForm').addEventListener('submit', function(e){
     value: Number($('#cpValue').value) || 0,
     minOrder: Number($('#cpMinOrder').value) || 0,
     maxUses: Number($('#cpMaxUses').value) || 100,
-    active: true,
-    used: 0,
+    active: true, used: 0,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
-  toast('⏳ সংরক্ষণ হচ্ছে...');
   db.collection('coupons').doc(code).set(data).then(function(){
     closeModal('couponModal');
     toast('✅ কুপন সংরক্ষণ', 'success');
-  }).catch(function(err){ toast('❌ ' + err.message, 'error'); });
+  });
 });
 
-/* ORDERS */
 function renderOrdersSection(){ renderOrderFilters(); renderOrdersList(); }
 
 function renderOrderFilters(){
@@ -1151,6 +1232,8 @@ function renderOrdersList(){
   list.forEach(function(o){
     var phone = (o.customer && o.customer.phone) || '';
     var waNum = phone.replace(/[^0-9]/g, '').replace(/^0/, '88');
+    var fbPage = SETTINGS.facebookPage || '61590750957468';
+    var msgLink = 'https://m.me/' + fbPage;
     var itemsPreview = '';
     (o.items || []).slice(0, 3).forEach(function(i){
       itemsPreview += '<div class="oc-item">';
@@ -1189,7 +1272,8 @@ function renderOrdersList(){
     });
     html += '</select>';
     if(phone) html += '<a class="oc-action call" href="tel:' + esc(phone) + '">📞</a>';
-    if(phone) html += '<a class="oc-action wa" href="https://wa.me/' + esc(waNum) + '" target="_blank">💬</a>';
+    if(phone) html += '<a class="oc-action wa" href="https://wa.me/' + esc(waNum) + '" target="_blank">💬 WA</a>';
+    html += '<a class="oc-action msg" href="' + msgLink + '" target="_blank">💬 MSG</a>';
     html += '<button class="oc-action view" onclick="viewOrder(\'' + esc(o.docId) + '\')">👁️</button>';
     html += '<button class="oc-action" style="color:var(--sale);border-color:rgba(192,57,43,.25)" onclick="deleteOrder(\'' + esc(o.docId) + '\')">🗑️</button>';
     html += '</div></div></div>';
@@ -1233,7 +1317,6 @@ function viewOrder(docId){
   if(o.discount) body += '<p style="margin-bottom:6px"><b>ডিসকাউন্ট:</b> -' + money(o.discount) + '</p>';
   body += '<p style="margin-bottom:6px"><b>ডেলিভারি:</b> ' + (o.shipping === 0 ? 'ফ্রি' : money(o.shipping || 0)) + '</p>';
   body += '<p style="margin-bottom:6px"><b>পেমেন্ট:</b> ' + (payNames[o.paymentMethod] || 'ক্যাশ') + '</p>';
-  body += '<p style="margin-bottom:6px"><b>এলাকা:</b> ' + (o.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '</p>';
   body += '<p style="font-size:16px;font-weight:700;border-top:1px dashed var(--line);padding-top:8px;margin-top:8px"><b>সর্বমোট:</b> ' + money(o.total || 0) + '</p>';
   body += '</div>';
   body += '<div style="background:var(--bg);border-radius:12px;padding:16px;margin-bottom:14px;font-size:13.5px">';
@@ -1246,24 +1329,33 @@ function viewOrder(docId){
   openModal('infoModal');
 }
 
-function copyText(text){
-  if(!text) return;
-  try {
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(text).then(function(){ toast('📋 কপি!', 'success'); });
-    } else {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      toast('📋 কপি!', 'success');
+function renderCustomers(){
+  var wrap = $('#customersWrap');
+  if(!CUSTOMERS.length){
+    wrap.innerHTML = '<div class="empty"><div class="big">👥</div><b>কোনো কাস্টমার নেই</b><p>কাস্টমার সাইন আপ করলে এখানে দেখাবে</p></div>';
+    return;
+  }
+  var html = '<table><thead><tr><th>#</th><th>নাম</th><th>মোবাইল</th><th>যোগদান</th><th>শেষ লগইন</th><th>অ্যাকশন</th></tr></thead><tbody>';
+  CUSTOMERS.forEach(function(c, i){
+    var waNum = (c.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '88');
+    html += '<tr>';
+    html += '<td><b>' + (i + 1) + '</b></td>';
+    html += '<td><b>' + esc(c.name || '—') + '</b></td>';
+    html += '<td>' + esc(c.phone || '—') + '</td>';
+    html += '<td>' + formatDate(c.createdAt) + '</td>';
+    html += '<td>' + formatDate(c.lastLogin) + '</td>';
+    html += '<td><div class="actions-cell">';
+    if(c.phone){
+      html += '<a class="icon-action" href="tel:' + esc(c.phone) + '" style="text-decoration:none">📞</a>';
+      html += '<a class="icon-action" href="https://wa.me/' + esc(waNum) + '" target="_blank" style="text-decoration:none">💬</a>';
     }
-  } catch(e){ toast('❌ কপি হয়নি', 'error'); }
+    html += '<button class="icon-action" onclick="copyText(\'' + esc(c.phone || '') + '\')">📋</button>';
+    html += '</div></td></tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 
-/* REVIEWS */
 function renderReviewsSection(){
   var wrap = $('#reviewsWrap');
   var summary = $('#reviewsSummary');
@@ -1273,7 +1365,7 @@ function renderReviewsSection(){
     return;
   }
   var avg = (REVIEWS.reduce(function(s, r){ return s + r.rating; }, 0) / REVIEWS.length).toFixed(1);
-  summary.textContent = '⭐ ' + avg + ' গড় • ' + REVIEWS.length + 'টি';
+  summary.textContent = '⭐ ' + avg + ' • ' + REVIEWS.length + 'টি';
   var html = '';
   REVIEWS.slice().reverse().forEach(function(r){
     var p = PRODUCTS.find(function(x){ return x.id === r.productId; });
@@ -1285,7 +1377,7 @@ function renderReviewsSection(){
     html += '<div class="review-stars">' + stars + '</div></div>';
     if(r.text) html += '<div class="review-text">' + esc(r.text) + '</div>';
     if(p) html += '<span class="review-product">📦 ' + esc(p.name) + '</span>';
-    html += '<div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="deleteReview(\'' + esc(r.id) + '\')" style="color:var(--sale);border-color:rgba(192,57,43,.25)">🗑️ মুছুন</button></div>';
+    html += '<div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="deleteReview(\'' + esc(r.id) + '\')" style="color:var(--sale)">🗑️ মুছুন</button></div>';
     html += '</div>';
   });
   wrap.innerHTML = html;
@@ -1298,7 +1390,6 @@ function deleteReview(id){
   });
 }
 
-/* REPORTS */
 function renderReportsSection(){
   var orders = ORDERS.filter(function(o){ return o.status !== 'cancelled'; });
   var now = new Date();
@@ -1320,7 +1411,7 @@ function renderReportsSection(){
   var counts = {};
   orders.forEach(function(o){
     (o.items || []).forEach(function(i){
-      counts[i.id] = counts[i.id] || { id:i.id, name:i.name, qty:0, revenue:0, img:i.img };
+      counts[i.id] = counts[i.id] || { id:i.id, name:i.name, qty:0, revenue:0 };
       counts[i.id].qty += i.qty;
       counts[i.id].revenue += i.qty * i.price;
     });
@@ -1328,7 +1419,7 @@ function renderReportsSection(){
   var topP = Object.values(counts).sort(function(a, b){ return b.qty - a.qty; }).slice(0, 5);
   var tpWrap = $('#topProducts');
   if(!topP.length){
-    tpWrap.innerHTML = '<div class="empty"><div class="big">📊</div><b>তথ্য নেই</b></div>';
+    tpWrap.innerHTML = '<div class="empty"><b>তথ্য নেই</b></div>';
   } else {
     var html = '<table><thead><tr><th>#</th><th>পণ্য</th><th>বিক্রি</th><th>আয়</th></tr></thead><tbody>';
     topP.forEach(function(p, i){
@@ -1352,7 +1443,7 @@ function renderReportsSection(){
   var topC = Object.values(custMap).sort(function(a, b){ return b.total - a.total; }).slice(0, 5);
   var tcWrap = $('#topCustomers');
   if(!topC.length){
-    tcWrap.innerHTML = '<div class="empty"><div class="big">👥</div><b>তথ্য নেই</b></div>';
+    tcWrap.innerHTML = '<div class="empty"><b>তথ্য নেই</b></div>';
   } else {
     var html2 = '<table><thead><tr><th>#</th><th>নাম</th><th>মোবাইল</th><th>অর্ডার</th><th>মোট</th></tr></thead><tbody>';
     topC.forEach(function(c, i){
@@ -1367,12 +1458,13 @@ function renderReportsSection(){
   }
 }
 
-/* SETTINGS */
 function renderSettingsForm(){
   $('#setSiteName').value = SETTINGS.siteName || '';
-  $('#setEmail').value = SETTINGS.email || '';
   $('#setPhone').value = SETTINGS.phone || '';
+  $('#setEmail').value = SETTINGS.email || '';
   $('#setAddress').value = SETTINGS.address || '';
+  $('#setFbPage').value = SETTINGS.facebookPage || '61590750957468';
+  $('#setWhatsApp').value = SETTINGS.whatsApp || '';
   $('#setFreeShip').value = SETTINGS.freeShipLimit || 2000;
   $('#setDhakaInside').value = SETTINGS.dhakaInside || 100;
   $('#setDhakaOutside').value = SETTINGS.dhakaOutside || 120;
@@ -1380,26 +1472,31 @@ function renderSettingsForm(){
   $('#setNagad').value = SETTINGS.nagadNumber || '';
   $('#setPassword').value = SETTINGS.adminPassword || 'admin123';
 }
-$('#settingsForm').addEventListener('submit', function(e){
-  e.preventDefault();
+
+function saveAllSettings(){
   var data = {
-    siteName: $('#setSiteName').value.trim(),
-    email: $('#setEmail').value.trim(),
+    siteName: $('#setSiteName').value.trim() || 'Lomura Wear',
     phone: $('#setPhone').value.trim(),
+    email: $('#setEmail').value.trim(),
     address: $('#setAddress').value.trim(),
+    facebookPage: $('#setFbPage').value.trim() || '61590750957468',
+    whatsApp: $('#setWhatsApp').value.trim(),
     freeShipLimit: Number($('#setFreeShip').value) || 2000,
     dhakaInside: Number($('#setDhakaInside').value) || 100,
     dhakaOutside: Number($('#setDhakaOutside').value) || 120,
     bkashNumber: $('#setBkash').value.trim(),
     nagadNumber: $('#setNagad').value.trim(),
-    adminPassword: $('#setPassword').value.trim() || 'admin123'
+    adminPassword: $('#setPassword').value.trim() || 'admin123',
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
   toast('⏳ সংরক্ষণ হচ্ছে...');
-  db.collection('settings').doc('main').set(data).then(function(){
+  db.collection('settings').doc('main').set(data, { merge: true }).then(function(){
     for(var k in data){ SETTINGS[k] = data[k]; }
-    toast('✅ সেটিংস সংরক্ষণ', 'success');
-  }).catch(function(err){ toast('❌ ' + err.message, 'error'); });
-});
+    toast('✅ সেটিংস সংরক্ষণ হয়েছে!', 'success');
+  }).catch(function(err){
+    toast('❌ ' + err.message, 'error');
+  });
+}
 
 function resetAll(){
   showConfirm('সব ডেটা রিসেট?', 'সব পণ্য, অর্ডার, রিভিউ চলে যাবে।', async function(){
@@ -1412,13 +1509,30 @@ function resetAll(){
       revs.forEach(function(d){ d.ref.delete(); });
       var cps = await db.collection('coupons').get();
       cps.forEach(function(d){ d.ref.delete(); });
-      toast('🗑️ সব ডেটা মুছে ফেলা হয়েছে', 'error');
+      toast('🗑️ সব মুছে ফেলা হয়েছে', 'error');
     } catch(e){ toast('❌ ' + e.message, 'error'); }
   });
 }
 
+function copyText(text){
+  if(!text) return;
+  try {
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){ toast('📋 কপি!', 'success'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      toast('📋 কপি!', 'success');
+    }
+  } catch(e){ toast('❌ কপি হয়নি', 'error'); }
+}
+
 checkAuth();
-console.log('✅ Admin Panel loaded');
+console.log('✅ Admin Panel v2 — Facebook Page support');
 </script>
 </body>
-</html>
+  </html>
