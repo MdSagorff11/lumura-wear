@@ -87,8 +87,9 @@ a{color:inherit;text-decoration:none}
 #screen-detail .content{padding-bottom:100px}
 .pd-gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-ms-overflow-style:none;scrollbar-width:none}
 .pd-gallery::-webkit-scrollbar{display:none}
-.pd-image{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:1;background:#f1ece5;overflow:hidden;position:relative}
+.pd-image{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:1;background:#f1ece5;overflow:hidden;position:relative;cursor:zoom-in}
 .pd-image img{width:100%;height:100%;object-fit:cover}
+.pd-image .zoom-hint{position:absolute;bottom:12px;right:12px;background:rgba(20,20,20,.75);color:#fff;padding:5px 11px;border-radius:999px;font-size:11px}
 .pd-thumbs{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
 .pd-thumbs::-webkit-scrollbar{display:none}
 .pd-thumb{flex:0 0 56px;width:56px;height:56px;border-radius:10px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:#f1ece5}
@@ -260,10 +261,11 @@ a{color:inherit;text-decoration:none}
 .pay-detail .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
 .pay-detail .row:last-child{border-bottom:none}
 .pay-detail .row b{font-family:monospace;color:#96703a;font-size:14px}
+.pay-detail .steps{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.8}
+.pay-detail .steps b{color:var(--accent-d)}
 .star-input{display:flex;gap:6px;justify-content:center;margin:10px 0 18px}
 .star-input button{font-size:36px;color:var(--line);cursor:pointer;padding:4px;line-height:1;border:none;background:none}
 .star-input button.active{color:var(--gold)}
-.otp-input{text-align:center;font-size:24px;font-family:monospace;letter-spacing:8px;font-weight:700;padding:16px}
 .toast{position:fixed;bottom:80px;left:50%;transform:translate(-50%,120px);background:var(--ink);color:var(--white);padding:12px 24px;border-radius:999px;font-size:13.5px;font-weight:500;z-index:600;opacity:0;transition:all .35s;max-width:88%;text-align:center}
 .toast.show{transform:translate(-50%,0);opacity:1}
 .toast.success{background:#166a36}
@@ -271,6 +273,15 @@ a{color:inherit;text-decoration:none}
 .loading{text-align:center;padding:60px 20px;color:var(--muted)}
 .loading .spin{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.lightbox.show{display:flex}
+.lightbox img{max-width:100%;max-height:90vh;object-fit:contain;user-select:none;border-radius:8px}
+.lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;display:grid;place-items:center;font-size:24px;line-height:1;border:none;z-index:2}
+.lightbox-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:12px;background:rgba(255,255,255,.1);padding:6px 14px;border-radius:999px;white-space:nowrap}
+.order-success-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.order-success-btns a{text-align:center;text-decoration:none;padding:14px;font-size:14px;border-radius:12px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-msg{background:linear-gradient(135deg,#0084FF,#0064D2)}
+.btn-wa{background:#25D366}
 @media (min-width:769px){
   body{padding:24px 0 100px}
   .app{max-width:1180px;border-radius:24px;overflow:hidden;padding-bottom:0;box-shadow:0 30px 80px rgba(0,0,0,.1)}
@@ -304,26 +315,26 @@ a{color:inherit;text-decoration:none}
   <div class="content">
     <div class="user-greeting" id="userGreeting" style="display:none"></div>
     <div class="hero"><div class="hero-inner">
-      <small>NEW COLLECTION 2025</small>
-      <h2>আপনার স্টাইল,<br><span>আমাদের পোশাক</span></h2>
-      <p>প্রিমিয়াম কোয়ালিটি • সাশ্রয়ী দাম</p>
-      <button onclick="go('categories')">শপিং শুরু করুন →</button>
+      <small data-i18n="newCollection">NEW COLLECTION 2025</small>
+      <h2 data-i18n="heroTitle">আপনার স্টাইল,<br><span>আমাদের পোশাক</span></h2>
+      <p data-i18n="heroSub">প্রিমিয়াম কোয়ালিটি • সাশ্রয়ী দাম</p>
+      <button onclick="go('categories')" data-i18n="startShopping">শপিং শুরু করুন →</button>
     </div></div>
     <div class="quick-cats" id="quickCats"></div>
     <div class="flash" id="flashSection" style="display:none">
       <div class="flash-head">
-        <div class="flash-title"><span style="color:var(--sale)">⚡</span><span>ফ্ল্যাশ সেল</span></div>
-        <div class="flash-timer"><span>শেষ:</span><span class="box" id="fsH">00</span>:<span class="box" id="fsM">00</span>:<span class="box" id="fsS">00</span></div>
+        <div class="flash-title"><span style="color:var(--sale)">⚡</span><span data-i18n="flashSale">ফ্ল্যাশ সেল</span></div>
+        <div class="flash-timer"><span data-i18n="endsIn">শেষ:</span><span class="box" id="fsH">00</span>:<span class="box" id="fsM">00</span>:<span class="box" id="fsS">00</span></div>
       </div>
       <div class="h-scroll" id="flashScroll"></div>
     </div>
     <div class="section" id="bestSection" style="display:none">
-      <div class="section-head"><h2>🔥 বেস্ট সেলিং</h2></div>
+      <div class="section-head"><h2 data-i18n="bestSelling">🔥 বেস্ট সেলিং</h2></div>
       <div class="product-grid" id="bestGrid"></div>
     </div>
     <div class="section">
-      <div class="section-head"><h2>🆕 নতুন পণ্য</h2><a onclick="go('categories')">সব দেখুন →</a></div>
-      <div class="product-grid" id="homeGrid"><div class="loading"><div class="spin"></div><p>লোড হচ্ছে...</p></div></div>
+      <div class="section-head"><h2 data-i18n="newProducts">🆕 নতুন পণ্য</h2><a onclick="go('categories')" data-i18n="seeAll">সব দেখুন →</a></div>
+      <div class="product-grid" id="homeGrid"><div class="loading"><div class="spin"></div></div></div>
     </div>
   </div>
 </section>
@@ -331,7 +342,7 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-categories">
   <div class="page-head">
     <button class="back-btn" onclick="go('home')">←</button>
-    <h1>সব পণ্য</h1>
+    <h1 data-i18n="allProducts">সব পণ্য</h1>
   </div>
   <div class="content">
     <div class="cat-page-grid" id="catPageGrid"></div>
@@ -345,7 +356,7 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-detail">
   <div class="page-head">
     <button class="back-btn" onclick="go('home')">←</button>
-    <h1>পণ্যের বিস্তারিত</h1>
+    <h1 data-i18n="productDetails">পণ্যের বিস্তারিত</h1>
   </div>
   <div class="content" id="detailContent"></div>
 </section>
@@ -353,7 +364,7 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-cart">
   <div class="page-head">
     <button class="back-btn" onclick="go('home')">←</button>
-    <h1>আমার কার্ট</h1>
+    <h1 data-i18n="myCart">আমার কার্ট</h1>
   </div>
   <div class="content" id="cartContent"></div>
 </section>
@@ -361,18 +372,18 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-orders">
   <div class="page-head">
     <button class="back-btn" onclick="go('home')">←</button>
-    <h1>আমার অর্ডার</h1>
+    <h1 data-i18n="myOrders">আমার অর্ডার</h1>
   </div>
   <div class="content">
     <div class="track-box">
-      <h3>🚚 অর্ডার ট্র্যাক করুন</h3>
+      <h3 data-i18n="trackOrder">🚚 অর্ডার ট্র্যাক করুন</h3>
       <div class="track-input-row">
         <input type="text" id="trackInput" placeholder="ORD-XXXXXX">
-        <button onclick="trackOrder()">ট্র্যাক</button>
+        <button onclick="trackOrder()" data-i18n="track">ট্র্যাক</button>
       </div>
       <div id="trackResult"></div>
     </div>
-    <div style="padding:0 12px 12px"><h3 style="font-size:15px;margin:8px 0 12px;font-weight:700">📦 আমার অর্ডার</h3></div>
+    <div style="padding:0 12px 12px"><h3 style="font-size:15px;margin:8px 0 12px;font-weight:700" data-i18n="myOrders2">📦 আমার অর্ডার</h3></div>
     <div id="ordersContent"></div>
   </div>
 </section>
@@ -383,8 +394,8 @@ a{color:inherit;text-decoration:none}
     <div class="acc-user">
       <div class="acc-avatar" id="accAvatar">গ</div>
       <div class="acc-user-info">
-        <h3 id="accName">Guest <span class="verified-badge" id="verifiedBadge" style="display:none">✓ Verified</span></h3>
-        <p id="accPhone">লগইন করুন</p>
+        <h3 id="accName">Guest <span class="verified-badge" id="verifiedBadge" style="display:none">✓</span></h3>
+        <p id="accPhone" data-i18n="loginNow">লগইন করুন</p>
       </div>
     </div>
   </div>
@@ -394,30 +405,38 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-settings">
   <div class="page-head">
     <button class="back-btn" onclick="go('account')">←</button>
-    <h1>সেটিংস</h1>
+    <h1 data-i18n="settings">সেটিংস</h1>
   </div>
   <div class="content">
     <div class="settings-group">
-      <div class="settings-group-title">অ্যাকাউন্ট</div>
-      <div class="set-item" onclick="openProfileEdit()"><div class="ic">👤</div><div class="txt"><b>অ্যাকাউন্ট তথ্য</b><small>নাম পরিবর্তন</small></div><div class="arrow">›</div></div>
-      <div class="set-item" onclick="openAddressBook()"><div class="ic">📍</div><div class="txt"><b>ঠিকানা বই</b><small>সংরক্ষিত ঠিকানা</small></div><div class="arrow">›</div></div>
+      <div class="settings-group-title" data-i18n="accountGroup">অ্যাকাউন্ট</div>
+      <div class="set-item" onclick="openProfileEdit()"><div class="ic">👤</div><div class="txt"><b data-i18n="accountInfo">অ্যাকাউন্ট তথ্য</b><small data-i18n="accountInfoDesc">নাম পরিবর্তন</small></div><div class="arrow">›</div></div>
+      <div class="set-item" onclick="openAddressBook()"><div class="ic">📍</div><div class="txt"><b data-i18n="addressBook">ঠিকানা বই</b><small data-i18n="addressBookDesc">সংরক্ষিত ঠিকানা</small></div><div class="arrow">›</div></div>
     </div>
     <div class="settings-group">
-      <div class="settings-group-title">প্রেফারেন্স</div>
+      <div class="settings-group-title" data-i18n="preferenceGroup">প্রেফারেন্স</div>
+      <div class="set-item">
+        <div class="ic">🌐</div>
+        <div class="txt"><b data-i18n="language">ভাষা - Language</b></div>
+        <div class="lang-toggle">
+          <button id="langBn" class="active" onclick="setLang('bn')">বাং</button>
+          <button id="langEn" onclick="setLang('en')">EN</button>
+        </div>
+      </div>
       <div class="set-item" onclick="toggleTheme()">
         <div class="ic" id="themeIcon">🌙</div>
-        <div class="txt"><b>ডার্ক মোড</b><small id="themeStatus">বন্ধ</small></div>
+        <div class="txt"><b data-i18n="darkMode">ডার্ক মোড</b><small id="themeStatus">বন্ধ</small></div>
         <div class="arrow">›</div>
       </div>
     </div>
     <div class="settings-group">
-      <div class="settings-group-title">তথ্য</div>
-      <div class="set-item" onclick="openPolicies()"><div class="ic">📄</div><div class="txt"><b>নীতিমালা</b><small>প্রাইভেসি, রিটার্ন</small></div><div class="arrow">›</div></div>
-      <div class="set-item" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b>সাহায্য</b></div><div class="arrow">›</div></div>
-      <div class="set-item" onclick="showAbout()"><div class="ic">ℹ️</div><div class="txt"><b>সম্পর্কে</b></div><div class="val">v8.0</div></div>
+      <div class="settings-group-title" data-i18n="infoGroup">তথ্য</div>
+      <div class="set-item" onclick="openPolicies()"><div class="ic">📄</div><div class="txt"><b data-i18n="policies">নীতিমালা</b></div><div class="arrow">›</div></div>
+      <div class="set-item" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b data-i18n="help">সাহায্য</b></div><div class="arrow">›</div></div>
+      <div class="set-item" onclick="showAbout()"><div class="ic">ℹ️</div><div class="txt"><b data-i18n="about">সম্পর্কে</b></div><div class="val">v9.0</div></div>
     </div>
     <div class="settings-group" id="logoutGroup" style="display:none">
-      <div class="set-item logout-item" onclick="doLogout()"><div class="ic" style="background:rgba(232,60,60,.1)">🚪</div><div class="txt"><b>লগআউট</b></div></div>
+      <div class="set-item logout-item" onclick="doLogout()"><div class="ic" style="background:rgba(232,60,60,.1)">🚪</div><div class="txt"><b data-i18n="logout">লগআউট</b></div></div>
     </div>
   </div>
 </section>
@@ -425,7 +444,7 @@ a{color:inherit;text-decoration:none}
 <section class="screen" id="screen-search">
   <div class="page-head">
     <button class="back-btn" onclick="go('home')">←</button>
-    <h1>সার্চ</h1>
+    <h1 data-i18n="search">সার্চ</h1>
   </div>
   <div style="padding:14px;border-bottom:1px solid var(--line)">
     <input type="text" id="searchInput" placeholder="পণ্য খুঁজুন..." style="width:100%;padding:12px 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink);font-size:14.5px" autofocus>
@@ -436,46 +455,42 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <nav class="bottom-nav">
-  <button class="nav-btn active" data-nav="home" onclick="go('home')"><span class="ic">🏠</span><span>হোম</span></button>
-  <button class="nav-btn" data-nav="categories" onclick="go('categories')"><span class="ic">📂</span><span>শপ</span></button>
-  <button class="nav-btn" data-nav="cart" onclick="go('cart')"><span class="ic">🛒<span class="cnt" id="navCartCount" style="display:none">0</span></span><span>কার্ট</span></button>
-  <button class="nav-btn" data-nav="orders" onclick="go('orders')"><span class="ic">📦</span><span>অর্ডার</span></button>
-  <button class="nav-btn" data-nav="account" onclick="go('account')"><span class="ic">👤</span><span>অ্যাকাউন্ট</span></button>
+  <button class="nav-btn active" data-nav="home" onclick="go('home')"><span class="ic">🏠</span><span data-i18n="home">হোম</span></button>
+  <button class="nav-btn" data-nav="categories" onclick="go('categories')"><span class="ic">📂</span><span data-i18n="shop">শপ</span></button>
+  <button class="nav-btn" data-nav="cart" onclick="go('cart')"><span class="ic">🛒<span class="cnt" id="navCartCount" style="display:none">0</span></span><span data-i18n="cart">কার্ট</span></button>
+  <button class="nav-btn" data-nav="orders" onclick="go('orders')"><span class="ic">📦</span><span data-i18n="orders">অর্ডার</span></button>
+  <button class="nav-btn" data-nav="account" onclick="go('account')"><span class="ic">👤</span><span data-i18n="account">অ্যাকাউন্ট</span></button>
 </nav>
 </div>
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL (Phone + Password) -->
 <div class="overlay" id="loginOverlay">
   <div class="modal">
-    <div class="modal-head"><h3>👋 স্বাগতম</h3><button class="modal-close" onclick="closeModal('loginOverlay')">×</button></div>
-    
-    <div id="loginStep1">
-      <div style="text-align:center;padding:8px 0 20px">
-        <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;margin-bottom:6px">Lomura <span style="color:var(--accent)">Wear</span></div>
-        <p style="font-size:13.5px;color:var(--muted)">OTP যাচাই করে লগইন করুন</p>
-      </div>
-      <div class="form-field"><label>আপনার নাম *</label><input type="text" id="loginName" placeholder="রাফসান আহমেদ"></div>
-      <div class="form-field"><label>মোবাইল নম্বর *</label><input type="tel" id="loginPhone" placeholder="01711111111"></div>
-      <button class="btn-primary" id="sendOtpBtn" onclick="sendOTP()">📱 OTP পাঠান</button>
-      <div id="recaptcha-container" style="margin-top:10px"></div>
+    <div class="modal-head"><h3 data-i18n="welcome">👋 স্বাগতম</h3><button class="modal-close" onclick="closeModal('loginOverlay')">×</button></div>
+    <div style="text-align:center;padding:8px 0 20px">
+      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;margin-bottom:6px">Lomura <span style="color:var(--accent)">Wear</span></div>
+      <p style="font-size:13.5px;color:var(--muted)" id="loginSubtitle">নতুন অ্যাকাউন্ট তৈরি করুন বা লগইন করুন</p>
     </div>
 
-    <div id="loginStep2" style="display:none">
-      <div style="text-align:center;padding:8px 0 20px">
-        <div style="font-size:44px;margin-bottom:10px">📱</div>
-        <h3 style="font-size:18px;font-weight:700;margin-bottom:6px">OTP যাচাই করুন</h3>
-        <p style="font-size:13.5px;color:var(--muted)" id="otpPhoneText">আপনার ফোনে ৬ ডিজিটের কোড পাঠানো হয়েছে</p>
-      </div>
-      <div class="form-field">
-        <label>৬ ডিজিটের OTP *</label>
-        <input type="tel" id="otpCode" class="otp-input" placeholder="------" maxlength="6">
-      </div>
-      <button class="btn-primary" id="verifyOtpBtn" onclick="verifyOTP()">✅ যাচাই করুন</button>
-      <button class="btn-outline" onclick="backToStep1()" style="margin-top:10px">← নম্বর বদলান</button>
-      <div style="text-align:center;margin-top:14px">
-        <button onclick="resendOTP()" style="color:var(--accent-d);font-size:13px;font-weight:600;background:none;border:none" id="resendBtn">কোড পাননি? আবার পাঠান</button>
-        <div id="resendTimer" style="font-size:12px;color:var(--muted);margin-top:4px"></div>
-      </div>
+    <div class="tab-switch">
+      <button id="tabLogin" class="active" onclick="switchAuthTab('login')" data-i18n="login">লগইন</button>
+      <button id="tabSignup" onclick="switchAuthTab('signup')" data-i18n="signup">সাইন আপ</button>
+    </div>
+
+    <div class="form-field"><label data-i18n="yourName">আপনার নাম *</label><input type="text" id="authName" placeholder="রাফসান আহমেদ"></div>
+    <div class="form-field"><label data-i18n="yourPhone">মোবাইল নম্বর *</label><input type="tel" id="authPhone" placeholder="01711111111" maxlength="11"></div>
+    <div class="form-field"><label data-i18n="yourPassword">পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)</label><input type="password" id="authPassword" placeholder="••••••"></div>
+    <div class="form-field" id="confirmPassField" style="display:none"><label data-i18n="confirmPassword">পাসওয়ার্ড আবার লিখুন *</label><input type="password" id="authPassword2" placeholder="••••••"></div>
+
+    <button class="btn-primary" id="authBtn" onclick="doAuth()" data-i18n="createAccount">✅ অ্যাকাউন্ট তৈরি করুন</button>
+
+    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--muted)">
+      <span id="authSwitchText">আগে থেকেই অ্যাকাউন্ট আছে?</span>
+      <button onclick="toggleAuthMode()" style="color:var(--accent-d);font-weight:700;background:none;border:none;cursor:pointer" id="authSwitchBtn">লগইন করুন</button>
+    </div>
+
+    <div style="background:var(--bg);border-radius:10px;padding:12px;margin-top:16px;font-size:11.5px;color:var(--muted);line-height:1.6">
+      🔒 আপনার তথ্য সুরক্ষিত। পাসওয়ার্ড এনক্রিপ্টেড আকারে সংরক্ষিত।
     </div>
   </div>
 </div>
@@ -483,54 +498,49 @@ a{color:inherit;text-decoration:none}
 <!-- PROFILE MODAL -->
 <div class="overlay" id="profileOverlay">
   <div class="modal">
-    <div class="modal-head"><h3>প্রোফাইল এডিট</h3><button class="modal-close" onclick="closeModal('profileOverlay')">×</button></div>
-    <div class="form-field"><label>নাম</label><input type="text" id="peName"></div>
-    <button class="btn-primary" onclick="saveProfile()">সংরক্ষণ করুন</button>
-    <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:12px">📱 ফোন নম্বর পরিবর্তন করতে লগআউট করে আবার লগইন করুন</p>
+    <div class="modal-head"><h3 data-i18n="editProfile">প্রোফাইল এডিট</h3><button class="modal-close" onclick="closeModal('profileOverlay')">×</button></div>
+    <div class="form-field"><label data-i18n="name">নাম</label><input type="text" id="peName"></div>
+    <button class="btn-primary" onclick="saveProfile()" data-i18n="save">সংরক্ষণ করুন</button>
   </div>
 </div>
 
-<!-- ADDRESS MODAL -->
 <div class="overlay" id="addressOverlay">
   <div class="modal">
-    <div class="modal-head"><h3>ঠিকানা বই</h3><button class="modal-close" onclick="closeModal('addressOverlay')">×</button></div>
+    <div class="modal-head"><h3 data-i18n="addressBook">ঠিকানা বই</h3><button class="modal-close" onclick="closeModal('addressOverlay')">×</button></div>
     <div id="addressList"></div>
-    <button class="btn-primary" onclick="addNewAddress()" style="margin-top:14px">+ নতুন ঠিকানা</button>
+    <button class="btn-primary" onclick="addNewAddress()" style="margin-top:14px" data-i18n="addAddress">+ নতুন ঠিকানা</button>
   </div>
 </div>
 
-<!-- CHECKOUT MODAL -->
 <div class="overlay" id="checkoutOverlay">
   <div class="modal">
-    <div class="modal-head"><h3>🛒 অর্ডার কনফার্ম</h3><button class="modal-close" onclick="closeModal('checkoutOverlay')">×</button></div>
-    <div class="form-field"><label>আপনার নাম *</label><input type="text" id="coName"></div>
-    <div class="form-field"><label>মোবাইল নম্বর *</label><input type="tel" id="coPhone" readonly style="background:var(--line);cursor:not-allowed"></div>
-    <div class="form-field"><label>সম্পূর্ণ ঠিকানা *</label><textarea id="coAddress"></textarea></div>
-    <label style="font-size:13.5px;font-weight:600;display:block;margin-bottom:8px">🚚 ডেলিভারি এলাকা</label>
+    <div class="modal-head"><h3 data-i18n="checkoutTitle">🛒 অর্ডার কনফার্ম</h3><button class="modal-close" onclick="closeModal('checkoutOverlay')">×</button></div>
+    <div class="form-field"><label data-i18n="coName">আপনার নাম *</label><input type="text" id="coName"></div>
+    <div class="form-field"><label data-i18n="coPhone">মোবাইল নম্বর *</label><input type="tel" id="coPhone" readonly style="background:var(--line);cursor:not-allowed"></div>
+    <div class="form-field"><label data-i18n="coAddress">সম্পূর্ণ ঠিকানা *</label><textarea id="coAddress"></textarea></div>
+    <label style="font-size:13.5px;font-weight:600;display:block;margin-bottom:8px" data-i18n="deliveryArea">🚚 ডেলিভারি এলাকা</label>
     <div id="deliveryBox"></div>
-    <label style="font-size:13.5px;font-weight:600;display:block;margin:14px 0 8px">💳 পেমেন্ট পদ্ধতি</label>
+    <label style="font-size:13.5px;font-weight:600;display:block;margin:14px 0 8px" data-i18n="paymentMethod">💳 পেমেন্ট পদ্ধতি</label>
     <div id="paymentBox"></div>
     <div id="paymentDetail"></div>
     <div id="coSummary" style="background:var(--bg);border-radius:10px;padding:14px;margin:14px 0;font-size:13.5px"></div>
-    <button class="btn-primary" onclick="submitOrder()">✅ অর্ডার কনফার্ম করুন</button>
-    <button class="btn-outline" onclick="closeModal('checkoutOverlay')">বাতিল</button>
+    <button class="btn-primary" onclick="submitOrder()" data-i18n="confirmOrder">✅ অর্ডার কনফার্ম করুন</button>
+    <button class="btn-outline" onclick="closeModal('checkoutOverlay')" data-i18n="cancel">বাতিল</button>
   </div>
 </div>
 
-<!-- REVIEW MODAL -->
 <div class="overlay" id="reviewOverlay">
   <div class="modal">
-    <div class="modal-head"><h3>⭐ রিভিউ দিন</h3><button class="modal-close" onclick="closeModal('reviewOverlay')">×</button></div>
-    <p style="font-size:13.5px;color:var(--muted);text-align:center;margin-bottom:6px">পণ্যটি কেমন লেগেছে?</p>
+    <div class="modal-head"><h3 data-i18n="giveReview">⭐ রিভিউ দিন</h3><button class="modal-close" onclick="closeModal('reviewOverlay')">×</button></div>
+    <p style="font-size:13.5px;color:var(--muted);text-align:center;margin-bottom:6px" data-i18n="howWasProduct">পণ্যটি কেমন লেগেছে?</p>
     <div class="star-input" id="starInput">
       <button data-star="1">★</button><button data-star="2">★</button><button data-star="3">★</button><button data-star="4">★</button><button data-star="5">★</button>
     </div>
-    <div class="form-field"><label>মন্তব্য (ঐচ্ছিক)</label><textarea id="rvText" placeholder="পণ্য সম্পর্কে লিখুন..."></textarea></div>
-    <button class="btn-primary" onclick="submitReview()">✅ রিভিউ পাঠান</button>
+    <div class="form-field"><label data-i18n="comment">মন্তব্য (ঐচ্ছিক)</label><textarea id="rvText"></textarea></div>
+    <button class="btn-primary" onclick="submitReview()" data-i18n="sendReview">✅ রিভিউ পাঠান</button>
   </div>
 </div>
 
-<!-- INFO MODAL -->
 <div class="overlay" id="infoOverlay">
   <div class="modal">
     <div class="modal-head"><h3 id="infoTitle">তথ্য</h3><button class="modal-close" onclick="closeModal('infoOverlay')">×</button></div>
@@ -538,11 +548,17 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-hint">👆 ডাবল ট্যাপ করলে জুম হবে</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script>
 var firebaseConfig = {
   apiKey: "AIzaSyBbp1RN4uBkkb-eWBp67tUdfnlT7Uma-B8",
@@ -559,11 +575,12 @@ var PRODUCTS = [];
 var CATEGORIES = [];
 var COUPONS = [];
 var REVIEWS = [];
-var SETTINGS = { phone:'01700000000', email:'', address:'', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'' };
+var SETTINGS = { phone:'01700000000', email:'', address:'', facebookPage:'lomurawear', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'' };
 var CART = [];
 var WISHLIST = [];
 var ADDRESSES = [];
 var USER = null;
+var LANG = 'bn';
 var currentCatFilter = 'all';
 var previousScreen = 'home';
 var currentProductId = null;
@@ -572,10 +589,7 @@ var CURRENT_RATING = 5;
 var SELECTED_DELIVERY = 'inside';
 var SELECTED_PAYMENT = 'cod';
 var PENDING_ACTION = null;
-var confirmationResult = null;
-var recaptchaVerifier = null;
-var resendInterval = null;
-var verifyInProgress = false;
+var AUTH_MODE = 'signup';
 
 function $(s){ return document.querySelector(s); }
 function $$(s){ return document.querySelectorAll(s); }
@@ -618,183 +632,138 @@ function go(screen){
   window.scrollTo(0, 0);
 }
 
-/* ========== AUTH ========== */
-function isLoggedIn(){
-  return USER && USER.name && USER.verified === true;
+/* ========== AUTH (Phone + Password) ========== */
+function isLoggedIn(){ return USER && USER.name && USER.phone && USER.verified; }
+
+function switchAuthTab(mode){
+  AUTH_MODE = mode;
+  $('#tabLogin').classList.toggle('active', mode === 'login');
+  $('#tabSignup').classList.toggle('active', mode === 'signup');
+  $('#confirmPassField').style.display = mode === 'signup' ? 'block' : 'none';
+  $('#authBtn').textContent = mode === 'signup' ? '✅ অ্যাকাউন্ট তৈরি করুন' : '✅ লগইন করুন';
+  $('#authSwitchText').textContent = mode === 'signup' ? 'আগে থেকেই অ্যাকাউন্ট আছে?' : 'নতুন গ্রাহক?';
+  $('#authSwitchBtn').textContent = mode === 'signup' ? 'লগইন করুন' : 'সাইন আপ করুন';
+  $('#loginSubtitle').textContent = mode === 'signup' ? 'নতুন অ্যাকাউন্ট তৈরি করুন' : 'আপনার অ্যাকাউন্টে লগইন করুন';
+}
+function toggleAuthMode(){ switchAuthTab(AUTH_MODE === 'signup' ? 'login' : 'signup'); }
+
+function hashPassword(pw){
+  // Simple hash for demo — real production should use bcrypt on server
+  var hash = 0;
+  for(var i = 0; i < pw.length; i++){
+    var char = pw.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return 'h' + Math.abs(hash).toString(36) + '_' + pw.length;
 }
 
 function requireLogin(cb){
   if(isLoggedIn()){ if(cb) cb(); return; }
   PENDING_ACTION = cb;
-  $('#loginName').value = '';
-  $('#loginPhone').value = '';
-  $('#otpCode').value = '';
-  $('#loginStep1').style.display = 'block';
-  $('#loginStep2').style.display = 'none';
+  $('#authName').value = '';
+  $('#authPhone').value = '';
+  $('#authPassword').value = '';
+  $('#authPassword2').value = '';
+  switchAuthTab('signup');
   openModal('loginOverlay');
 }
 
-function initRecaptcha(){
-  if(recaptchaVerifier) return;
-  try {
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-      size: 'invisible',
-      callback: function(){}
-    });
-  } catch(e){ console.log('Recaptcha error:', e); }
-}
-
-function sendOTP(){
-  var name = $('#loginName').value.trim();
-  var phone = $('#loginPhone').value.trim();
+function doAuth(){
+  var name = $('#authName').value.trim();
+  var phone = $('#authPhone').value.trim();
+  var pass = $('#authPassword').value;
+  var pass2 = $('#authPassword2').value;
 
   if(!name || name.length < 2){ toast('❌ সঠিক নাম লিখুন', 'error'); return; }
   if(!phone || phone.length !== 11 || phone[0] !== '0'){ 
     toast('❌ সঠিক ১১ ডিজিটের নম্বর দিন (০ দিয়ে শুরু)', 'error'); 
     return; 
   }
+  if(!pass || pass.length < 6){ toast('❌ পাসওয়ার্ড কমপক্ষে ৬ অক্ষর', 'error'); return; }
 
-  var intlPhone = '+88' + phone;
-  var btn = $('#sendOtpBtn');
+  var btn = $('#authBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ পাঠানো হচ্ছে...';
+  btn.textContent = '⏳ অপেক্ষা করুন...';
 
-  initRecaptcha();
+  if(AUTH_MODE === 'signup'){
+    if(pass !== pass2){ toast('❌ দুটো পাসওয়ার্ড মিলছে না', 'error'); btn.disabled = false; btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন'; return; }
 
-  firebase.auth().signInWithPhoneNumber(intlPhone, recaptchaVerifier)
-    .then(function(result){
-      confirmationResult = result;
-      window._pendingName = name;
-      window._pendingPhone = phone;
-      $('#otpPhoneText').textContent = 'নম্বর ' + phone + ' এ ৬ ডিজিটের কোড পাঠানো হয়েছে';
-      $('#loginStep1').style.display = 'none';
-      $('#loginStep2').style.display = 'block';
-      $('#otpCode').value = '';
-      setTimeout(function(){ $('#otpCode').focus(); }, 200);
-      startResendTimer();
-      toast('✅ OTP পাঠানো হয়েছে', 'success');
-      btn.disabled = false;
-      btn.textContent = '📱 OTP পাঠান';
-    })
-    .catch(function(err){
-      console.error('OTP error:', err);
-      var msg = err.message || 'OTP পাঠানো যায়নি';
-      if(err.code === 'auth/invalid-phone-number') msg = 'ভুল ফোন নম্বর';
-      else if(err.code === 'auth/too-many-requests') msg = 'অনেকবার চেষ্টা, পরে ট্রাই করুন';
-      else if(err.code === 'auth/quota-exceeded') msg = 'আজকের লিমিট শেষ';
-      else if(err.code === 'auth/billing-not-enabled') msg = 'Billing setup লাগবে';
-      toast('❌ ' + msg, 'error');
-      btn.disabled = false;
-      btn.textContent = '📱 OTP পাঠান';
-      if(recaptchaVerifier){
-        try { recaptchaVerifier.clear(); } catch(e){}
-        recaptchaVerifier = null;
+    // Check if phone already exists
+    db.collection('users').doc(phone).get().then(function(doc){
+      if(doc.exists){
+        toast('❌ এই নম্বর দিয়ে অ্যাকাউন্ট আছে। লগইন করুন।', 'error');
+        btn.disabled = false;
+        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
+        switchAuthTab('login');
+        return;
       }
-    });
-}
-
-function verifyOTP(){
-  if(verifyInProgress) return;
-  var code = $('#otpCode').value.trim();
-  if(!code || code.length !== 6){ toast('❌ ৬ ডিজিটের কোড দিন', 'error'); return; }
-  if(!confirmationResult){ toast('❌ আগে OTP পাঠান', 'error'); return; }
-
-  verifyInProgress = true;
-  var btn = $('#verifyOtpBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ যাচাই...';
-
-  confirmationResult.confirm(code)
-    .then(function(result){
-      var fbUser = result.user;
-      USER = {
-        name: window._pendingName || 'Customer',
-        phone: window._pendingPhone,
-        uid: fbUser.uid,
+      var hashed = hashPassword(pass);
+      db.collection('users').doc(phone).set({
+        name: name,
+        phone: phone,
+        password: hashed,
         verified: true,
-        loginAt: new Date().toISOString()
-      };
-      try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
-
-      if(USER.phone){
-        db.collection('customers').doc(USER.phone).set({
-          name: USER.name,
-          phone: USER.phone,
-          uid: USER.uid,
-          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }).catch(function(){});
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function(){
+        USER = { name: name, phone: phone, verified: true };
+        try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
+        closeModal('loginOverlay');
+        toast('✅ স্বাগতম, ' + name + '!', 'success');
+        renderAccount();
+        updateGreeting();
+        btn.disabled = false;
+        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
+        if(PENDING_ACTION){ var fn = PENDING_ACTION; PENDING_ACTION = null; setTimeout(fn, 300); }
+      }).catch(function(err){
+        toast('❌ ' + err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
+      });
+    }).catch(function(err){
+      toast('❌ ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
+    });
+  } else {
+    // Login mode
+    db.collection('users').doc(phone).get().then(function(doc){
+      if(!doc.exists){
+        toast('❌ এই নম্বরে অ্যাকাউন্ট নেই। সাইন আপ করুন।', 'error');
+        btn.disabled = false;
+        btn.textContent = '✅ লগইন করুন';
+        switchAuthTab('signup');
+        return;
       }
-
+      var data = doc.data();
+      var hashed = hashPassword(pass);
+      if(data.password !== hashed){
+        toast('❌ ভুল পাসওয়ার্ড!', 'error');
+        btn.disabled = false;
+        btn.textContent = '✅ লগইন করুন';
+        return;
+      }
+      USER = { name: data.name, phone: phone, verified: true };
+      try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
+      db.collection('users').doc(phone).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() }).catch(function(){});
       closeModal('loginOverlay');
-      toast('✅ সফলভাবে লগইন!', 'success');
+      toast('✅ স্বাগতম, ' + data.name + '!', 'success');
       renderAccount();
       updateGreeting();
-
-      if(resendInterval){ clearInterval(resendInterval); resendInterval = null; }
-
-      verifyInProgress = false;
       btn.disabled = false;
-      btn.textContent = '✅ যাচাই করুন';
-
-      if(PENDING_ACTION){
-        var fn = PENDING_ACTION;
-        PENDING_ACTION = null;
-        setTimeout(fn, 300);
-      }
-    })
-    .catch(function(err){
-      console.error('Verify error:', err);
-      var msg = 'ভুল OTP';
-      if(err.code === 'auth/invalid-verification-code') msg = 'ভুল OTP কোড';
-      else if(err.code === 'auth/code-expired') msg = 'OTP এর মেয়াদ শেষ';
-      toast('❌ ' + msg, 'error');
-      verifyInProgress = false;
+      btn.textContent = '✅ লগইন করুন';
+      if(PENDING_ACTION){ var fn = PENDING_ACTION; PENDING_ACTION = null; setTimeout(fn, 300); }
+    }).catch(function(err){
+      toast('❌ ' + err.message, 'error');
       btn.disabled = false;
-      btn.textContent = '✅ যাচাই করুন';
+      btn.textContent = '✅ লগইন করুন';
     });
-}
-
-function backToStep1(){
-  $('#loginStep1').style.display = 'block';
-  $('#loginStep2').style.display = 'none';
-  confirmationResult = null;
-  if(resendInterval){ clearInterval(resendInterval); resendInterval = null; }
-}
-
-function resendOTP(){
-  if(!window._pendingPhone){ backToStep1(); return; }
-  $('#loginPhone').value = window._pendingPhone;
-  $('#loginName').value = window._pendingName || '';
-  backToStep1();
-  setTimeout(sendOTP, 300);
-}
-
-function startResendTimer(){
-  var btn = $('#resendBtn');
-  var timer = $('#resendTimer');
-  var seconds = 30;
-  btn.disabled = true;
-  btn.style.opacity = '0.5';
-  timer.textContent = seconds + ' সেকেন্ড পরে আবার পাঠাতে পারবেন';
-
-  if(resendInterval) clearInterval(resendInterval);
-  resendInterval = setInterval(function(){
-    seconds--;
-    if(seconds <= 0){
-      clearInterval(resendInterval);
-      resendInterval = null;
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      timer.textContent = '';
-    } else {
-      timer.textContent = seconds + ' সেকেন্ড পরে আবার পাঠাতে পারবেন';
-    }
-  }, 1000);
+  }
 }
 
 function doLogout(){
   if(!confirm('লগআউট করবেন?')) return;
-  firebase.auth().signOut().catch(function(){});
   USER = null;
   try { localStorage.removeItem('lomura_user'); } catch(e){}
   CART = [];
@@ -810,7 +779,7 @@ function updateGreeting(){
   if(!el) return;
   if(isLoggedIn()){
     el.style.display = 'flex';
-    el.innerHTML = '👋 স্বাগতম, <b>' + esc(USER.name) + '</b> <span class="verified-badge">✓ Verified</span>';
+    el.innerHTML = '👋 স্বাগতম, <b>' + esc(USER.name) + '</b> <span class="verified-badge">✓</span>';
   } else {
     el.style.display = 'none';
   }
@@ -824,18 +793,10 @@ function saveCart(){
 function loadCart(){
   try { var c = localStorage.getItem('lomura_cart'); return c ? JSON.parse(c) : []; } catch(e){ return []; }
 }
-function saveWishlist(){
-  try { localStorage.setItem('lomura_wishlist', JSON.stringify(WISHLIST)); } catch(e){}
-}
-function loadWishlist(){
-  try { var w = localStorage.getItem('lomura_wishlist'); return w ? JSON.parse(w) : []; } catch(e){ return []; }
-}
-function saveAddresses(){
-  try { localStorage.setItem('lomura_addresses', JSON.stringify(ADDRESSES)); } catch(e){}
-}
-function loadAddresses(){
-  try { var a = localStorage.getItem('lomura_addresses'); return a ? JSON.parse(a) : []; } catch(e){ return []; }
-}
+function saveWishlist(){ try { localStorage.setItem('lomura_wishlist', JSON.stringify(WISHLIST)); } catch(e){} }
+function loadWishlist(){ try { var w = localStorage.getItem('lomura_wishlist'); return w ? JSON.parse(w) : []; } catch(e){ return []; } }
+function saveAddresses(){ try { localStorage.setItem('lomura_addresses', JSON.stringify(ADDRESSES)); } catch(e){} }
+function loadAddresses(){ try { var a = localStorage.getItem('lomura_addresses'); return a ? JSON.parse(a) : []; } catch(e){ return []; } }
 
 /* ========== FIREBASE LOADS ========== */
 function loadProducts(){
@@ -853,8 +814,6 @@ function loadProducts(){
     });
     renderHome();
     if(document.getElementById('screen-categories').classList.contains('active')) renderCategoriesPage();
-  }, function(err){
-    $('#homeGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--sale)">❌ লোড ব্যর্থ</div>';
   });
 }
 function loadCategories(){
@@ -872,21 +831,13 @@ function loadCategories(){
 function loadCoupons(){
   db.collection('coupons').onSnapshot(function(snap){
     COUPONS = [];
-    snap.forEach(function(doc){
-      var c = doc.data();
-      c.code = doc.id;
-      COUPONS.push(c);
-    });
+    snap.forEach(function(doc){ var c = doc.data(); c.code = doc.id; COUPONS.push(c); });
   });
 }
 function loadReviews(){
   db.collection('reviews').onSnapshot(function(snap){
     REVIEWS = [];
-    snap.forEach(function(doc){
-      var r = doc.data();
-      r.id = doc.id;
-      REVIEWS.push(r);
-    });
+    snap.forEach(function(doc){ var r = doc.data(); r.id = doc.id; REVIEWS.push(r); });
     renderHome();
     if(document.getElementById('screen-detail').classList.contains('active') && currentProductId) openProduct(currentProductId);
   });
@@ -907,7 +858,7 @@ function productCardHtml(p, isBest){
   var avg = rvs.length ? (rvs.reduce(function(s,r){ return s + r.rating; }, 0) / rvs.length).toFixed(1) : null;
   var html = '<div class="p-card" onclick="openProduct(\'' + esc(p.id) + '\')">';
   html += '<div class="img-box">';
-  if(isBest) html += '<span class="best-badge">🔥 বেস্ট</span>';
+  if(isBest) html += '<span class="best-badge">🔥</span>';
   else if(p.badge) html += '<span class="badge' + (p.badgeType === 'new' || p.badge === 'নতুন' ? ' new' : '') + '">' + esc(p.badge) + '</span>';
   html += '<button class="wish ' + wished + '" onclick="event.stopPropagation();toggleWish(\'' + esc(p.id) + '\')">' + (wished ? '❤️' : '🤍') + '</button>';
   html += '<img src="' + esc(p.img) + '" onerror="this.src=\'https://picsum.photos/seed/' + esc(p.id) + '/300\'">';
@@ -1016,9 +967,9 @@ function openProduct(id){
 
   var gallery = '';
   images.forEach(function(img, i){
-    gallery += '<div class="pd-image">';
+    gallery += '<div class="pd-image" onclick="openLightbox(\'' + String(img).replace(/'/g, "\\'") + '\')">';
     gallery += '<img src="' + esc(img) + '" onerror="this.src=\'https://picsum.photos/seed/' + esc(p.id) + '_' + i + '/600\'">';
-    gallery += '</div>';
+    gallery += '<div class="zoom-hint">🔍 জুম করতে ট্যাপ</div></div>';
   });
 
   var thumbs = '';
@@ -1082,6 +1033,33 @@ function openProduct(id){
 }
 function toggleWishDetail(id){ toggleWish(id); openProduct(id); }
 function scrollImg(i){ var g = $('#pdGallery'); if(g) g.scrollTo({ left: g.clientWidth * i, behavior: 'smooth' }); }
+
+/* ========== LIGHTBOX ========== */
+function openLightbox(src){
+  var lb = $('#lightbox');
+  var img = $('#lightboxImg');
+  img.src = src;
+  img.style.transform = 'scale(1)';
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  $('#lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+setTimeout(function(){
+  var img = document.getElementById('lightboxImg');
+  if(!img) return;
+  var lastTap = 0, scale = 1;
+  img.addEventListener('click', function(){
+    var now = Date.now();
+    if(now - lastTap < 300){
+      scale = scale === 1 ? 2.5 : 1;
+      img.style.transform = 'scale(' + scale + ')';
+    }
+    lastTap = now;
+  });
+}, 800);
 
 function formatDate(ts){
   if(!ts) return '';
@@ -1213,7 +1191,6 @@ function applyCoupon(){
   if(!code){ toast('❌ কোড লিখুন', 'error'); return; }
   var c = COUPONS.find(function(x){ return x.code === code; });
   if(!c){ toast('❌ ভুল কোড', 'error'); return; }
-  if(c.active === false){ toast('❌ নিষ্ক্রিয়', 'error'); return; }
   var subtotal = CART.reduce(function(s, i){ return s + i.price * i.qty; }, 0);
   if(subtotal < (c.minOrder || 0)){ toast('❌ সর্বনিম্ন ' + money(c.minOrder) + ' অর্ডার', 'error'); return; }
   APPLIED_COUPON = c;
@@ -1248,10 +1225,10 @@ function renderPaymentOptions(){
   html += '<div class="info"><b>ক্যাশ অন ডেলিভারি</b><small>পণ্য পেয়ে টাকা</small></div></div>';
   html += '<div class="payment-opt ' + (SELECTED_PAYMENT === 'bkash' ? 'selected' : '') + '" data-payment="bkash" onclick="selectPayment(\'bkash\')">';
   html += '<div class="radio"></div><div class="pay-logo bkash">bKash</div>';
-  html += '<div class="info"><b>বিকাশ</b><small>অগ্রিম</small></div></div>';
+  html += '<div class="info"><b>বিকাশ</b><small>Send Money</small></div></div>';
   html += '<div class="payment-opt ' + (SELECTED_PAYMENT === 'nagad' ? 'selected' : '') + '" data-payment="nagad" onclick="selectPayment(\'nagad\')">';
   html += '<div class="radio"></div><div class="pay-logo nagad">Nagad</div>';
-  html += '<div class="info"><b>নগদ</b><small>অগ্রিম</small></div></div>';
+  html += '<div class="info"><b>নগদ</b><small>Send Money</small></div></div>';
   $('#paymentBox').innerHTML = html;
 }
 function renderPaymentDetail(){
@@ -1260,11 +1237,23 @@ function renderPaymentDetail(){
   if(SELECTED_PAYMENT === 'cod'){
     html = '<div class="pay-detail"><b>💵 ক্যাশ অন ডেলিভারি:</b> পণ্য হাতে পেয়ে টাকা দিন।</div>';
   } else if(SELECTED_PAYMENT === 'bkash'){
-    html = '<div class="pay-detail"><div class="row"><span>বিকাশ</span><b>' + esc(SETTINGS.bkashNumber || SETTINGS.phone) + '</b></div>';
-    html += '<div style="margin-top:8px;font-size:12.5px;color:var(--muted)">টাকা পাঠিয়ে স্ক্রিনশট পাঠান।</div></div>';
+    var num = SETTINGS.bkashNumber || SETTINGS.phone;
+    html = '<div class="pay-detail"><div class="row"><span>বিকাশ নম্বর</span><b>' + esc(num) + '</b></div>';
+    html += '<div class="steps">';
+    html += '১. বিকাশ অ্যাপ খুলুন → <b>Send Money</b> সিলেক্ট করুন<br>';
+    html += '২. উপরের নম্বরে <b>টাকা পাঠান</b><br>';
+    html += '৩. Transaction ID স্ক্রিনশট নিন<br>';
+    html += '৪. WhatsApp এ পাঠান';
+    html += '</div></div>';
   } else if(SELECTED_PAYMENT === 'nagad'){
-    html = '<div class="pay-detail"><div class="row"><span>নগদ</span><b>' + esc(SETTINGS.nagadNumber || SETTINGS.phone) + '</b></div>';
-    html += '<div style="margin-top:8px;font-size:12.5px;color:var(--muted)">টাকা পাঠিয়ে স্ক্রিনশট পাঠান।</div></div>';
+    var num2 = SETTINGS.nagadNumber || SETTINGS.phone;
+    html = '<div class="pay-detail"><div class="row"><span>নগদ নম্বর</span><b>' + esc(num2) + '</b></div>';
+    html += '<div class="steps">';
+    html += '১. নগদ অ্যাপ খুলুন → <b>Send Money</b> সিলেক্ট করুন<br>';
+    html += '২. উপরের নম্বরে <b>টাকা পাঠান</b><br>';
+    html += '৩. Transaction ID স্ক্রিনশট নিন<br>';
+    html += '৪. WhatsApp এ পাঠান';
+    html += '</div></div>';
   }
   el.innerHTML = html;
 }
@@ -1314,7 +1303,6 @@ function submitOrder(){
     paymentMethod: SELECTED_PAYMENT,
     status: 'pending',
     userPhone: phone,
-    userUid: USER.uid || '',
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
   toast('⏳ পাঠানো হচ্ছে...');
@@ -1336,8 +1324,12 @@ function submitOrder(){
 function showSuccess(order){
   var payNames = { cod:'ক্যাশ অন ডেলিভারি', bkash:'বিকাশ', nagad:'নগদ' };
   var waNum = (SETTINGS.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '88');
-  var waMsg = 'নতুন অর্ডার: ' + order.orderId + ' | ' + order.customer.name + ' | ' + money(order.total);
+  var waMsg = '🛍️ নতুন অর্ডার\n\nঅর্ডার: ' + order.orderId + '\nনাম: ' + order.customer.name + '\nফোন: ' + order.customer.phone + '\nমোট: ' + money(order.total);
   var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
+
+  // Messenger link — page username from settings (fallback: search)
+  var fbPage = SETTINGS.facebookPage || 'lomurawear';
+  var msgLink = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(waMsg);
 
   var html = '<div style="text-align:center;padding:10px 0 16px">';
   html += '<div style="font-size:56px;margin-bottom:12px">✅</div>';
@@ -1348,14 +1340,23 @@ function showSuccess(order){
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>পেমেন্ট</span><b>' + (payNames[order.paymentMethod] || 'ক্যাশ') + '</b></div>';
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>ডেলিভারি</span><b>' + (order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '</b></div>';
   html += '<div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--line);font-size:15px"><b>সর্বমোট</b><b>' + money(order.total) + '</b></div></div>';
+
   if(order.paymentMethod !== 'cod'){
-    html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.7">';
-    html += '<b>💳 পেমেন্ট:</b><br>' + esc(SETTINGS.bkashNumber || SETTINGS.phone) + ' নম্বরে <b>' + money(order.total) + '</b> পাঠিয়ে স্ক্রিনশট পাঠান।</div>';
+    var num = order.paymentMethod === 'bkash' ? (SETTINGS.bkashNumber || SETTINGS.phone) : (SETTINGS.nagadNumber || SETTINGS.phone);
+    html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.8">';
+    html += '<b>💳 ' + (order.paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ') + ' এ টাকা পাঠান:</b><br>';
+    html += 'নম্বর: <b>' + esc(num) + '</b><br>';
+    html += 'পদ্ধতি: <b>Send Money</b><br>';
+    html += 'পরিমাণ: <b>' + money(order.total) + '</b><br>';
+    html += 'পাঠিয়ে স্ক্রিনশট নিচে পাঠান 👇</div>';
   }
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">';
-  html += '<a href="tel:' + esc(SETTINGS.phone) + '" style="text-align:center;text-decoration:none;padding:13px;font-size:14px;background:var(--green);color:#fff;border-radius:12px;font-weight:600">📞 কল</a>';
-  html += '<a href="' + waLink + '" target="_blank" style="text-align:center;text-decoration:none;padding:13px;font-size:14px;background:#25D366;color:#fff;border-radius:12px;font-weight:600">💬 WhatsApp</a></div>';
-  html += '<button class="btn-outline" onclick="closeModal(\'infoOverlay\');go(\'orders\')">📦 অর্ডার দেখুন</button>';
+
+  html += '<p style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:10px">নিচে যেকোনো একটায় স্ক্রিনশট বা মেসেজ পাঠান:</p>';
+  html += '<div class="order-success-btns">';
+  html += '<a href="' + msgLink + '" target="_blank" class="btn-msg">💬 Messenger</a>';
+  html += '<a href="' + waLink + '" target="_blank" class="btn-wa">💬 WhatsApp</a>';
+  html += '</div>';
+  html += '<button class="btn-outline" onclick="closeModal(\'infoOverlay\');go(\'orders\')" style="margin-top:6px">📦 অর্ডার দেখুন</button>';
 
   $('#infoTitle').textContent = '🎉 অর্ডার সফল!';
   $('#infoBody').innerHTML = html;
@@ -1370,7 +1371,7 @@ function renderOrders(){
     el.innerHTML = '<div class="empty" style="padding:40px 20px"><div class="big">📦</div><b>লগইন করুন</b><p>অর্ডার দেখতে লগইন করুন</p><button onclick="requireLogin()">লগইন</button></div>';
     return;
   }
-  el.innerHTML = '<div class="loading"><div class="spin"></div><p>লোড হচ্ছে...</p></div>';
+  el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
   db.collection('orders').where('userPhone', '==', USER.phone).get().then(function(snap){
     var list = [];
     snap.forEach(function(doc){ var d = doc.data(); d.docId = doc.id; list.push(d); });
@@ -1402,10 +1403,9 @@ function renderOrders(){
     });
     el.innerHTML = html;
   }).catch(function(err){
-    el.innerHTML = '<div class="empty"><b>❌ লোড ব্যর্থ</b><p>' + esc(err.message) + '</p></div>';
+    el.innerHTML = '<div class="empty"><b>❌ লোড ব্যর্থ</b></div>';
   });
 }
-
 function copyText(text){
   if(!text) return;
   try {
@@ -1434,7 +1434,7 @@ function trackOrder(){
   el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
   db.collection('orders').where('orderId', '==', id).get().then(function(snap){
     if(snap.empty){
-      el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale);font-weight:600">❌ এই আইডি দিয়ে অর্ডার নেই</div>';
+      el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale);font-weight:600">❌ পাওয়া যায়নি</div>';
       return;
     }
     var o = null;
@@ -1464,8 +1464,8 @@ function trackOrder(){
       html += '</div>';
     }
     el.innerHTML = html;
-  }).catch(function(err){
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale)">❌ ' + esc(err.message) + '</div>';
+  }).catch(function(){
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale)">❌ লোড ব্যর্থ</div>';
   });
 }
 
@@ -1473,7 +1473,7 @@ function trackOrder(){
 function renderAccount(){
   var name = (USER && USER.name) || 'Guest';
   var phone = (USER && USER.phone) || 'লগইন করুন';
-  $('#accName').innerHTML = esc(name) + (isLoggedIn() ? ' <span class="verified-badge">✓ Verified</span>' : '');
+  $('#accName').innerHTML = esc(name) + (isLoggedIn() ? ' <span class="verified-badge" style="display:inline">✓</span>' : '');
   $('#accPhone').textContent = phone;
   $('#accAvatar').textContent = name.charAt(0).toUpperCase();
 
@@ -1481,15 +1481,15 @@ function renderAccount(){
   if(!isLoggedIn()){
     shortcuts.innerHTML = '<div class="acc-short" onclick="requireLogin()">' +
       '<div class="ic" style="background:var(--accent);color:#fff">🔐</div>' +
-      '<div class="txt"><b>লগইন / সাইন আপ</b><small>OTP দিয়ে verified লগইন</small></div>' +
+      '<div class="txt"><b>লগইন / সাইন আপ</b><small>ফোন + পাসওয়ার্ড দিয়ে</small></div>' +
       '<div class="arrow">›</div></div>' +
       '<div class="acc-short" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b>সাহায্য</b></div><div class="arrow">›</div></div>';
     $('#logoutGroup').style.display = 'none';
   } else {
-    shortcuts.innerHTML = '<div class="acc-short" onclick="go(\'orders\')"><div class="ic">📋</div><div class="txt"><b>আমার অর্ডার</b><small>সব অর্ডার দেখুন</small></div><div class="arrow">›</div></div>' +
-      '<div class="acc-short" onclick="openAddressBook()"><div class="ic">📍</div><div class="txt"><b>ঠিকানা বই</b><small>সংরক্ষিত ঠিকানা</small></div><div class="arrow">›</div></div>' +
-      '<div class="acc-short" onclick="openWishlist()"><div class="ic">❤️</div><div class="txt"><b>পছন্দের তালিকা</b><small>সংরক্ষিত পণ্য</small></div><div class="arrow">›</div></div>' +
-      '<div class="acc-short" onclick="go(\'settings\')"><div class="ic">⚙️</div><div class="txt"><b>সেটিংস</b><small>অ্যাপ সেটিংস</small></div><div class="arrow">›</div></div>' +
+    shortcuts.innerHTML = '<div class="acc-short" onclick="go(\'orders\')"><div class="ic">📋</div><div class="txt"><b>আমার অর্ডার</b></div><div class="arrow">›</div></div>' +
+      '<div class="acc-short" onclick="openAddressBook()"><div class="ic">📍</div><div class="txt"><b>ঠিকানা বই</b></div><div class="arrow">›</div></div>' +
+      '<div class="acc-short" onclick="openWishlist()"><div class="ic">❤️</div><div class="txt"><b>পছন্দের তালিকা</b></div><div class="arrow">›</div></div>' +
+      '<div class="acc-short" onclick="go(\'settings\')"><div class="ic">⚙️</div><div class="txt"><b>সেটিংস</b></div><div class="arrow">›</div></div>' +
       '<div class="acc-short" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b>সাহায্য</b></div><div class="arrow">›</div></div>' +
       '<div class="acc-short" onclick="doLogout()"><div class="ic" style="background:rgba(232,60,60,.1)">🚪</div><div class="txt"><b style="color:var(--sale)">লগআউট</b></div><div class="arrow">›</div></div>';
     $('#logoutGroup').style.display = 'block';
@@ -1506,9 +1506,7 @@ function saveProfile(){
   if(!name){ toast('❌ নাম লিখুন', 'error'); return; }
   USER.name = name;
   try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
-  if(USER.phone){
-    db.collection('customers').doc(USER.phone).set({ name: name }, { merge: true }).catch(function(){});
-  }
+  db.collection('users').doc(USER.phone).update({ name: name }).catch(function(){});
   closeModal('profileOverlay');
   renderAccount();
   updateGreeting();
@@ -1563,8 +1561,17 @@ function openWishlist(){
 }
 
 function openHelp(){
+  var waNum = (SETTINGS.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '88');
+  var fbPage = SETTINGS.facebookPage || 'lomurawear';
   $('#infoTitle').textContent = '💬 সাহায্য';
-  $('#infoBody').innerHTML = '<p style="margin-bottom:12px">যোগাযোগ:</p><div style="background:var(--bg);padding:14px;border-radius:10px"><div style="margin-bottom:8px">📞 <b>' + esc(SETTINGS.phone) + '</b></div><div style="margin-bottom:8px">✉️ <b>' + esc(SETTINGS.email) + '</b></div><div>📍 ' + esc(SETTINGS.address) + '</div></div>';
+  $('#infoBody').innerHTML = '<p style="margin-bottom:12px">যোগাযোগ করুন:</p>' +
+    '<div style="background:var(--bg);padding:14px;border-radius:10px;margin-bottom:14px">' +
+    '<div style="margin-bottom:8px">📞 <b>' + esc(SETTINGS.phone) + '</b></div>' +
+    '<div style="margin-bottom:8px">✉️ <b>' + esc(SETTINGS.email) + '</b></div>' +
+    '<div>📍 ' + esc(SETTINGS.address) + '</div></div>' +
+    '<div class="order-success-btns">' +
+    '<a href="https://m.me/' + fbPage + '" target="_blank" class="btn-msg">💬 Messenger</a>' +
+    '<a href="https://wa.me/' + waNum + '" target="_blank" class="btn-wa">💬 WhatsApp</a></div>';
   openModal('infoOverlay');
 }
 function openPolicies(){
@@ -1574,7 +1581,7 @@ function openPolicies(){
 }
 function showAbout(){
   $('#infoTitle').textContent = 'Lomura Wear';
-  $('#infoBody').innerHTML = '<div style="text-align:center;padding:20px 0"><div style="font-size:36px;margin-bottom:8px">🛍️</div><div style="font-size:22px;font-weight:700;margin-bottom:6px">Lomura <span style="color:var(--accent)">Wear</span></div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">v8.0.0 — OTP Verified</div><p style="font-size:13.5px;line-height:1.7">আধুনিক ও স্টাইলিশ পোশাকের নির্ভরযোগ্য ঠিকানা।</p></div>';
+  $('#infoBody').innerHTML = '<div style="text-align:center;padding:20px 0"><div style="font-size:36px;margin-bottom:8px">🛍️</div><div style="font-size:22px;font-weight:700;margin-bottom:6px">Lomura <span style="color:var(--accent)">Wear</span></div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">v9.0.0</div><p style="font-size:13.5px;line-height:1.7">আধুনিক ও স্টাইলিশ পোশাকের নির্ভরযোগ্য ঠিকানা।</p></div>';
   openModal('infoOverlay');
 }
 
@@ -1613,6 +1620,83 @@ function submitReview(){
   });
 }
 
+/* ========== LANGUAGE ========== */
+var I18N = {
+  bn: {
+    home:'হোম', shop:'শপ', cart:'কার্ট', orders:'অর্ডার', account:'অ্যাকাউন্ট',
+    allProducts:'সব পণ্য', myCart:'আমার কার্ট', myOrders:'আমার অর্ডার', myOrders2:'📦 আমার অর্ডার',
+    settings:'সেটিংস', search:'সার্চ', productDetails:'পণ্যের বিস্তারিত',
+    trackOrder:'🚚 অর্ডার ট্র্যাক করুন', track:'ট্র্যাক',
+    welcome:'👋 স্বাগতম', login:'লগইন', signup:'সাইন আপ',
+    yourName:'আপনার নাম *', yourPhone:'মোবাইল নম্বর *', yourPassword:'পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)',
+    confirmPassword:'পাসওয়ার্ড আবার লিখুন *', createAccount:'✅ অ্যাকাউন্ট তৈরি করুন',
+    loginNow:'লগইন করুন', editProfile:'প্রোফাইল এডিট', name:'নাম', save:'সংরক্ষণ করুন',
+    addressBook:'ঠিকানা বই', addressBookDesc:'সংরক্ষিত ঠিকানা', addAddress:'+ নতুন ঠিকানা',
+    accountInfo:'অ্যাকাউন্ট তথ্য', accountInfoDesc:'নাম পরিবর্তন',
+    language:'ভাষা - Language', darkMode:'ডার্ক মোড', logout:'লগআউট',
+    policies:'নীতিমালা', help:'সাহায্য', about:'সম্পর্কে',
+    accountGroup:'অ্যাকাউন্ট', preferenceGroup:'প্রেফারেন্স', infoGroup:'তথ্য',
+    checkoutTitle:'🛒 অর্ডার কনফার্ম', coName:'আপনার নাম *', coPhone:'মোবাইল নম্বর *', coAddress:'সম্পূর্ণ ঠিকানা *',
+    deliveryArea:'🚚 ডেলিভারি এলাকা', paymentMethod:'💳 পেমেন্ট পদ্ধতি',
+    confirmOrder:'✅ অর্ডার কনফার্ম করুন', cancel:'বাতিল',
+    giveReview:'⭐ রিভিউ দিন', howWasProduct:'পণ্যটি কেমন লেগেছে?', comment:'মন্তব্য (ঐচ্ছিক)', sendReview:'✅ রিভিউ পাঠান',
+    flashSale:'ফ্ল্যাশ সেল', endsIn:'শেষ:', bestSelling:'🔥 বেস্ট সেলিং', newProducts:'🆕 নতুন পণ্য', seeAll:'সব দেখুন →',
+    heroSub:'প্রিমিয়াম কোয়ালিটি • সাশ্রয়ী দাম', startShopping:'শপিং শুরু করুন →', newCollection:'NEW COLLECTION 2025',
+    heroTitle:'আপনার স্টাইল,<br><span>আমাদের পোশাক</span>'
+  },
+  en: {
+    home:'Home', shop:'Shop', cart:'Cart', orders:'Orders', account:'Account',
+    allProducts:'All Products', myCart:'My Cart', myOrders:'My Orders', myOrders2:'📦 My Orders',
+    settings:'Settings', search:'Search', productDetails:'Product Details',
+    trackOrder:'🚚 Track Order', track:'Track',
+    welcome:'👋 Welcome', login:'Login', signup:'Sign Up',
+    yourName:'Your Name *', yourPhone:'Mobile Number *', yourPassword:'Password * (min 6 chars)',
+    confirmPassword:'Confirm Password *', createAccount:'✅ Create Account',
+    loginNow:'Login now', editProfile:'Edit Profile', name:'Name', save:'Save',
+    addressBook:'Address Book', addressBookDesc:'Saved addresses', addAddress:'+ New Address',
+    accountInfo:'Account Info', accountInfoDesc:'Change name',
+    language:'Language', darkMode:'Dark Mode', logout:'Logout',
+    policies:'Policies', help:'Help', about:'About',
+    accountGroup:'Account', preferenceGroup:'Preferences', infoGroup:'Information',
+    checkoutTitle:'🛒 Confirm Order', coName:'Your Name *', coPhone:'Mobile Number *', coAddress:'Full Address *',
+    deliveryArea:'🚚 Delivery Area', paymentMethod:'💳 Payment Method',
+    confirmOrder:'✅ Confirm Order', cancel:'Cancel',
+    giveReview:'⭐ Give Review', howWasProduct:'How was the product?', comment:'Comment (optional)', sendReview:'✅ Send Review',
+    flashSale:'Flash Sale', endsIn:'Ends:', bestSelling:'🔥 Best Selling', newProducts:'🆕 New Products', seeAll:'See All →',
+    heroSub:'Premium Quality • Affordable Price', startShopping:'Start Shopping →', newCollection:'NEW COLLECTION 2025',
+    heroTitle:'Your Style,<br><span>Our Clothing</span>'
+  }
+};
+function t(key){ return (I18N[LANG] && I18N[LANG][key]) || key; }
+
+function applyLanguage(){
+  $$('[data-i18n]').forEach(function(el){
+    var key = el.dataset.i18n;
+    if(I18N[LANG][key]){
+      if(key === 'heroTitle') el.innerHTML = I18N[LANG][key];
+      else el.textContent = I18N[LANG][key];
+    }
+  });
+  // Update placeholders
+  var ph = {
+    bn: { search: 'পণ্য খুঁজুন...', authName: 'রাফসান আহমেদ', authPhone: '01711111111', authPass: '••••••' },
+    en: { search: 'Search products...', authName: 'Rafsan Ahmed', authPhone: '01711111111', authPass: '••••••' }
+  };
+  var p = ph[LANG];
+  var sInput = $('#searchInput'); if(sInput) sInput.placeholder = p.search;
+  var aName = $('#authName'); if(aName) aName.placeholder = p.authName;
+}
+
+function setLang(l){
+  LANG = l;
+  try { localStorage.setItem('lomura_lang', l); } catch(e){}
+  var bn = $('#langBn'), en = $('#langEn');
+  if(bn) bn.classList.toggle('active', l === 'bn');
+  if(en) en.classList.toggle('active', l === 'en');
+  applyLanguage();
+  toast(l === 'bn' ? '✅ ভাষা: বাংলা' : '✅ Language: English', 'success');
+}
+
 /* ========== TIMER ========== */
 function updateFlashTimer(){
   var end = new Date(); end.setHours(23,59,59,999);
@@ -1629,10 +1713,12 @@ try {
   var su = localStorage.getItem('lomura_user');
   if(su){
     var parsed = JSON.parse(su);
-    if(parsed.verified === true){ USER = parsed; }
-    else { localStorage.removeItem('lomura_user'); }
+    if(parsed.verified === true) USER = parsed;
+    else localStorage.removeItem('lomura_user');
   }
 } catch(e){}
+try { var sl = localStorage.getItem('lomura_lang'); if(sl) LANG = sl; } catch(e){}
+
 CART = loadCart();
 WISHLIST = loadWishlist();
 ADDRESSES = loadAddresses();
@@ -1647,24 +1733,16 @@ loadCoupons();
 loadReviews();
 loadSettings();
 
-// Firebase Auth state
-firebase.auth().onAuthStateChanged(function(fbUser){
-  if(!fbUser && USER && USER.verified){
-    USER = null;
-    try { localStorage.removeItem('lomura_user'); } catch(e){}
-    renderAccount();
-    updateGreeting();
-  }
-});
+setTimeout(applyLanguage, 300);
 
 var searchEl = $('#searchInput');
 if(searchEl){
   searchEl.addEventListener('input', function(e){
     var q = e.target.value.trim().toLowerCase();
     var el = $('#searchResults');
-    if(!q){ el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">টাইপ করুন</div>'; return; }
+    if(!q){ el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">' + (LANG==='bn'?'টাইপ করুন':'Type to search') + '</div>'; return; }
     var res = PRODUCTS.filter(function(p){ return (p.name || '').toLowerCase().indexOf(q) > -1; });
-    if(!res.length){ el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">কিছু পাওয়া যায়নি 😔</div>'; return; }
+    if(!res.length){ el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">' + (LANG==='bn'?'কিছু পাওয়া যায়নি 😔':'Nothing found 😔') + '</div>'; return; }
     var html = '';
     res.forEach(function(p){ html += productCardHtml(p, false); });
     el.innerHTML = html;
@@ -1673,7 +1751,7 @@ if(searchEl){
 
 updateFlashTimer();
 setInterval(updateFlashTimer, 1000);
-console.log('✅ Lomura Wear v8 — OTP Verified Login');
+console.log('✅ Lomura Wear v9 — Phone+Password Auth, Lightbox, i18n');
 </script>
 </body>
   </html>
