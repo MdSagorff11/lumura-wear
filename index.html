@@ -465,38 +465,6 @@ a{color:inherit;text-decoration:none}
 </nav>
 </div>
 
-<!-- LOGIN MODAL (Phone + Password) -->
-<div class="overlay" id="loginOverlay">
-  <div class="modal">
-    <div class="modal-head"><h3 data-i18n="welcome">👋 স্বাগতম</h3><button class="modal-close" onclick="closeModal('loginOverlay')">×</button></div>
-    <div style="text-align:center;padding:8px 0 20px">
-     <img src="logo.png" alt="Lomura Wear" style="width:100px;height:100px;object-fit:contain;margin:0 auto 10px;display:block">
-      <p style="font-size:13.5px;color:var(--muted)" id="loginSubtitle">নতুন অ্যাকাউন্ট তৈরি করুন বা লগইন করুন</p>
-    </div>
-
-    <div class="tab-switch">
-      <button id="tabLogin" class="active" onclick="switchAuthTab('login')" data-i18n="login">লগইন</button>
-      <button id="tabSignup" onclick="switchAuthTab('signup')" data-i18n="signup">সাইন আপ</button>
-    </div>
-
-    <div class="form-field"><label data-i18n="yourName">আপনার নাম *</label><input type="text" id="authName" placeholder="রাফসান আহমেদ"></div>
-    <div class="form-field"><label data-i18n="yourPhone">মোবাইল নম্বর *</label><input type="tel" id="authPhone" placeholder="01711111111" maxlength="11"></div>
-    <div class="form-field"><label data-i18n="yourPassword">পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)</label><input type="password" id="authPassword" placeholder="••••••"></div>
-    <div class="form-field" id="confirmPassField" style="display:none"><label data-i18n="confirmPassword">পাসওয়ার্ড আবার লিখুন *</label><input type="password" id="authPassword2" placeholder="••••••"></div>
-
-    <button class="btn-primary" id="authBtn" onclick="doAuth()" data-i18n="createAccount">✅ অ্যাকাউন্ট তৈরি করুন</button>
-
-    <div style="text-align:center;margin-top:14px;font-size:12.5px;color:var(--muted)">
-      <span id="authSwitchText">আগে থেকেই অ্যাকাউন্ট আছে?</span>
-      <button onclick="toggleAuthMode()" style="color:var(--accent-d);font-weight:700;background:none;border:none;cursor:pointer" id="authSwitchBtn">লগইন করুন</button>
-    </div>
-
-    <div style="background:var(--bg);border-radius:10px;padding:12px;margin-top:16px;font-size:11.5px;color:var(--muted);line-height:1.6">
-      🔒 আপনার তথ্য সুরক্ষিত। পাসওয়ার্ড এনক্রিপ্টেড আকারে সংরক্ষিত।
-    </div>
-  </div>
-</div>
-
 <!-- PROFILE MODAL -->
 <div class="overlay" id="profileOverlay">
   <div class="modal">
@@ -577,7 +545,10 @@ var PRODUCTS = [];
 var CATEGORIES = [];
 var COUPONS = [];
 var REVIEWS = [];
-var SETTINGS = { phone:'01700000000', email:'', address:'', facebookPage:'lomurawear', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'' };
+var SETTINGS = { 
+  phone:'01700000000', email:'', address:'', facebookPage:'lomurawear', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'',
+  returnPolicy: 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।'
+};
 var CART = [];
 var WISHLIST = [];
 var ADDRESSES = [];
@@ -591,7 +562,6 @@ var CURRENT_RATING = 5;
 var SELECTED_DELIVERY = 'inside';
 var SELECTED_PAYMENT = 'cod';
 var PENDING_ACTION = null;
-var AUTH_MODE = 'signup';
 
 function $(s){ return document.querySelector(s); }
 function $$(s){ return document.querySelectorAll(s); }
@@ -634,134 +604,12 @@ function go(screen){
   window.scrollTo(0, 0);
 }
 
-/* ========== AUTH (Phone + Password) ========== */
+/* ========== AUTH (Redirects to auth.html) ========== */
 function isLoggedIn(){ return USER && USER.name && USER.phone && USER.verified; }
-
-function switchAuthTab(mode){
-  AUTH_MODE = mode;
-  $('#tabLogin').classList.toggle('active', mode === 'login');
-  $('#tabSignup').classList.toggle('active', mode === 'signup');
-  $('#confirmPassField').style.display = mode === 'signup' ? 'block' : 'none';
-  $('#authBtn').textContent = mode === 'signup' ? '✅ অ্যাকাউন্ট তৈরি করুন' : '✅ লগইন করুন';
-  $('#authSwitchText').textContent = mode === 'signup' ? 'আগে থেকেই অ্যাকাউন্ট আছে?' : 'নতুন গ্রাহক?';
-  $('#authSwitchBtn').textContent = mode === 'signup' ? 'লগইন করুন' : 'সাইন আপ করুন';
-  $('#loginSubtitle').textContent = mode === 'signup' ? 'নতুন অ্যাকাউন্ট তৈরি করুন' : 'আপনার অ্যাকাউন্টে লগইন করুন';
-}
-function toggleAuthMode(){ switchAuthTab(AUTH_MODE === 'signup' ? 'login' : 'signup'); }
-
-function hashPassword(pw){
-  // Simple hash for demo — real production should use bcrypt on server
-  var hash = 0;
-  for(var i = 0; i < pw.length; i++){
-    var char = pw.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return 'h' + Math.abs(hash).toString(36) + '_' + pw.length;
-}
 
 function requireLogin(cb){
   if(isLoggedIn()){ if(cb) cb(); return; }
-  PENDING_ACTION = cb;
-  $('#authName').value = '';
-  $('#authPhone').value = '';
-  $('#authPassword').value = '';
-  $('#authPassword2').value = '';
-  switchAuthTab('signup');
-  openModal('loginOverlay');
-}
-
-function doAuth(){
-  var name = $('#authName').value.trim();
-  var phone = $('#authPhone').value.trim();
-  var pass = $('#authPassword').value;
-  var pass2 = $('#authPassword2').value;
-
-  if(!name || name.length < 2){ toast('❌ সঠিক নাম লিখুন', 'error'); return; }
-  if(!phone || phone.length !== 11 || phone[0] !== '0'){ 
-    toast('❌ সঠিক ১১ ডিজিটের নম্বর দিন (০ দিয়ে শুরু)', 'error'); 
-    return; 
-  }
-  if(!pass || pass.length < 6){ toast('❌ পাসওয়ার্ড কমপক্ষে ৬ অক্ষর', 'error'); return; }
-
-  var btn = $('#authBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ অপেক্ষা করুন...';
-
-  if(AUTH_MODE === 'signup'){
-    if(pass !== pass2){ toast('❌ দুটো পাসওয়ার্ড মিলছে না', 'error'); btn.disabled = false; btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন'; return; }
-
-    // Check if phone already exists
-    db.collection('users').doc(phone).get().then(function(doc){
-      if(doc.exists){
-        toast('❌ এই নম্বর দিয়ে অ্যাকাউন্ট আছে। লগইন করুন।', 'error');
-        btn.disabled = false;
-        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
-        switchAuthTab('login');
-        return;
-      }
-      var hashed = hashPassword(pass);
-      db.collection('users').doc(phone).set({
-        name: name,
-        phone: phone,
-        password: hashed,
-        verified: true,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(function(){
-        USER = { name: name, phone: phone, verified: true };
-        try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
-        closeModal('loginOverlay');
-        toast('✅ স্বাগতম, ' + name + '!', 'success');
-        renderAccount();
-        updateGreeting();
-        btn.disabled = false;
-        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
-        if(PENDING_ACTION){ var fn = PENDING_ACTION; PENDING_ACTION = null; setTimeout(fn, 300); }
-      }).catch(function(err){
-        toast('❌ ' + err.message, 'error');
-        btn.disabled = false;
-        btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
-      });
-    }).catch(function(err){
-      toast('❌ ' + err.message, 'error');
-      btn.disabled = false;
-      btn.textContent = '✅ অ্যাকাউন্ট তৈরি করুন';
-    });
-  } else {
-    // Login mode
-    db.collection('users').doc(phone).get().then(function(doc){
-      if(!doc.exists){
-        toast('❌ এই নম্বরে অ্যাকাউন্ট নেই। সাইন আপ করুন।', 'error');
-        btn.disabled = false;
-        btn.textContent = '✅ লগইন করুন';
-        switchAuthTab('signup');
-        return;
-      }
-      var data = doc.data();
-      var hashed = hashPassword(pass);
-      if(data.password !== hashed){
-        toast('❌ ভুল পাসওয়ার্ড!', 'error');
-        btn.disabled = false;
-        btn.textContent = '✅ লগইন করুন';
-        return;
-      }
-      USER = { name: data.name, phone: phone, verified: true };
-      try { localStorage.setItem('lomura_user', JSON.stringify(USER)); } catch(e){}
-      db.collection('users').doc(phone).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() }).catch(function(){});
-      closeModal('loginOverlay');
-      toast('✅ স্বাগতম, ' + data.name + '!', 'success');
-      renderAccount();
-      updateGreeting();
-      btn.disabled = false;
-      btn.textContent = '✅ লগইন করুন';
-      if(PENDING_ACTION){ var fn = PENDING_ACTION; PENDING_ACTION = null; setTimeout(fn, 300); }
-    }).catch(function(err){
-      toast('❌ ' + err.message, 'error');
-      btn.disabled = false;
-      btn.textContent = '✅ লগইন করুন';
-    });
-  }
+  window.location.href = 'auth.html';
 }
 
 function doLogout(){
@@ -772,8 +620,8 @@ function doLogout(){
   saveCart();
   renderAccount();
   updateGreeting();
-  go('home');
   toast('লগআউট');
+  setTimeout(function(){ window.location.href = 'auth.html'; }, 800);
 }
 
 function updateGreeting(){
@@ -1237,7 +1085,12 @@ function renderPaymentDetail(){
   var el = $('#paymentDetail');
   var html = '';
   if(SELECTED_PAYMENT === 'cod'){
-    html = '<div class="pay-detail"><b>💵 ক্যাশ অন ডেলিভারি:</b> পণ্য হাতে পেয়ে টাকা দিন।</div>';
+    var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
+    html = '<div class="pay-detail">';
+    html += '<b>💵 ক্যাশ অন ডেলিভারি:</b> পণ্য হাতে পেয়ে টাকা দিন।<br><br>';
+    html += '<div style="background:rgba(232,60,60,.1);padding:10px;border-radius:8px;border-left:3px solid var(--sale);font-size:12.5px;color:var(--sale);margin-top:8px;line-height:1.6">';
+    html += '<b>⚠️ রিটার্ন পলিসি:</b> ' + rp.replace(/\n/g, '<br>');
+    html += '</div></div>';
   } else if(SELECTED_PAYMENT === 'bkash'){
     var num = SETTINGS.bkashNumber || SETTINGS.phone;
     html = '<div class="pay-detail"><div class="row"><span>বিকাশ নম্বর</span><b>' + esc(num) + '</b></div>';
@@ -1329,7 +1182,6 @@ function showSuccess(order){
   var waMsg = '🛍️ নতুন অর্ডার\n\nঅর্ডার: ' + order.orderId + '\nনাম: ' + order.customer.name + '\nফোন: ' + order.customer.phone + '\nমোট: ' + money(order.total);
   var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
 
-  // Messenger link — page username from settings (fallback: search)
   var fbPage = SETTINGS.facebookPage || 'lomurawear';
   var msgLink = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(waMsg);
 
@@ -1343,7 +1195,12 @@ function showSuccess(order){
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>ডেলিভারি</span><b>' + (order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '</b></div>';
   html += '<div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--line);font-size:15px"><b>সর্বমোট</b><b>' + money(order.total) + '</b></div></div>';
 
-  if(order.paymentMethod !== 'cod'){
+  if(order.paymentMethod === 'cod'){
+    var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
+    html += '<div style="background:rgba(232,60,60,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:var(--sale);line-height:1.8">';
+    html += '<b>⚠️ রিটার্ন পলিসি:</b> ' + rp.replace(/\n/g, '<br>');
+    html += '</div>';
+  } else if(order.paymentMethod !== 'cod'){
     var num = order.paymentMethod === 'bkash' ? (SETTINGS.bkashNumber || SETTINGS.phone) : (SETTINGS.nagadNumber || SETTINGS.phone);
     html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.8">';
     html += '<b>💳 ' + (order.paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ') + ' এ টাকা পাঠান:</b><br>';
@@ -1481,7 +1338,7 @@ function renderAccount(){
 
   var shortcuts = $('#accShortcuts');
   if(!isLoggedIn()){
-    shortcuts.innerHTML = '<div class="acc-short" onclick="requireLogin()">' +
+    shortcuts.innerHTML = '<div class="acc-short" onclick="window.location.href=\'auth.html\'">' +
       '<div class="ic" style="background:var(--accent);color:#fff">🔐</div>' +
       '<div class="txt"><b>লগইন / সাইন আপ</b><small>ফোন + পাসওয়ার্ড দিয়ে</small></div>' +
       '<div class="arrow">›</div></div>' +
@@ -1577,8 +1434,15 @@ function openHelp(){
   openModal('infoOverlay');
 }
 function openPolicies(){
+  var rp = SETTINGS.returnPolicy || '১. ক্যাশ অন ডেলিভারিতে পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) কাস্টমারকে ডেলিভারি ম্যানকে দিতে হবে।<br><br>২. যদি আমাদের ভুলে ভুল প্রোডাক্ট, ভাঙা বা ড্যামেজ প্রোডাক্ট যায়, তাহলে রিটার্নের সম্পূর্ণ দায় Lomura Wear এর। সেক্ষেত্রে কাস্টমারকে কোনো টাকা দিতে হবে না।<br><br>৩. পণ্য পছন্দ না হলে ৭ দিনের মধ্যে রিটার্ন করা যাবে (শুধুমাত্র ডেলিভারি চার্জ কাস্টমার বহন করবে)।';
+  
   $('#infoTitle').textContent = '📄 নীতিমালা';
-  $('#infoBody').innerHTML = '<h4 style="margin-bottom:8px;font-size:14px">রিটার্ন পলিসি</h4><p style="margin-bottom:14px">৭ দিনের মধ্যে বিনামূল্যে বদল।</p><h4 style="margin-bottom:8px;font-size:14px">ডেলিভারি</h4><p style="margin-bottom:14px">ঢাকার ভিতরে ১০০৳ (২৪ ঘণ্টা), বাইরে ১২০৳ (২-৩ দিন)। ২০০০৳+ অর্ডারে ফ্রি।</p><h4 style="margin-bottom:8px;font-size:14px">প্রাইভেসি</h4><p>আপনার তথ্য সুরক্ষিত।</p>';
+  $('#infoBody').innerHTML = '<h4 style="margin-bottom:8px;font-size:14px">রিটার্ন ও রিফান্ড পলিসি</h4>' +
+    '<p style="margin-bottom:14px; line-height:1.8;">' + rp.replace(/\n/g, '<br>') + '</p>' +
+    '<h4 style="margin-bottom:8px;font-size:14px">ডেলিভারি</h4>' +
+    '<p style="margin-bottom:14px">ঢাকার ভিতরে ১০০৳ (২৪ ঘণ্টা), বাইরে ১২০৳ (২-৩ দিন)। ২০০০৳+ অর্ডারে ফ্রি।</p>' +
+    '<h4 style="margin-bottom:8px;font-size:14px">প্রাইভেসি</h4>' +
+    '<p>আপনার তথ্য সুরক্ষিত।</p>';
   openModal('infoOverlay');
 }
 function showAbout(){
@@ -1679,14 +1543,12 @@ function applyLanguage(){
       else el.textContent = I18N[LANG][key];
     }
   });
-  // Update placeholders
   var ph = {
-    bn: { search: 'পণ্য খুঁজুন...', authName: 'রাফসান আহমেদ', authPhone: '01711111111', authPass: '••••••' },
-    en: { search: 'Search products...', authName: 'Rafsan Ahmed', authPhone: '01711111111', authPass: '••••••' }
+    bn: { search: 'পণ্য খুঁজুন...' },
+    en: { search: 'Search products...' }
   };
   var p = ph[LANG];
   var sInput = $('#searchInput'); if(sInput) sInput.placeholder = p.search;
-  var aName = $('#authName'); if(aName) aName.placeholder = p.authName;
 }
 
 function setLang(l){
@@ -1753,7 +1615,7 @@ if(searchEl){
 
 updateFlashTimer();
 setInterval(updateFlashTimer, 1000);
-console.log('✅ Lomura Wear v9 — Phone+Password Auth, Lightbox, i18n');
+console.log('✅ Lomura Wear v9 — Redirects to auth.html');
 </script>
 </body>
   </html>
