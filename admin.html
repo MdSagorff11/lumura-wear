@@ -435,6 +435,18 @@ tr:hover td{background:var(--bg)}
         </div>
       </div>
 
+      <!-- নতুন রিটার্ন পলিসি প্যানেল -->
+      <div class="panel">
+        <div class="panel-head"><h2>📄 রিটার্ন পলিসি</h2></div>
+        <div class="panel-body" style="padding:24px">
+          <div class="form-group">
+            <label>কাস্টমারের জন্য রিটার্ন পলিসি (ক্যাশ অন ডেলিভারি)</label>
+            <textarea id="setReturnPolicy" rows="4" placeholder="পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ..."></textarea>
+            <small>এখানে যা লিখবেন, তা কাস্টমার চেকআউট ও নীতিমালায় দেখতে পাবে।</small>
+          </div>
+        </div>
+      </div>
+
       <div class="panel">
         <div class="panel-head"><h2>💳 পেমেন্ট নম্বর</h2></div>
         <div class="panel-body" style="padding:24px">
@@ -589,18 +601,11 @@ var ORDERS = [];
 var REVIEWS = [];
 var CUSTOMERS = [];
 var SETTINGS = {
-  siteName:'Lomura Wear',
-  phone:'',
-  email:'',
-  address:'',
-  facebookPage:'61590750957468',
-  whatsApp:'',
-  freeShipLimit:2000,
-  dhakaInside:100,
-  dhakaOutside:120,
-  bkashNumber:'',
-  nagadNumber:'',
-  adminPassword:'admin123'
+  siteName:'Lomura Wear', phone:'', email:'', address:'',
+  facebookPage:'61590750957468', whatsApp:'',
+  freeShipLimit:2000, dhakaInside:100, dhakaOutside:120,
+  bkashNumber:'', nagadNumber:'', adminPassword:'admin123',
+  returnPolicy: 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।'
 };
 var currentOrderFilter = 'all';
 var pendingImages = [];
@@ -766,7 +771,7 @@ function loadCustomers(){
     CUSTOMERS = [];
     snap.forEach(function(doc){
       var u = doc.data();
-      u.uid = doc.id;
+      u.phone = doc.id;
       CUSTOMERS.push(u);
     });
     CUSTOMERS.sort(function(a, b){
@@ -782,9 +787,6 @@ function loadSettings(){
     if(doc.exists){
       var s = doc.data();
       for(var k in s){ SETTINGS[k] = s[k]; }
-    } else {
-      // First time — set defaults with Facebook ID
-      db.collection('settings').doc('main').set(SETTINGS).catch(function(){});
     }
   });
 }
@@ -1319,6 +1321,14 @@ function viewOrder(docId){
   body += '<p style="margin-bottom:6px"><b>পেমেন্ট:</b> ' + (payNames[o.paymentMethod] || 'ক্যাশ') + '</p>';
   body += '<p style="font-size:16px;font-weight:700;border-top:1px dashed var(--line);padding-top:8px;margin-top:8px"><b>সর্বমোট:</b> ' + money(o.total || 0) + '</p>';
   body += '</div>';
+  
+  if(o.paymentMethod === 'cod'){
+    var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
+    body += '<div style="background:rgba(232,60,60,.08);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12.5px;color:var(--sale);border:1px solid rgba(232,60,60,.2)">';
+    body += '<b>⚠️ রিটার্ন পলিসি (COD):</b><br>' + rp.replace(/\n/g, '<br>');
+    body += '</div>';
+  }
+
   body += '<div style="background:var(--bg);border-radius:12px;padding:16px;margin-bottom:14px;font-size:13.5px">';
   body += '<p><b>স্ট্যাটাস:</b> ' + (statusNames[o.status] || o.status) + '</p></div>';
   body += '<h3 style="font-size:14px;margin-bottom:8px">📦 পণ্যসমূহ</h3>';
@@ -1327,6 +1337,33 @@ function viewOrder(docId){
   $('#infoModalTitle').textContent = 'অর্ডার #' + o.orderId;
   $('#infoModalBody').innerHTML = body;
   openModal('infoModal');
+}
+
+// 🔑 অ্যাডমিন থেকে পাসওয়ার্ড রিসেট
+function resetCustomerPassword(phone, name) {
+  var newPass = prompt('🔑 ' + name + ' এর জন্য নতুন পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর):');
+  
+  if(!newPass) return;
+  if(newPass.length < 6) {
+    toast('❌ পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে!', 'error');
+    return;
+  }
+
+  var hash = 0;
+  for(var i = 0; i < newPass.length; i++){
+    var char = newPass.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  var hashedPass = 'h' + Math.abs(hash).toString(36) + '_' + newPass.length;
+
+  db.collection('users').doc(phone).update({ 
+    password: hashedPass 
+  }).then(function() {
+    toast('✅ পাসওয়ার্ড আপডেট হয়েছে! কাস্টমারকে নতুন পাসওয়ার্ডটি জানিয়ে দিন।', 'success');
+  }).catch(function(err) {
+    toast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
+  });
 }
 
 function renderCustomers(){
@@ -1348,6 +1385,7 @@ function renderCustomers(){
     if(c.phone){
       html += '<a class="icon-action" href="tel:' + esc(c.phone) + '" style="text-decoration:none">📞</a>';
       html += '<a class="icon-action" href="https://wa.me/' + esc(waNum) + '" target="_blank" style="text-decoration:none">💬</a>';
+      html += '<button class="icon-action" style="color:var(--accent-d)" onclick="resetCustomerPassword(\'' + esc(c.phone) + '\', \'' + esc(c.name) + '\')">🔑</button>';
     }
     html += '<button class="icon-action" onclick="copyText(\'' + esc(c.phone || '') + '\')">📋</button>';
     html += '</div></td></tr>';
@@ -1471,6 +1509,7 @@ function renderSettingsForm(){
   $('#setBkash').value = SETTINGS.bkashNumber || '';
   $('#setNagad').value = SETTINGS.nagadNumber || '';
   $('#setPassword').value = SETTINGS.adminPassword || 'admin123';
+  $('#setReturnPolicy').value = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
 }
 
 function saveAllSettings(){
@@ -1487,6 +1526,7 @@ function saveAllSettings(){
     bkashNumber: $('#setBkash').value.trim(),
     nagadNumber: $('#setNagad').value.trim(),
     adminPassword: $('#setPassword').value.trim() || 'admin123',
+    returnPolicy: $('#setReturnPolicy').value.trim(),
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
   toast('⏳ সংরক্ষণ হচ্ছে...');
@@ -1535,4 +1575,4 @@ checkAuth();
 console.log('✅ Admin Panel v2 — Facebook Page support');
 </script>
 </body>
-  </html>
+          </html>
