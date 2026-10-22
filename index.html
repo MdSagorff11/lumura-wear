@@ -25,10 +25,17 @@ a{color:inherit;text-decoration:none}
 .screen.active{display:block}
 .topbar{position:sticky;top:0;z-index:50;background:var(--white);padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
 .topbar .logo{font-size:22px;flex-shrink:0}
-.search-box{flex:1;background:var(--bg);border-radius:999px;padding:10px 14px;font-size:14px;color:var(--muted);cursor:pointer}
+.theme-btn{background:var(--bg);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
 .top-icon{width:38px;height:38px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:17px;position:relative;flex-shrink:0}
 .top-icon .dot{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--sale);border-radius:50%;border:1.5px solid var(--white)}
-.theme-btn{background:var(--bg);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+
+/* অ্যানিমেটেড সার্চ বার */
+.top-search-wrap { flex: 1; position: relative; height: 40px; margin: 0 10px; display: flex; align-items: center; justify-content: flex-end; }
+.top-search-wrap input { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); opacity: 0; transition: all 0.5s ease-in-out; padding: 0 45px 0 15px; color: var(--ink); font-size: 14px; z-index: 5; }
+.top-search-wrap input:focus { width: 100%; opacity: 1; border-radius: 999px; background: var(--white); border-color: var(--accent); box-shadow: 0 0 10px rgba(184, 137, 75, 0.2); }
+.top-search-wrap .search-icon-box { position: absolute; right: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 16px; z-index: 6; transition: all 0.5s; pointer-events: none; }
+.top-search-wrap input:focus ~ .search-icon-box { background: var(--accent); color: #fff; border-color: var(--accent); transform: rotate(90deg); }
+
 .page-head{position:sticky;top:0;z-index:50;background:var(--white);padding:14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
 .page-head h1{font-size:17px;font-weight:600;flex:1}
 .back-btn{width:38px;height:38px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:18px;flex-shrink:0}
@@ -228,201 +235,68 @@ a{color:inherit;text-decoration:none}
 [data-theme="dark"] .lang-toggle button.active{background:var(--accent);color:#fff}
 
 /* ========== NEW GLOWING NAVIGATION ========== */
-.navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 520px;
-  margin: 0 auto;
-  height: var(--nav-h);
-  background: var(--white);
-  border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-.navigation ul {
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-  position: relative;
-  margin-top: 0;
-}
-
-.navigation ul li {
-  list-style: none;
-  position: relative;
-  width: 20%;
-  height: var(--nav-h);
-  z-index: 2;
-}
-
-.navigation ul li a {
-  text-decoration: none;
-  color: var(--muted);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.navigation ul li a .icon {
-  position: relative;
-  display: block;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  line-height: 50px;
-  border-radius: 50%;
-  font-size: 22px;
-  transition: 0.4s;
-  transition-delay: 0s;
-  background: var(--white);
-}
-
-/* Cart badge inside new nav */
-.navigation ul li a .icon .cnt {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  background: var(--sale);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  padding: 0 4px;
-  border: 2px solid var(--white);
-}
-
-.navigation ul li a .label {
-  font-size: 11px;
-  font-weight: 600;
-  margin-top: 2px;
-  transition: 0.4s;
-}
-
-/* Indicator */
-.indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20%;
-  height: var(--nav-h);
-  display: flex;
-  justify-content: center;
-  transition: 0.4s ease-in-out;
-  z-index: 1;
-  pointer-events: none;
-}
-.indicator::before {
-  content: '';
-  position: absolute;
-  top: 5px;
-  width: 50px;
-  height: 50px;
-  background: var(--white);
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-/* Active states */
-.navigation ul li.active a .icon {
-  background: var(--clr);
-  color: #fff;
-  transform: translateY(-25px);
-  transition-delay: 0.2s;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-  line-height: 50px;
-}
-.navigation ul li.active a .label {
-  transform: translateY(-15px);
-  opacity: 0;
-}
-.navigation ul li.active a .icon::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: var(--clr);
-  border-radius: 50%;
-  filter: blur(15px);
-  opacity: 0.6;
-  z-index: -1;
-}
-
-/* Desktop Nav adjustments */
+.navigation { position: fixed; bottom: 0; left: 0; right: 0; max-width: 520px; margin: 0 auto; height: var(--nav-h); background: var(--white); border-top: 1px solid var(--line); display: flex; justify-content: center; align-items: center; z-index: 100; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.navigation ul { display: flex; width: 100%; justify-content: space-around; position: relative; margin-top: 0; }
+.navigation ul li { list-style: none; position: relative; width: 20%; height: var(--nav-h); z-index: 2; }
+.navigation ul li a { text-decoration: none; color: var(--muted); position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.navigation ul li a .icon { position: relative; display: block; width: 50px; height: 50px; text-align: center; line-height: 50px; border-radius: 50%; font-size: 22px; transition: 0.4s; transition-delay: 0s; background: var(--white); }
+.navigation ul li a .icon .cnt { position: absolute; top: -2px; right: -2px; background: var(--sale); color: #fff; font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--white); }
+.navigation ul li a .label { font-size: 11px; font-weight: 600; margin-top: 2px; transition: 0.4s; }
+.indicator { position: absolute; top: 0; left: 0; width: 20%; height: var(--nav-h); display: flex; justify-content: center; transition: 0.4s ease-in-out; z-index: 1; pointer-events: none; }
+.indicator::before { content: ''; position: absolute; top: 5px; width: 50px; height: 50px; background: var(--white); border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+.navigation ul li.active a .icon { background: var(--clr); color: #fff; transform: translateY(-25px); transition-delay: 0.2s; box-shadow: 0 10px 15px rgba(0,0,0,0.2); line-height: 50px; }
+.navigation ul li.active a .label { transform: translateY(-15px); opacity: 0; }
+.navigation ul li.active a .icon::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: var(--clr); border-radius: 50%; filter: blur(15px); opacity: 0.6; z-index: -1; }
 @media (min-width: 769px) {
-  .navigation {
-    bottom: 24px;
-    border-radius: 999px;
-    width: auto;
-    padding: 0 20px;
-    border: none;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    height: 64px;
-  }
-  [data-theme="dark"] .navigation {
-    background: rgba(26, 26, 26, 0.95);
-  }
-  [data-theme="dark"] .indicator::before {
-    background: var(--white);
-  }
-  .navigation ul li {
-    height: 64px;
-  }
-  .navigation ul li.active a .icon {
-    transform: translateY(-18px);
-  }
-  .navigation ul li.active a .label {
-    transform: translateY(-10px);
-  }
-  .indicator {
-    height: 64px;
-  }
-  .indicator::before {
-    top: 7px;
-  }
-  .app {
-    padding-bottom: 0;
-  }
+  .navigation { bottom: 24px; border-radius: 999px; width: auto; padding: 0 20px; border: none; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); height: 64px; }
+  [data-theme="dark"] .navigation { background: rgba(26, 26, 26, 0.95); }
+  [data-theme="dark"] .indicator::before { background: var(--white); }
+  .navigation ul li { height: 64px; }
+  .navigation ul li.active a .icon { transform: translateY(-18px); }
+  .navigation ul li.active a .label { transform: translateY(-10px); }
+  .indicator { height: 64px; }
+  .indicator::before { top: 7px; }
+  .app { padding-bottom: 0; }
 }
 /* ========================================= */
 
-.overlay{position:fixed;inset:0;background:rgba(15,15,15,.55);z-index:200;display:none;align-items:flex-end;justify-content:center}
-.overlay.show{display:flex}
-.modal{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:22px 20px 30px}
+.overlay{position:fixed;inset:0;background:rgba(15,15,15,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.show{display:flex;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:22px 20px 30px;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);box-shadow:0 -10px 40px rgba(0,0,0,0.1)}
+.overlay.show .modal{transform:translateY(0)}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .modal-head h3{font-size:18px;font-weight:700}
-.modal-close{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--muted);display:grid;place-items:center;font-size:18px;border:none}
-.form-field{margin-bottom:14px}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--muted);display:grid;place-items:center;font-size:18px;border:none;transition:0.3s}
+.modal-close:hover{background:var(--sale);color:#fff;transform:rotate(90deg)}
+.form-field{margin-bottom:16px}
 .form-field label{font-size:13px;font-weight:600;color:var(--ink2);display:block;margin-bottom:6px}
-.form-field input,.form-field textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;font-size:14.5px;background:var(--bg);color:var(--ink)}
-.form-field textarea{resize:vertical;min-height:70px;font-family:inherit}
-.btn-primary{width:100%;padding:15px;background:var(--ink);color:var(--white);border-radius:12px;font-weight:600;font-size:15px;border:none}
+.form-field input,.form-field textarea{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;background:var(--bg);color:var(--ink);transition:0.3s}
+.form-field textarea{resize:vertical;min-height:90px;font-family:inherit}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--accent);background:var(--white);box-shadow:0 0 0 4px rgba(184,137,75,0.1)}
+.btn-primary{width:100%;padding:15px;background:var(--ink);color:var(--white);border-radius:12px;font-weight:600;font-size:15px;border:none;transition:0.3s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2)}
 [data-theme="dark"] .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-.btn-outline{width:100%;padding:14px;background:transparent;border:1.5px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px;color:var(--ink2);margin-top:10px}
-.delivery-opt,.payment-opt{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:var(--white)}
+.btn-outline{width:100%;padding:14px;background:transparent;border:1.5px solid var(--line);border-radius:12px;font-weight:600;font-size:14.5px;color:var(--ink2);margin-top:10px;transition:0.3s}
+.btn-outline:hover{background:var(--bg)}
+
+/* নতুন ঠিকানা কার্ড ডিজাইন */
+.address-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;transition:all 0.3s ease;position:relative;overflow:hidden;animation:slideUp 0.4s ease-out}
+.address-card:hover{border-color:var(--accent);box-shadow:0 5px 15px rgba(184,137,75,0.1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.address-card .icon-box{width:40px;height:40px;border-radius:50%;background:rgba(184,137,75,0.1);display:grid;place-items:center;font-size:20px;flex-shrink:0;color:var(--accent-d)}
+.address-card .address-text{flex:1;font-size:14px;line-height:1.6;color:var(--ink2);padding-top:2px}
+.address-card .btn-delete{width:36px;height:36px;border-radius:10px;background:rgba(232,60,60,0.1);color:var(--sale);display:grid;place-items:center;border:none;flex-shrink:0;transition:0.3s}
+.address-card .btn-delete:hover{background:var(--sale);color:#fff;transform:scale(1.1)}
+
+.delivery-opt,.payment-opt{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:var(--white);transition:0.3s}
+.delivery-opt:hover,.payment-opt:hover{border-color:var(--accent)}
 .delivery-opt.selected,.payment-opt.selected{border-color:var(--accent);background:rgba(184,137,75,.06)}
-.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative;transition:0.3s}
 .delivery-opt.selected .radio,.payment-opt.selected .radio{border-color:var(--accent)}
-.delivery-opt.selected .radio::after,.payment-opt.selected .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+.delivery-opt.selected .radio::after,.payment-opt.selected .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent);animation:popIn 0.3s ease-out}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
 .delivery-opt .info,.payment-opt .info{flex:1}
 .delivery-opt .info b,.payment-opt .info b{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
 .delivery-opt .info small,.payment-opt .info small{font-size:11.5px;color:var(--muted)}
@@ -431,16 +305,17 @@ a{color:inherit;text-decoration:none}
 .pay-logo.cod{background:#6b7280;font-size:22px}
 .pay-logo.bkash{background:#e2136e}
 .pay-logo.nagad{background:#f6821f}
-.pay-detail{margin-top:12px;padding:14px;background:var(--bg);border-radius:12px;font-size:13px;line-height:1.7}
+.pay-detail{margin-top:12px;padding:14px;background:var(--bg);border-radius:12px;font-size:13px;line-height:1.7;border:1px solid var(--line)}
 .pay-detail .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
 .pay-detail .row:last-child{border-bottom:none}
 .pay-detail .row b{font-family:monospace;color:#96703a;font-size:14px}
 .pay-detail .steps{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.8}
 .pay-detail .steps b{color:var(--accent-d)}
 .star-input{display:flex;gap:6px;justify-content:center;margin:10px 0 18px}
-.star-input button{font-size:36px;color:var(--line);cursor:pointer;padding:4px;line-height:1;border:none;background:none}
-.star-input button.active{color:var(--gold)}
-.toast{position:fixed;bottom:calc(var(--nav-h) + 20px);left:50%;transform:translate(-50%,120px);background:var(--ink);color:var(--white);padding:12px 24px;border-radius:999px;font-size:13.5px;font-weight:500;z-index:600;opacity:0;transition:all .35s;max-width:88%;text-align:center}
+.star-input button{font-size:36px;color:var(--line);cursor:pointer;padding:4px;line-height:1;border:none;background:none;transition:0.2s}
+.star-input button:hover{transform:scale(1.2)}
+.star-input button.active{color:var(--gold);text-shadow:0 0 10px rgba(212,165,44,0.5)}
+.toast{position:fixed;bottom:calc(var(--nav-h) + 20px);left:50%;transform:translate(-50%,120px);background:var(--ink);color:var(--white);padding:12px 24px;border-radius:999px;font-size:13.5px;font-weight:500;z-index:600;opacity:0;transition:all .35s cubic-bezier(0.175, 0.885, 0.32, 1.275);max-width:88%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
 .toast.show{transform:translate(-50%,0);opacity:1}
 .toast.success{background:#166a36}
 .toast.error{background:var(--sale)}
@@ -449,11 +324,12 @@ a{color:inherit;text-decoration:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
 .lightbox.show{display:flex}
-.lightbox img{max-width:100%;max-height:90vh;object-fit:contain;user-select:none;border-radius:8px}
+.lightbox img{max-width:100%;max-height:90vh;object-fit:contain;user-select:none;border-radius:8px;transition:transform 0.3s ease-out}
 .lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;display:grid;place-items:center;font-size:24px;line-height:1;border:none;z-index:2}
 .lightbox-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:12px;background:rgba(255,255,255,.1);padding:6px 14px;border-radius:999px;white-space:nowrap}
 .order-success-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.order-success-btns a{text-align:center;text-decoration:none;padding:14px;font-size:14px;border-radius:12px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.order-success-btns a{text-align:center;text-decoration:none;padding:14px;font-size:14px;border-radius:12px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.3s}
+.order-success-btns a:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2)}
 .btn-msg{background:linear-gradient(135deg,#0084FF,#0064D2)}
 .btn-wa{background:#25D366}
 
@@ -480,14 +356,20 @@ a{color:inherit;text-decoration:none}
 <section class="screen active" id="screen-home">
   <div class="topbar">
     <div class="logo">Lomura <span>Wear</span></div>
-    <div class="search-box" onclick="go('search')">🔍 খুঁজুন...</div>
+    
+    <!-- নতুন অ্যানিমেটেড সার্চ বার -->
+    <div class="top-search-wrap">
+      <input type="text" id="topSearchInput" placeholder="খুঁজুন...">
+      <div class="search-icon-box">🔍</div>
+    </div>
+
     <button class="theme-btn" onclick="toggleTheme()">🌙</button>
     <button class="top-icon" onclick="go('cart')">🛒<span class="dot cart-dot" style="display:none"></span></button>
   </div>
   <div class="content">
     <div class="user-greeting" id="userGreeting" style="display:none"></div>
     <div class="hero"><div class="hero-inner">
-      <small data-i18n="newCollection">NEW COLLECTION 2025</small>
+      <small id="heroSmallText">NEW COLLECTION 2025</small>
       <h2 data-i18n="heroTitle">আপনার স্টাইল,<br><span>আমাদের পোশাক</span></h2>
       <p data-i18n="heroSub">প্রিমিয়াম কোয়ালিটি • সাশ্রয়ী দাম</p>
       <button onclick="go('categories')" data-i18n="startShopping">শপিং শুরু করুন →</button>
@@ -626,7 +508,7 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
-<!-- NEW ANIMATED NAVIGATION BAR -->
+<!-- ANIMATED NAVIGATION BAR -->
 <nav class="navigation">
   <ul>
     <li class="list active" data-nav="home" onclick="go('home')" style="--clr:#f44336;">
@@ -662,7 +544,6 @@ a{color:inherit;text-decoration:none}
     <div class="indicator"></div>
   </ul>
 </nav>
-<!-- END NEW ANIMATED NAVIGATION BAR -->
 
 </div>
 
@@ -675,11 +556,27 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- ADDRESS BOOK MODAL -->
 <div class="overlay" id="addressOverlay">
   <div class="modal">
     <div class="modal-head"><h3 data-i18n="addressBook">ঠিকানা বই</h3><button class="modal-close" onclick="closeModal('addressOverlay')">×</button></div>
-    <div id="addressList"></div>
-    <button class="btn-primary" onclick="addNewAddress()" style="margin-top:14px" data-i18n="addAddress">+ নতুন ঠিকানা</button>
+    <div id="addressList" style="margin-bottom:16px"></div>
+    <button class="btn-primary" onclick="addNewAddress()" data-i18n="addAddress">+ নতুন ঠিকানা</button>
+  </div>
+</div>
+
+<!-- NEW ADD ADDRESS MODAL (Custom Popup) -->
+<div class="overlay" id="addAddressOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📍</span> নতুন ঠিকানা</h3>
+      <button class="modal-close" onclick="closeModal('addAddressOverlay')">×</button>
+    </div>
+    <div class="form-field">
+      <label>সম্পূর্ণ ঠিকানা লিখুন</label>
+      <textarea id="newAddressText" placeholder="বাসা/হোল্ডিং নম্বর, রোড, এলাকা, জেলা..." rows="3"></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveNewAddress()">✅ ঠিকানা সংরক্ষণ করুন</button>
   </div>
 </div>
 
@@ -719,7 +616,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">×</button>
   <img id="lightboxImg" src="" alt="">
@@ -748,7 +644,8 @@ var COUPONS = [];
 var REVIEWS = [];
 var SETTINGS = { 
   phone:'01700000000', email:'', address:'', facebookPage:'lomurawear', freeShipLimit:2000, dhakaInside:100, dhakaOutside:120, bkashNumber:'', nagadNumber:'',
-  returnPolicy: 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।'
+  returnPolicy: 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।',
+  heroSmallText: 'NEW COLLECTION 2025'
 };
 var CART = [];
 var WISHLIST = [];
@@ -794,12 +691,10 @@ function toggleTheme(){
 function go(screen){
   if(screen !== 'detail' && screen !== 'search') previousScreen = screen;
   
-  // সেকশন পরিবর্তন
   $$('.screen').forEach(function(s){ s.classList.remove('active'); });
   var el = document.getElementById('screen-' + screen);
   if(el) el.classList.add('active');
   
-  // নতুন নেভিগেশন অ্যানিমেশন লজিক
   var navItems = $$('.navigation ul li');
   var indicator = document.querySelector('.indicator');
   var activeIndex = 0;
@@ -812,12 +707,10 @@ function go(screen){
     }
   });
 
-  // ইন্ডিকেটর বাবল মুভ করা
   if(indicator) {
     indicator.style.transform = 'translateX(' + (activeIndex * 100) + '%)';
   }
 
-  // পেজ লোড ফাংশন কল
   if(screen === 'cart') renderCart();
   if(screen === 'orders') renderOrders();
   if(screen === 'account') renderAccount();
@@ -858,13 +751,8 @@ function updateGreeting(){
 }
 
 /* ========== LOCAL STORAGE ========== */
-function saveCart(){
-  try { localStorage.setItem('lomura_cart', JSON.stringify(CART)); } catch(e){}
-  updateCartBadge();
-}
-function loadCart(){
-  try { var c = localStorage.getItem('lomura_cart'); return c ? JSON.parse(c) : []; } catch(e){ return []; }
-}
+function saveCart(){ try { localStorage.setItem('lomura_cart', JSON.stringify(CART)); } catch(e){} updateCartBadge(); }
+function loadCart(){ try { var c = localStorage.getItem('lomura_cart'); return c ? JSON.parse(c) : []; } catch(e){ return []; } }
 function saveWishlist(){ try { localStorage.setItem('lomura_wishlist', JSON.stringify(WISHLIST)); } catch(e){} }
 function loadWishlist(){ try { var w = localStorage.getItem('lomura_wishlist'); return w ? JSON.parse(w) : []; } catch(e){ return []; } }
 function saveAddresses(){ try { localStorage.setItem('lomura_addresses', JSON.stringify(ADDRESSES)); } catch(e){} }
@@ -874,16 +762,8 @@ function loadAddresses(){ try { var a = localStorage.getItem('lomura_addresses')
 function loadProducts(){
   db.collection('products').onSnapshot(function(snap){
     PRODUCTS = [];
-    snap.forEach(function(doc){
-      var p = doc.data();
-      p.id = doc.id;
-      PRODUCTS.push(p);
-    });
-    PRODUCTS.sort(function(a, b){
-      var ta = a.createdAt ? a.createdAt.seconds : 0;
-      var tb = b.createdAt ? b.createdAt.seconds : 0;
-      return tb - ta;
-    });
+    snap.forEach(function(doc){ var p = doc.data(); p.id = doc.id; PRODUCTS.push(p); });
+    PRODUCTS.sort(function(a, b){ var ta = a.createdAt ? a.createdAt.seconds : 0; var tb = b.createdAt ? b.createdAt.seconds : 0; return tb - ta; });
     renderHome();
     if(document.getElementById('screen-categories').classList.contains('active')) renderCategoriesPage();
   });
@@ -891,11 +771,7 @@ function loadProducts(){
 function loadCategories(){
   db.collection('categories').onSnapshot(function(snap){
     CATEGORIES = [];
-    snap.forEach(function(doc){
-      var c = doc.data();
-      c.slug = doc.id;
-      CATEGORIES.push(c);
-    });
+    snap.forEach(function(doc){ var c = doc.data(); c.slug = doc.id; CATEGORIES.push(c); });
     renderQuickCats();
     if(document.getElementById('screen-categories').classList.contains('active')) renderCategoriesPage();
   });
@@ -919,6 +795,10 @@ function loadSettings(){
     if(doc.exists){
       var s = doc.data();
       for(var k in s){ SETTINGS[k] = s[k]; }
+      if(SETTINGS.heroSmallText) {
+        var heroEl = document.getElementById('heroSmallText');
+        if(heroEl) heroEl.textContent = SETTINGS.heroSmallText;
+      }
     }
   });
 }
@@ -1411,7 +1291,7 @@ function showSuccess(order){
   html += '<div style="font-size:56px;margin-bottom:12px">✅</div>';
   html += '<h3 style="font-size:18px;margin-bottom:6px">ধন্যবাদ ' + esc(order.customer.name) + '!</h3>';
   html += '<p style="font-size:14px;color:var(--muted)">অর্ডার কনফার্ম হয়েছে</p></div>';
-  html += '<div style="background:var(--bg);border-radius:12px;padding:14px;font-size:13.5px;margin-bottom:14px">';
+  html += '<div style="background:var(--bg);border-radius:12px;padding:14px;font-size:13.5px;margin-bottom:14px;border:1px solid var(--line)">';
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>অর্ডার</span><b>#' + order.orderId + '</b></div>';
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>পেমেন্ট</span><b>' + (payNames[order.paymentMethod] || 'ক্যাশ') + '</b></div>';
   html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>ডেলিভারি</span><b>' + (order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '</b></div>';
@@ -1419,12 +1299,12 @@ function showSuccess(order){
 
   if(order.paymentMethod === 'cod'){
     var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
-    html += '<div style="background:rgba(232,60,60,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:var(--sale);line-height:1.8">';
+    html += '<div style="background:rgba(232,60,60,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:var(--sale);line-height:1.8;border:1px solid rgba(232,60,60,.2)">';
     html += '<b>⚠️ রিটার্ন পলিসি:</b> ' + rp.replace(/\n/g, '<br>');
     html += '</div>';
   } else if(order.paymentMethod !== 'cod'){
     var num = order.paymentMethod === 'bkash' ? (SETTINGS.bkashNumber || SETTINGS.phone) : (SETTINGS.nagadNumber || SETTINGS.phone);
-    html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.8">';
+    html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.8;border:1px solid rgba(232,19,110,.2)">';
     html += '<b>💳 ' + (order.paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ') + ' এ টাকা পাঠান:</b><br>';
     html += 'নম্বর: <b>' + esc(num) + '</b><br>';
     html += 'পদ্ধতি: <b>Send Money</b><br>';
@@ -1456,11 +1336,7 @@ function renderOrders(){
   db.collection('orders').where('userPhone', '==', USER.phone).get().then(function(snap){
     var list = [];
     snap.forEach(function(doc){ var d = doc.data(); d.docId = doc.id; list.push(d); });
-    list.sort(function(a, b){
-      var ta = a.createdAt ? a.createdAt.seconds : 0;
-      var tb = b.createdAt ? b.createdAt.seconds : 0;
-      return tb - ta;
-    });
+    list.sort(function(a, b){ var ta = a.createdAt ? a.createdAt.seconds : 0; var tb = b.createdAt ? b.createdAt.seconds : 0; return tb - ta; });
     if(!list.length){
       el.innerHTML = '<div class="empty" style="padding:40px 20px"><div class="big">📦</div><b>কোনো অর্ডার নেই</b><button onclick="go(\'home\')">শপিং শুরু</button></div>';
       return;
@@ -1469,9 +1345,7 @@ function renderOrders(){
     var html = '';
     list.forEach(function(o){
       var preview = '';
-      (o.items || []).slice(0, 4).forEach(function(i){
-        preview += '<img src="' + esc(i.img) + '" onerror="this.src=\'https://picsum.photos/seed/' + esc(i.id) + '/100\'">';
-      });
+      (o.items || []).slice(0, 4).forEach(function(i){ preview += '<img src="' + esc(i.img) + '" onerror="this.src=\'https://picsum.photos/seed/' + esc(i.id) + '/100\'">'; });
       html += '<div class="order-card">';
       html += '<div class="order-head"><div class="order-id">#' + esc(o.orderId) + '<small>' + formatDate(o.createdAt) + '</small></div>';
       html += '<span class="status-pill ' + esc(o.status) + '">' + (statusNames[o.status] || o.status) + '</span></div>';
@@ -1483,58 +1357,34 @@ function renderOrders(){
       html += '</div></div>';
     });
     el.innerHTML = html;
-  }).catch(function(err){
-    el.innerHTML = '<div class="empty"><b>❌ লোড ব্যর্থ</b></div>';
-  });
+  }).catch(function(err){ el.innerHTML = '<div class="empty"><b>❌ লোড ব্যর্থ</b></div>'; });
 }
 function copyText(text){
   if(!text) return;
   try {
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(text).then(function(){ toast('📋 কপি!', 'success'); });
-    } else {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      toast('📋 কপি!', 'success');
-    }
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){ toast('📋 কপি!', 'success'); }); }
+    else { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('📋 কপি!', 'success'); }
   } catch(e){ toast('❌ কপি হয়নি', 'error'); }
 }
-function trackFromOrder(id){
-  go('orders');
-  $('#trackInput').value = id;
-  setTimeout(trackOrder, 300);
-}
+function trackFromOrder(id){ go('orders'); $('#trackInput').value = id; setTimeout(trackOrder, 300); }
 function trackOrder(){
   var id = ($('#trackInput').value || '').trim().toUpperCase();
   if(!id){ toast('❌ আইডি লিখুন', 'error'); return; }
   var el = $('#trackResult');
   el.innerHTML = '<div class="loading"><div class="spin"></div></div>';
   db.collection('orders').where('orderId', '==', id).get().then(function(snap){
-    if(snap.empty){
-      el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale);font-weight:600">❌ পাওয়া যায়নি</div>';
-      return;
-    }
+    if(snap.empty){ el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale);font-weight:600">❌ পাওয়া যায়নি</div>'; return; }
     var o = null;
     snap.forEach(function(doc){ o = doc.data(); });
-    var steps = [
-      { key:'pending', label:'অর্ডার গৃহীত' },
-      { key:'processing', label:'প্রস্তুত হচ্ছে' },
-      { key:'shipped', label:'ডেলিভারিতে' },
-      { key:'delivered', label:'ডেলিভারড' }
-    ];
+    var steps = [{ key:'pending', label:'অর্ডার গৃহীত' },{ key:'processing', label:'প্রস্তুত হচ্ছে' },{ key:'shipped', label:'ডেলিভারিতে' },{ key:'delivered', label:'ডেলিভারড' }];
     var orderArr = ['pending','processing','shipped','delivered'];
     var ci = orderArr.indexOf(o.status);
     var cancelled = o.status === 'cancelled';
-    var html = '<div style="background:var(--bg);border-radius:10px;padding:12px;margin:14px 0;font-size:13px">';
+    var html = '<div style="background:var(--bg);border-radius:10px;padding:12px;margin:14px 0;font-size:13px;border:1px solid var(--line)">';
     html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted)">অর্ডার</span><b>#' + esc(o.orderId) + '</b></div>';
     html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">স্ট্যাটাস</span><b>' + (cancelled ? 'বাতিল' : 'সক্রিয়') + '</b></div></div>';
-    if(cancelled){
-      html += '<p style="text-align:center;color:var(--sale);padding:14px;font-weight:600">❌ বাতিল</p>';
-    } else {
+    if(cancelled){ html += '<p style="text-align:center;color:var(--sale);padding:14px;font-weight:600">❌ বাতিল</p>'; }
+    else {
       html += '<div class="track-steps">';
       steps.forEach(function(s, i){
         var cls = '';
@@ -1545,9 +1395,7 @@ function trackOrder(){
       html += '</div>';
     }
     el.innerHTML = html;
-  }).catch(function(){
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale)">❌ লোড ব্যর্থ</div>';
-  });
+  }).catch(function(){ el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sale)">❌ লোড ব্যর্থ</div>'; });
 }
 
 /* ========== ACCOUNT ========== */
@@ -1594,32 +1442,53 @@ function saveProfile(){
   toast('✅ সংরক্ষণ!', 'success');
 }
 
+/* ========== ADDRESS SYSTEM ========== */
 function openAddressBook(){
   if(!isLoggedIn()){ requireLogin(function(){ openAddressBook(); }); return; }
   renderAddressList();
   openModal('addressOverlay');
 }
+
 function renderAddressList(){
   var el = $('#addressList');
-  if(!ADDRESSES.length){ el.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:14px">কোনো ঠিকানা নেই</div>'; return; }
+  if(!ADDRESSES.length){ 
+    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--muted);font-size:14px;background:var(--bg);border-radius:12px;border:1px dashed var(--line)">কোনো ঠিকানা নেই</div>'; 
+    return; 
+  }
   var html = '';
   ADDRESSES.forEach(function(a, i){
-    html += '<div style="background:var(--bg);padding:14px 16px;border-radius:11px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">';
-    html += '<div style="font-size:18px">📍</div>';
-    html += '<div style="flex:1;font-size:13.5px;line-height:1.5">' + esc(a) + '</div>';
-    html += '<button onclick="deleteAddress(' + i + ')" style="color:var(--sale);font-size:18px;padding:0 6px;border:none;background:none">×</button></div>';
+    html += '<div class="address-card">';
+    html += '<div class="icon-box">📍</div>';
+    html += '<div class="address-text">' + esc(a) + '</div>';
+    html += '<button class="btn-delete" onclick="deleteAddress(' + i + ')">🗑️</button>';
+    html += '</div>';
   });
   el.innerHTML = html;
 }
+
+// New function to open Custom Prompt Modal
 function addNewAddress(){
-  var addr = prompt('নতুন ঠিকানা লিখুন:');
-  if(!addr) return;
-  ADDRESSES.unshift(addr.trim());
+  $('#newAddressText').value = '';
+  openModal('addAddressOverlay');
+}
+
+// New function to save from Custom Prompt Modal
+function saveNewAddress(){
+  var addr = $('#newAddressText').value.trim();
+  if(!addr){ toast('❌ ঠিকানা লিখুন', 'error'); return; }
+  ADDRESSES.unshift(addr);
   saveAddresses();
   renderAddressList();
-  toast('✅ যোগ!', 'success');
+  closeModal('addAddressOverlay');
+  toast('✅ নতুন ঠিকানা সেভ হয়েছে', 'success');
 }
-function deleteAddress(i){ ADDRESSES.splice(i, 1); saveAddresses(); renderAddressList(); }
+
+function deleteAddress(i){ 
+  ADDRESSES.splice(i, 1); 
+  saveAddresses(); 
+  renderAddressList(); 
+  toast('🗑️ ঠিকানা মুছে ফেলা হয়েছে', 'error');
+}
 
 function openWishlist(){
   if(!WISHLIST.length){
@@ -1646,7 +1515,7 @@ function openHelp(){
   var fbPage = SETTINGS.facebookPage || 'lomurawear';
   $('#infoTitle').textContent = '💬 সাহায্য';
   $('#infoBody').innerHTML = '<p style="margin-bottom:12px">যোগাযোগ করুন:</p>' +
-    '<div style="background:var(--bg);padding:14px;border-radius:10px;margin-bottom:14px">' +
+    '<div style="background:var(--bg);padding:14px;border-radius:10px;margin-bottom:14px;border:1px solid var(--line)">' +
     '<div style="margin-bottom:8px">📞 <b>' + esc(SETTINGS.phone) + '</b></div>' +
     '<div style="margin-bottom:8px">✉️ <b>' + esc(SETTINGS.email) + '</b></div>' +
     '<div>📍 ' + esc(SETTINGS.address) + '</div></div>' +
@@ -1741,7 +1610,7 @@ var I18N = {
     yourName:'Your Name *', yourPhone:'Mobile Number *', yourPassword:'Password * (min 6 chars)',
     confirmPassword:'Confirm Password *', createAccount:'✅ Create Account',
     loginNow:'Login now', editProfile:'Edit Profile', name:'Name', save:'Save',
-    addressBook:'Address Book', addressBookDesc:'Saved addresses', addAddress:'+ New Address',
+    addressBook:'Address Book', addressBookDesc:'Saved addresses', addNewAddress:'+ New Address',
     accountInfo:'Account Info', accountInfoDesc:'Change name',
     language:'Language', darkMode:'Dark Mode', logout:'Logout',
     policies:'Policies', help:'Help', about:'About',
@@ -1765,10 +1634,7 @@ function applyLanguage(){
       else el.textContent = I18N[LANG][key];
     }
   });
-  var ph = {
-    bn: { search: 'পণ্য খুঁজুন...' },
-    en: { search: 'Search products...' }
-  };
+  var ph = { bn: { search: 'পণ্য খুঁজুন...' }, en: { search: 'Search products...' } };
   var p = ph[LANG];
   var sInput = $('#searchInput'); if(sInput) sInput.placeholder = p.search;
 }
@@ -1835,7 +1701,28 @@ if(searchEl){
   });
 }
 
-// Initialize indicator position on load
+var topSearchInput = $('#topSearchInput');
+if(topSearchInput) {
+  topSearchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      var q = e.target.value.trim();
+      if(q) {
+        go('search');
+        setTimeout(function(){
+          var searchScreenInput = $('#searchInput');
+          if(searchScreenInput) {
+            searchScreenInput.value = q;
+            var event = new Event('input', { bubbles: true });
+            searchScreenInput.dispatchEvent(event);
+          }
+        }, 100);
+        e.target.value = '';
+        e.target.blur();
+      }
+    }
+  });
+}
+
 setTimeout(function(){
   var activeItem = document.querySelector('.navigation ul li.active');
   var indicator = document.querySelector('.indicator');
@@ -1847,7 +1734,7 @@ setTimeout(function(){
 
 updateFlashTimer();
 setInterval(updateFlashTimer, 1000);
-console.log('✅ Lomura Wear v9 — Glowing Nav Installed');
+console.log('✅ Lomura Wear v9 — Address Custom Modal Updated');
 </script>
 </body>
 </html>
