@@ -25,9 +25,30 @@ a{color:inherit;text-decoration:none}
 .screen.active{display:block}
 .topbar{position:sticky;top:0;z-index:50;background:var(--white);padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
 .topbar .logo{font-size:22px;flex-shrink:0}
-.theme-btn{background:var(--bg);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
 .top-icon{width:38px;height:38px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:17px;position:relative;flex-shrink:0}
 .top-icon .dot{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--sale);border-radius:50%;border:1.5px solid var(--white)}
+
+/* ====== নতুন অ্যানিমেটেড ডে/নাইট টগল ====== */
+.theme-toggle { position: relative; width: 64px; height: 34px; border-radius: 34px; background: #7eb3e3; padding: 0; border: none; cursor: pointer; outline: none; flex-shrink: 0; transition: background 0.6s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
+.theme-toggle.dark { background: #1a1c3b; }
+.toggle-track { position: absolute; inset: 0; border-radius: 34px; overflow: hidden; }
+.toggle-clouds { position: absolute; bottom: -5px; left: 0; width: 200%; height: 20px; display: flex; transition: opacity 0.5s; animation: cloudMove 10s linear infinite; }
+.toggle-cloud { width: 50%; height: 100%; background: rgba(255,255,255,0.8); border-radius: 20px; margin: 0 2px; }
+@keyframes cloudMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.toggle-sun { position: absolute; right: 6px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: #fcd34d; box-shadow: 0 0 8px #fcd34d; transition: opacity 0.5s, transform 0.5s; }
+.toggle-moon { position: absolute; left: 6px; top: 5px; font-size: 16px; opacity: 0; transform: translateY(-10px) rotate(-45deg); transition: opacity 0.5s, transform 0.5s; }
+.toggle-stars { position: absolute; inset: 0; opacity: 0; background-image: radial-gradient(1px 1px at 10px 5px, #fff, transparent), radial-gradient(1px 1px at 25px 12px, #fff, transparent), radial-gradient(1px 1px at 40px 8px, #fff, transparent), radial-gradient(1px 1px at 50px 18px, #fff, transparent); transition: opacity 0.5s; }
+.toggle-birds { position: absolute; top: 10px; left: 20px; width: 100%; height: 10px; transition: opacity 0.5s; }
+.bird { position: absolute; width: 6px; height: 4px; animation: flyBird 4s linear infinite; }
+.bird.b2 { animation-delay: -2s; top: 4px; }
+@keyframes flyBird { 0% { left: 100%; opacity: 1; } 80% { left: -20px; opacity: 1; } 100% { left: -20px; opacity: 0; } }
+.toggle-knob { position: absolute; top: 3px; left: 3px; width: 28px; height: 28px; background: #fff; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s; z-index: 2; }
+.theme-toggle.dark .toggle-knob { left: 33px; background: #cbd5e1; }
+.theme-toggle.dark .toggle-sun { opacity: 0; transform: scale(0); }
+.theme-toggle.dark .toggle-moon { opacity: 1; transform: translateY(0) rotate(0deg); }
+.theme-toggle.dark .toggle-stars { opacity: 1; }
+.theme-toggle.dark .toggle-clouds { opacity: 0.2; }
+.theme-toggle.dark .toggle-birds { opacity: 0; }
 
 /* অ্যানিমেটেড সার্চ বার */
 .top-search-wrap { flex: 1; position: relative; height: 40px; margin: 0 10px; display: flex; align-items: center; justify-content: flex-end; }
@@ -116,8 +137,6 @@ a{color:inherit;text-decoration:none}
 .pd-actions{position:fixed;bottom:var(--nav-h);left:0;right:0;max-width:520px;margin:0 auto;background:var(--white);padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:10px;z-index:90}
 .pd-actions .btn-wish{flex:0 0 50px;width:50px;height:50px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);display:grid;place-items:center;font-size:22px}
 .pd-actions .btn-wish.active{border-color:var(--sale);background:rgba(232,60,60,.05)}
-.pd-actions .btn-cart{flex:1;background:var(--ink);color:var(--white);border-radius:50px;font-weight:600;font-size:15px;padding:14px}
-[data-theme="dark"] .pd-actions .btn-cart{background:var(--accent);color:#fff}
 .pd-reviews{padding:20px 16px;border-top:8px solid var(--bg);margin-top:8px}
 .pd-reviews h3{font-size:16px;font-weight:700;margin-bottom:14px}
 .review-item{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:10px}
@@ -258,8 +277,204 @@ a{color:inherit;text-decoration:none}
   .indicator::before { top: 7px; }
   .app { padding-bottom: 0; }
 }
-/* ========================================= */
 
+/* ========== ANIMATED ADD TO CART BUTTON ========== */
+.acp-wrap { position: relative; display: flex; flex: 1; font-family: inherit; margin: 0; height: 50px; }
+.acp-live { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.acp-btn { position: relative; width: 100%; height: 100%; padding: 0; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 50px; cursor: pointer; overflow: hidden; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; background: linear-gradient(180deg, #202733, #12161e); box-shadow: 0 12px 30px rgba(4, 8, 16, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: transform 0.16s cubic-bezier(0.25, 0.1, 0.25, 1), border-color 0.2s ease, box-shadow 0.25s ease; }
+.acp-btn:hover { border-color: rgba(255, 255, 255, 0.16); box-shadow: 0 16px 36px rgba(4, 8, 16, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+.acp-btn:hover:not(.is-playing):not(.is-rm-done) { transform: translateY(-1px); }
+.acp-btn:active { transform: scale(0.975); }
+.acp-idle { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 9px; color: #edf1f7; font-size: 15px; font-weight: 600; letter-spacing: 0.01em; opacity: 1; transform: none; transition: opacity 0.24s ease, transform 0.26s ease; }
+.acp-idle svg { display: block; opacity: 0.9; }
+.is-playing .acp-idle, .is-rm-done .acp-idle { opacity: 0; transform: translateY(-9px); transition: opacity 0.2s ease, transform 0.26s ease; }
+.acp-scene { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.is-playing .acp-scene { opacity: 1; transition: opacity 0.2s ease 0.08s; }
+.acp-belt { position: absolute; left: 12px; right: 58px; bottom: 14px; height: 7px; border-radius: 4px; background: #0b0e14; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 3px 6px rgba(0, 0, 0, 0.4); overflow: hidden; opacity: 0; transform: translateY(12px); }
+.acp-belt::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 7px; background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.55)); }
+.s-enter .acp-belt { opacity: 1; transform: none; transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.22, 1, 0.36, 1); }
+.acp-tread { position: absolute; top: 2px; bottom: 2px; left: 0; width: 200%; background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(255, 255, 255, 0.16) 9px 12px); will-change: transform; animation: acp-roll 0.16s linear infinite; animation-play-state: paused; }
+.belt-run .acp-tread { animation-play-state: running; }
+@keyframes acp-roll { from { transform: translateX(0); } to { transform: translateX(-12px); } }
+.acp-scanner { position: absolute; left: 81px; top: 0; width: 30px; height: 20px; z-index: 4; opacity: 0; transform: translateY(-16px); }
+.s-enter .acp-scanner { opacity: 1; transform: none; transition: opacity 0.3s ease 0.12s, transform 0.42s cubic-bezier(0.34, 1.3, 0.64, 1) 0.12s; }
+.acp-scan-mount { position: absolute; top: 0; left: 12px; width: 6px; height: 5px; background: #2c3442; border-radius: 0 0 2px 2px; }
+.acp-scan-head { position: absolute; top: 4px; left: 2px; width: 26px; height: 9px; border-radius: 4px; background: linear-gradient(180deg, #39424f, #232a35); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1); transition: box-shadow 0.25s ease; }
+.s-scan .acp-scan-head { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), 0 5px 12px rgba(255, 86, 96, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+.acp-scan-led { position: absolute; top: 7px; left: 6px; width: 3px; height: 3px; border-radius: 50%; background: #ffb454; opacity: 0.85; }
+.acp-blink { position: absolute; top: 7px; right: 6px; width: 3px; height: 3px; border-radius: 50%; background: #3a4453; }
+.s-scan .acp-blink { animation: acp-blink 0.4s ease 0.46s both; }
+@keyframes acp-blink { 0%, 100% { background: #3a4453; box-shadow: none; } 40% { background: #5adf9e; box-shadow: 0 0 6px rgba(90, 223, 158, 0.9); } }
+.acp-laser { position: absolute; left: 87px; top: 13px; width: 2px; height: 29px; border-radius: 1px; background: linear-gradient(180deg, rgba(255, 86, 96, 0.95), rgba(255, 86, 96, 0.35)); box-shadow: 0 0 6px rgba(255, 86, 96, 0.8); opacity: 0; z-index: 3; will-change: transform, opacity; }
+.s-scan .acp-laser { animation: acp-sweep 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) both; }
+@keyframes acp-sweep { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(18px); opacity: 0; } }
+.acp-box { position: absolute; left: 0; bottom: 21px; width: 24px; height: 19px; z-index: 2; transform: translateX(-34px); will-change: transform; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.35)); }
+.s-enter .acp-box { transform: translateX(84px); transition: transform 1.02s cubic-bezier(0.3, 0.5, 0.25, 1) 0.18s; }
+.s-ship .acp-box { animation: acp-ship 0.8s forwards; }
+@keyframes acp-ship { 0% { transform: translateX(84px) rotate(0deg); animation-timing-function: cubic-bezier(0.35, 0.12, 0.65, 0.88); } 56% { transform: translateX(172px) rotate(0deg); animation-timing-function: ease-in; } 74% { transform: translate(188px, 3px) rotate(10deg); animation-timing-function: ease-in; } 88% { transform: translate(198px, 10px) rotate(15deg); opacity: 1; } 100% { transform: translate(204px, 16px) rotate(18deg); opacity: 0; } }
+.acp-face { position: absolute; inset: 0; border-radius: 2px; background: linear-gradient(180deg, #cf9a60, #b5824c); box-shadow: inset -3px 0 0 rgba(0, 0, 0, 0.12), inset 0 2px 0 rgba(255, 255, 255, 0.14); }
+.acp-barcode { position: absolute; left: 3px; bottom: 3px; width: 11px; height: 7px; border-radius: 1px; background: #e9dfcf; overflow: hidden; }
+.acp-barcode::before { content: ""; position: absolute; inset: 1px; background: repeating-linear-gradient(90deg, #33261a 0 1px, transparent 1px 2.6px); }
+.acp-flap { position: absolute; top: -3px; width: 12px; height: 3px; background: linear-gradient(180deg, #dca86c, #c08b52); border-radius: 1px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); }
+.acp-flap-l { left: 0; transform-origin: 0 100%; transform: rotate(-64deg); }
+.acp-flap-r { right: 0; transform-origin: 100% 100%; transform: rotate(64deg); }
+.s-fold .acp-flap-l { transform: rotate(0deg); transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1) 0.05s; }
+.s-fold .acp-flap-r { transform: rotate(0deg); transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1) 0.2s; }
+.acp-tape { position: absolute; top: -4px; left: 1px; right: 1px; height: 4px; background: linear-gradient(180deg, #ffc06a, #f2a94e); border-radius: 1px; transform: scaleX(0); transform-origin: 0 50%; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+.s-fold .acp-tape { transform: scaleX(1); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.3, 1) 0.52s; }
+.acp-slabel { position: absolute; top: 5px; right: 3px; width: 8px; height: 6px; background: #f2f4f7; border-radius: 1px; transform: scale(0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.06); }
+.acp-slabel::before { content: ""; position: absolute; left: 1.5px; top: 1.5px; width: 5px; height: 1px; background: #9aa4b2; box-shadow: 0 2px 0 #c3cad4; }
+.s-fold .acp-slabel { transform: scale(1); transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) 0.74s; }
+.acp-flash { position: absolute; inset: -4px -1px 0 -1px; border-radius: 3px; background: rgba(255, 240, 220, 0.9); opacity: 0; pointer-events: none; }
+.s-scan .acp-flash { animation: acp-flash 0.32s ease 0.3s both; }
+@keyframes acp-flash { 0%, 100% { opacity: 0; } 45% { opacity: 0.55; } }
+.acp-cart { position: absolute; right: 12px; bottom: 6px; width: 40px; height: 38px; z-index: 5; transform: translateX(58px); will-change: transform; }
+.acp-cart svg { display: block; }
+.s-fold .acp-cart { transform: translateX(0); transition: transform 0.5s cubic-bezier(0.22, 1.3, 0.36, 1) 0.3s; }
+.s-ship .acp-cart { animation: acp-bump 0.42s cubic-bezier(0.36, 0.07, 0.3, 1) 0.66s both; }
+@keyframes acp-bump { 0% { transform: translateX(0) translateY(0) rotate(0deg); } 32% { transform: translateX(0) translateY(3px) rotate(2deg); } 65% { transform: translateX(0) translateY(-1px) rotate(-0.6deg); } 100% { transform: translateX(0); } }
+.acp-badge { position: absolute; right: 8px; bottom: 44px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 9px; background: linear-gradient(180deg, #ffc571, #f5a844); color: #301d05; font-size: 9px; font-weight: 800; line-height: 16px; text-align: center; z-index: 6; transform: scale(0); box-shadow: 0 3px 8px rgba(245, 168, 68, 0.4); }
+.s-ship .acp-badge { animation: acp-badge 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.82s forwards; }
+@keyframes acp-badge { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+.acp-done { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; color: #e9f7ef; font-size: 15px; font-weight: 600; opacity: 0; transform: translateY(6px); pointer-events: none; }
+.acp-check { width: 22px; height: 22px; flex: none; }
+.acp-check-ring { stroke: #5adf9e; opacity: 0.35; }
+.acp-check-path { stroke: #5adf9e; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.s-done .acp-done, .is-rm-done .acp-done { opacity: 1; transform: none; transition: opacity 0.28s ease 0.18s, transform 0.34s cubic-bezier(0.34, 1.3, 0.64, 1) 0.18s; }
+.s-done .acp-check-path { animation: acp-draw 0.32s cubic-bezier(0.25, 0.8, 0.3, 1) 0.4s forwards; }
+.is-rm-done .acp-check-path { stroke-dashoffset: 0; }
+@keyframes acp-draw { to { stroke-dashoffset: 0; } }
+.s-done .acp-scene { opacity: 0; transition: opacity 0.24s ease; }
+.s-reset .acp-done { opacity: 0; transform: translateY(-6px); transition: opacity 0.22s ease, transform 0.22s ease; }
+.s-reset .acp-idle { opacity: 1; transform: none; transition: opacity 0.26s ease 0.12s, transform 0.3s ease 0.12s; }
+@media (prefers-reduced-motion: reduce) { .acp-btn, .acp-btn * { transition-duration: 0.01ms !important; transition-delay: 0ms !important; animation-duration: 0.01ms !important; animation-delay: 0ms !important; } }
+
+/* ========== ANIMATED LOGOUT BUTTON ========== */
+.logout-btn-container { display: flex; justify-content: center; padding: 24px 12px; margin-top: 10px; border-top: 1px dashed var(--line); }
+.logoutButton { --figure-duration: 100ms; --transform-figure: none; --walking-duration: 100ms; --transform-arm1: none; --transform-wrist1: none; --transform-arm2: none; --transform-wrist2: none; --transform-leg1: none; --transform-calf1: none; --transform-leg2: none; --transform-calf2: none; background: var(--white); border: 1.5px solid var(--line); border-radius: 12px; color: var(--ink); cursor: pointer; display: block; font-family: inherit; font-size: 14px; font-weight: 600; height: 44px; outline: none; padding: 0 0 0 20px; perspective: 100px; position: relative; text-align: left; width: 140px; -webkit-tap-highlight-color: transparent; transition: border-color 0.3s, box-shadow 0.3s; }
+.logoutButton:hover { border-color: var(--accent); box-shadow: 0 5px 15px rgba(184,137,75,0.1); }
+.logoutButton::before { background-color: var(--white); border-radius: 10px; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; transform: none; transition: transform 50ms ease; width: 100%; z-index: 2; }
+.logoutButton:hover .door { transform: rotateY(20deg); }
+.logoutButton:active::before { transform: scale(0.96); }
+.logoutButton:active .door { transform: rotateY(28deg); }
+.logoutButton.clicked::before { transform: none; }
+.logoutButton.clicked .door { transform: rotateY(35deg); }
+.logoutButton.door-slammed .door { transform: none; transition: transform 100ms ease-in 250ms; }
+.logoutButton.falling { animation: shake 200ms linear; }
+.logoutButton.falling .bang { animation: flash 300ms linear; }
+.logoutButton.falling .figure { animation: spin 1000ms infinite linear; bottom: -1080px; opacity: 0; right: 1px; transition: transform calc(var(--figure-duration) * 1ms) linear, bottom calc(var(--figure-duration) * 1ms) cubic-bezier(0.7, 0.1, 1, 1) 100ms, opacity calc(var(--figure-duration) * 0.25ms) linear calc(var(--figure-duration) * 0.75ms); z-index: 1; }
+.logoutButton .button-text { color: var(--ink); font-weight: 600; position: relative; z-index: 10; }
+.logoutButton svg { display: block; position: absolute; }
+.logoutButton .figure { bottom: 5px; fill: var(--accent); right: 18px; transform: var(--transform-figure); transition: transform calc(var(--figure-duration) * 1ms) cubic-bezier(0.2, 0.1, 0.8, 0.9); width: 30px; z-index: 4; }
+.logoutButton .door, .logoutButton .doorway { bottom: 4px; fill: var(--bg); right: 12px; width: 32px; }
+.logoutButton .door path { fill: var(--accent); stroke: var(--accent); stroke-width: 4; }
+.logoutButton .door { transform: rotateY(20deg); transform-origin: 100% 50%; transform-style: preserve-3d; transition: transform 200ms ease; z-index: 5; }
+.logoutButton .doorway { z-index: 3; }
+.logoutButton .bang { opacity: 0; }
+.logoutButton .arm1, .logoutButton .wrist1, .logoutButton .arm2, .logoutButton .wrist2, .logoutButton .leg1, .logoutButton .calf1, .logoutButton .leg2, .logoutButton .calf2 { transition: transform calc(var(--walking-duration) * 1ms) ease-in-out; }
+.logoutButton .arm1 { transform: var(--transform-arm1); transform-origin: 52% 45%; }
+.logoutButton .wrist1 { transform: var(--transform-wrist1); transform-origin: 59% 55%; }
+.logoutButton .arm2 { transform: var(--transform-arm2); transform-origin: 47% 43%; }
+.logoutButton .wrist2 { transform: var(--transform-wrist2); transform-origin: 35% 47%; }
+.logoutButton .leg1 { transform: var(--transform-leg1); transform-origin: 47% 64.5%; }
+.logoutButton .calf1 { transform: var(--transform-calf1); transform-origin: 55.5% 71.5%; }
+.logoutButton .leg2 { transform: var(--transform-leg2); transform-origin: 43% 63%; }
+.logoutButton .calf2 { transform: var(--transform-calf2); transform-origin: 41.5% 73%; }
+@keyframes spin { from { transform: rotate(0deg) scale(0.94); } to { transform: rotate(359deg) scale(0.94); } }
+@keyframes shake { 0% { transform: rotate(-1deg); } 50% { transform: rotate(2deg); } 100% { transform: rotate(-1deg); } }
+@keyframes flash { 0% { opacity: 0.4; } 100% { opacity: 0; } }
+
+/* =========================================
+   ROMANTIC SUCCESS ANIMATION STYLES
+========================================= */
+#successOverlay { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, #2b000d 0%, #140006 50%, #050002 100%); overflow: hidden; opacity: 0; transition: opacity 0.5s ease; }
+#successOverlay.show { display: flex; opacity: 1; }
+#hearts-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.romantic-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(255, 12, 70, 0.15) 0%, transparent 70%); pointer-events: none; z-index: 2; animation: ambient-pulse 6s ease-in-out infinite alternate; }
+@keyframes ambient-pulse { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1.08); } }
+.ground { position: absolute; bottom: -10%; left: 50%; transform: translateX(-50%) scale(1.5); width: 100vmin; aspect-ratio: 1.5; overflow: visible; z-index: 3; pointer-events: none; animation: shrinkGround 1.5s ease-in forwards 4s; }
+@keyframes shrinkGround { 100% { transform: translateX(-50%) scale(1); } }
+.flower-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10%; aspect-ratio: 16; container-type: inline-size; filter: drop-shadow(0 0 25cqi rgba(255, 12, 70, 0.85)); transform-origin: bottom center; transition: filter 0.3s ease; }
+.flower-container:nth-child(1) { top: 50%; left: 50%; }
+.flower-container:nth-child(2) { top: 45%; left: 30%; width: 8%; }
+.flower-container:nth-child(3) { top: 45%; left: 70%; width: 8%; }
+.flower-container:nth-child(4) { top: 85%; left: 95%; width: 20%; }
+.flower-container:nth-child(5) { top: 130%; left: 30%; width: 30%; }
+.flower-container:nth-child(6) { top: 60%; left: 10%; width: 12%; }
+.flower-container:nth-child(7) { top: 20%; left: 15%; width: 6%; }
+.flower-container:nth-child(8) { top: 15%; left: 35%; width: 5%; }
+.flower-container:nth-child(9) { top: 26%; left: 85%; width: 7%; }
+.flower-container:nth-child(10) { top: 22%; left: 60%; width: 6.5%; }
+.flower-container:nth-child(11) { top: 35%; left: 20%; width: 7.5%; }
+.flower-container:nth-child(12) { top: 38%; left: 80%; width: 7.5%; }
+.flower-top { width: 50cqi; aspect-ratio: 1.5; position: absolute; bottom: 100%; left: 50%; transform: translate(-50%, 50%); z-index: 1; }
+.flower-circle { width: 30cqi; aspect-ratio: 1.5; background: radial-gradient(circle, #ffccd5 0%, #ff0c46 60%, #80001a 100%); box-shadow: inset 0px -3cqi 5cqi rgba(128, 0, 26, 0.8), 0 0 20cqi #ff0c46; position: absolute; scale: 0; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 100% 100% 100% 100%/90% 90% 90% 90%; filter: drop-shadow(0 0 15cqi #ff0c46); transform-origin: top left; }
+.flower-petal { width: 80%; aspect-ratio: 1; background-image: linear-gradient(135deg, #ff0040 0%, #ff4d6d 45%, #b3002d 100%); box-shadow: inset 0 0 10cqi rgba(255, 204, 213, 0.4), 0 0 15cqi rgba(255, 12, 70, 0.6); position: absolute; opacity: 0; }
+.flower-petal__1 { bottom: 42%; right: 65%; border-radius: 0px 100% 5% 100%/0px 100% 5% 100%; transform: rotate(-10deg) scale(0.82); }
+.flower-petal__2 { bottom: 42%; left: 65%; border-radius: 0px 100% 5% 100%/0px 100% 5% 100%; transform: rotate(100deg) scale(0.82); }
+.flower-petal__3 { bottom: 40%; left: 10%; border-radius: 0px 100% 50% 100%/0px 100% 50% 100%; transform: rotate(45deg) scale(0.8); }
+.flower-petal__4 { top: -10%; left: 80%; border-radius: 0px 100% 0% 100%/0px 100% 0% 100%; transform: rotate(135deg) scale(0.9); }
+.flower-petal__5 { top: -10%; right: 70%; border-radius: 0px 100% 0% 100%/0px 100% 0% 100%; transform: rotate(315deg) scale(0.9); }
+.flower-petal__6 { top: 50%; right: 65%; border-radius: 0px 100% 10% 100%/0px 100% 5% 100%; transform: rotate(270deg) scale(1.1); }
+.flower-petal__7 { top: 50%; left: 65%; border-radius: 0px 100% 10% 100%/0px 100% 5% 100%; transform: rotate(180deg) scale(1.1); }
+.flower-petal__8 { top: 50%; left: 10%; border-radius: 0px 100% 50% 100%/0px 100% 30% 100%; transform: rotate(225deg) scale(1); }
+.flower-light { width: 3.5cqi; aspect-ratio: 1; position: absolute; border-radius: 50%; opacity: 0; }
+.flower-light:nth-child(odd) { background-color: #ffccd5; filter: blur(1.5cqi) drop-shadow(0 0 8cqi #ff0c46); }
+.flower-light:nth-child(even) { background-color: #ff0c46; filter: blur(1.5cqi) drop-shadow(0 0 8cqi #ff4d6d); }
+.flower-light__1 { top: 10%; left: 20%; scale: 0.8; } .flower-light__2 { top: 20%; left: 80%; scale: 1.2; }
+.flower-light__3 { top: 30%; left: 50%; scale: 1.5; } .flower-light__4 { top: 40%; left: 10%; }
+.flower-light__5 { top: 50%; left: 90%; scale: 2; } .flower-light__6 { top: 60%; left: 30%; }
+.flower-light__7 { top: 70%; left: 40%; scale: 0.5; } .flower-light__8 { top: 60%; left: 60%; }
+.flower-bottom { width: 6%; aspect-ratio: 0.02; left: 47%; top: 50%; }
+.flower-stem { width: 100%; height: 100%; transform: scaleY(0); background-image: linear-gradient(to left, rgba(0, 0, 0, 0.4), transparent, rgba(128, 0, 32, 0.4)), linear-gradient(to top, transparent 10%, #7a0c2e, #b3002d); border-radius: 50px 50px 0 0; transform-origin: bottom center; box-shadow: 0 0 10px rgba(255, 12, 70, 0.3); }
+.flower-leaf { width: 40%; aspect-ratio: 2.5; position: absolute; scale: 0; opacity: 0; }
+.flower-leaf:nth-child(even) { right: 55%; background-image: linear-gradient(120deg, #990026cc 0%, #4a001300 90%); border-radius: 0% 100% 0% 100%/0% 100% 0% 100%; transform-origin: bottom right; }
+.flower-leaf:nth-child(odd) { left: 55%; background-image: linear-gradient(300deg, #990026cc 0%, #4a001300 90%); border-radius: 100% 0% 100% 0%/100% 0% 100% 0%; transform-origin: bottom left; }
+.flower-leaf__2 { top: 25%; transform: rotate(-15deg) scale(1); } .flower-leaf__1 { top: 31%; transform: rotate(15deg) scale(1); }
+.flower-leaf__4 { top: 37%; transform: rotate(-15deg) scale(1.2); } .flower-leaf__3 { top: 43%; transform: rotate(15deg) scale(1.2); }
+.flower-leaf__6 { top: 50%; transform: rotate(-15deg) scale(1.5); } .flower-leaf__5 { top: 56%; transform: rotate(15deg) scale(1.5); }
+
+.animate.flower-container { animation: flower-rotate 12s linear infinite; }
+.animate .flower-circle { animation: grass-grow 0.25s ease-in forwards 2.5s; }
+.animate .flower-petal { animation: petal-grow 0.5s ease-in forwards, flower-rotate 3s linear infinite; }
+.animate .flower-petal__3 { animation-delay: 2.7s; } .animate .flower-petal__2 { animation-delay: 2.8s; } .animate .flower-petal__4 { animation-delay: 2.9s; }
+.animate .flower-petal__7 { animation-delay: 3.0s; } .animate .flower-petal__8 { animation-delay: 3.1s; } .animate .flower-petal__6 { animation-delay: 3.2s; }
+.animate .flower-petal__5 { animation-delay: 3.3s; } .animate .flower-petal__1 { animation-delay: 3.4s; }
+.animate .flower-stem { animation: stem-grow 2.5s ease-in forwards; }
+.animate .flower-leaf { animation: grass-grow 0.75s ease-in forwards, flower-rotate 6s linear infinite; }
+.animate .flower-leaf__2 { animation-delay: 1.5s; } .animate .flower-leaf__1 { animation-delay: 1.4s; } .animate .flower-leaf__4 { animation-delay: 1.3s; }
+.animate .flower-leaf__3 { animation-delay: 1.15s; } .animate .flower-leaf__6 { animation-delay: 1.0s; } .animate .flower-leaf__5 { animation-delay: 0.75s; }
+.animate .flower-light { animation: light-float 5s ease-in-out infinite; }
+.animate .flower-light__1 { animation-delay: 3.7s; } .animate .flower-light__2 { animation-delay: 4.2s; } .animate .flower-light__3 { animation-delay: 4.7s; }
+.animate .flower-light__4 { animation-delay: 5.2s; } .animate .flower-light__5 { animation-delay: 5.7s; } .animate .flower-light__6 { animation-delay: 6.2s; }
+.animate .flower-light__7 { animation-delay: 6.7s; } .animate .flower-light__8 { animation-delay: 7.2s; }
+@keyframes petal-grow { 0% { scale: 0; opacity: 0.9; } 50% { scale: 1; opacity: 0.9; } 75% { scale: 1.1; opacity: 0.95; } 90% { scale: 0.95; opacity: 0.95; } 100% { scale: 1; opacity: 1; } }
+@keyframes grass-grow { 100% { opacity: 1; scale: 1; } }
+@keyframes stem-grow { 0% { border-radius: 10%; } 100% { transform: scaleY(1); } }
+@keyframes flower-rotate { 0%, 100% { rotate: 0deg; } 25% { rotate: 5deg; } 75% { rotate: -5deg; } }
+@keyframes light-float { 0% { opacity: 0; transform: translate(0, 0); } 25% { opacity: 1; transform: translate(20cqi, -25cqi); } 50% { opacity: 1; transform: translate(0, -50cqi); } 75% { opacity: 1; transform: translate(-20cqi, -75cqi); } 100% { opacity: 0; transform: translate(0, -100cqi); } }
+
+.success-content-box { position: relative; z-index: 10; width: 100%; max-width: 400px; padding: 24px; background: rgba(20, 0, 5, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 12, 70, 0.3); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255,12,70,0.2); text-align: center; color: #fff; transform: translateY(30px); opacity: 0; animation: slideUpFade 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards; }
+@keyframes slideUpFade { to { transform: translateY(0); opacity: 1; } }
+.success-content-box h3 { font-size: 22px; color: #ffccd5; margin-bottom: 4px; font-family: 'Playfair Display', serif; text-shadow: 0 2px 10px rgba(255, 12, 70, 0.5); }
+.success-content-box p.subtitle { font-size: 13px; color: #ff80bf; margin-bottom: 20px; }
+.success-receipt { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 16px; margin-bottom: 20px; text-align: left; }
+.success-receipt .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: #d5cfc7; }
+.success-receipt .row span { color: #9a948c; }
+.success-receipt .row.total { border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-bottom: 0; font-size: 16px; font-weight: 700; color: #fff; }
+.success-receipt .row.total b { color: #ff4d79; font-size: 18px; }
+.return-policy-box { background: rgba(255, 12, 70, 0.1); border-left: 3px solid #ff4d79; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; color: #ffccd5; margin-bottom: 20px; line-height: 1.6; }
+.btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.btn-glass { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #fff; text-decoration: none; position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+.btn-glass::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-20deg); transition: 0.5s; }
+.btn-glass:hover::after { left: 150%; }
+.btn-glass:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.btn-msg-glass { background: linear-gradient(135deg, rgba(0, 132, 255, 0.8), rgba(0, 100, 210, 0.8)); border: 1px solid rgba(0, 132, 255, 0.5); }
+.btn-wa-glass { background: linear-gradient(135deg, rgba(37, 211, 102, 0.8), rgba(18, 140, 126, 0.8)); border: 1px solid rgba(37, 211, 102, 0.5); }
+.btn-close-glass { background: transparent; border: 1.5px solid rgba(255,255,255,0.2); color: #d5cfc7; width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600; transition: 0.3s; }
+.btn-close-glass:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ওভারলে মোডাল স্টাইল */
 .overlay{position:fixed;inset:0;background:rgba(15,15,15,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .overlay.show{display:flex;animation:fadeIn 0.3s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -357,13 +572,28 @@ a{color:inherit;text-decoration:none}
   <div class="topbar">
     <div class="logo">Lomura <span>Wear</span></div>
     
-    <!-- নতুন অ্যানিমেটেড সার্চ বার -->
     <div class="top-search-wrap">
       <input type="text" id="topSearchInput" placeholder="খুঁজুন...">
       <div class="search-icon-box">🔍</div>
     </div>
 
-    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+      <div class="toggle-track">
+        <div class="toggle-stars"></div>
+        <div class="toggle-clouds">
+          <div class="toggle-cloud c1"></div>
+          <div class="toggle-cloud c2"></div>
+        </div>
+        <div class="toggle-moon">🌙</div>
+        <div class="toggle-sun"></div>
+        <div class="toggle-birds">
+          <svg class="bird b1" viewBox="0 0 14 8"><path d="M0 6 Q7 -2 14 6 Q7 3 0 6Z" fill="#fff"/></svg>
+          <svg class="bird b2" viewBox="0 0 14 8"><path d="M0 6 Q7 -2 14 6 Q7 3 0 6Z" fill="#fff"/></svg>
+        </div>
+      </div>
+      <div class="toggle-knob"></div>
+    </button>
+
     <button class="top-icon" onclick="go('cart')">🛒<span class="dot cart-dot" style="display:none"></span></button>
   </div>
   <div class="content">
@@ -508,7 +738,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
-<!-- ANIMATED NAVIGATION BAR -->
 <nav class="navigation">
   <ul>
     <li class="list active" data-nav="home" onclick="go('home')" style="--clr:#f44336;">
@@ -545,6 +774,29 @@ a{color:inherit;text-decoration:none}
   </ul>
 </nav>
 
+</div>
+
+<!-- ROMANTIC SUCCESS OVERLAY -->
+<div id="successOverlay">
+  <canvas id="hearts-canvas"></canvas>
+  <div class="romantic-overlay"></div>
+  <div class="ground" id="flowerGround"></div>
+
+  <div class="success-content-box">
+    <h3>ধন্যবাদ!</h3>
+    <p class="subtitle">আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে</p>
+    
+    <div class="success-receipt" id="successReceipt"></div>
+    <div class="return-policy-box" id="successPolicy"></div>
+
+    <p style="font-size:12px; color:#ff80bf; margin-bottom:12px;">যোগাযোগের জন্য মেসেজ করুন:</p>
+    <div class="btn-group">
+      <a href="#" id="succMsgBtn" target="_blank" class="btn-glass btn-msg-glass">💬 Messenger</a>
+      <a href="#" id="succWaBtn" target="_blank" class="btn-glass btn-wa-glass">💬 WhatsApp</a>
+    </div>
+    
+    <button class="btn-close-glass" onclick="closeSuccessOverlay()">✕ বন্ধ করুন</button>
+  </div>
 </div>
 
 <!-- PROFILE MODAL -->
@@ -682,7 +934,16 @@ function toggleTheme(){
   var next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   try { localStorage.setItem('lomura_theme', next); } catch(e){}
-  $$('.theme-btn').forEach(function(b){ b.textContent = next === 'dark' ? '☀️' : '🌙'; });
+  
+  var toggleBtn = document.getElementById('themeToggle');
+  if(toggleBtn) {
+    if(next === 'dark') {
+      toggleBtn.classList.add('dark');
+    } else {
+      toggleBtn.classList.remove('dark');
+    }
+  }
+
   var ti = $('#themeIcon'), ts = $('#themeStatus');
   if(ti) ti.textContent = next === 'dark' ? '☀️' : '🌙';
   if(ts) ts.textContent = next === 'dark' ? 'চালু' : 'বন্ধ';
@@ -736,6 +997,17 @@ function doLogout(){
   renderAccount();
   updateGreeting();
   toast('লগআউট');
+  setTimeout(function(){ window.location.href = 'auth.html'; }, 800);
+}
+
+function doLogoutAnimated(){
+  USER = null;
+  try { localStorage.removeItem('lomura_user'); } catch(e){}
+  CART = [];
+  saveCart();
+  renderAccount();
+  updateGreeting();
+  toast('লগআউট সম্পন্ন');
   setTimeout(function(){ window.location.href = 'auth.html'; }, 800);
 }
 
@@ -967,7 +1239,26 @@ function openProduct(id){
   html += '<button class="write-review-btn" onclick="openReviewModal(\'' + esc(p.id) + '\')">✍️ রিভিউ লিখুন</button></div>';
   html += '<div class="pd-actions">';
   html += '<button class="btn-wish ' + (wished ? 'active' : '') + '" onclick="toggleWishDetail(\'' + esc(p.id) + '\')">' + (wished ? '❤️' : '🤍') + '</button>';
-  html += '<button class="btn-cart" onclick="handleAddToCart(\'' + esc(p.id) + '\')">🛒 কার্টে যোগ করুন</button>';
+  
+  // অ্যানিমেটেড Add to Cart বাটন
+  html += '<div class="acp-wrap" id="acpWrap">';
+  html += '  <button type="button" class="acp-btn" onclick="playAddToCartAnim(\'' + esc(p.id) + '\')">';
+  html += '    <span class="acp-idle">';
+  html += '      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v10l-8 4-8-4V7l8-4z"></path><path d="M4 7l8 4 8-4"></path><path d="M12 11v10"></path></svg>';
+  html += '      <span>কার্টে যোগ করুন</span>';
+  html += '    </span>';
+  html += '    <span class="acp-scene" aria-hidden="true">';
+  html += '      <span class="acp-belt"><span class="acp-tread"></span></span>';
+  html += '      <span class="acp-scanner"><span class="acp-scan-mount"></span><span class="acp-scan-head"></span><span class="acp-scan-led"></span><span class="acp-blink"></span></span>';
+  html += '      <span class="acp-laser"></span>';
+  html += '      <span class="acp-box"><span class="acp-face"></span><span class="acp-barcode"></span><span class="acp-flap acp-flap-l"></span><span class="acp-flap acp-flap-r"></span><span class="acp-tape"></span><span class="acp-slabel"></span><span class="acp-flash"></span></span>';
+  html += '      <span class="acp-cart"><svg width="40" height="38" viewBox="0 0 40 38" aria-hidden="true"><path d="M3 5h4.5l2.5 6" fill="none" stroke="#9aa7b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.5 10h28.5l-3.5 17h-20l-5-17z" fill="#1c232e" stroke="#9aa7b8" stroke-width="2" stroke-linejoin="round"></path><circle cx="15" cy="32.5" r="3" fill="#1c232e" stroke="#9aa7b8" stroke-width="2"></circle><circle cx="28" cy="32.5" r="3" fill="#1c232e" stroke="#9aa7b8" stroke-width="2"></circle></svg><span class="acp-badge">+1</span></span>';
+  html += '    </span>';
+  html += '    <span class="acp-done" aria-hidden="true"><svg class="acp-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle class="acp-check-ring" cx="12" cy="12" r="10" stroke-width="1.6"></circle><path class="acp-check-path" d="M7.2 12.4l3.3 3.3 6.3-6.9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" pathLength="1"></path></svg><span>যুক্ত হয়েছে</span></span>';
+  html += '  </button>';
+  html += '  <span class="acp-live" aria-live="polite"></span>';
+  html += '</div>';
+
   html += '</div>';
 
   $('#detailContent').innerHTML = html;
@@ -985,6 +1276,300 @@ function openProduct(id){
 }
 function toggleWishDetail(id){ toggleWish(id); openProduct(id); }
 function scrollImg(i){ var g = $('#pdGallery'); if(g) g.scrollTo({ left: g.clientWidth * i, behavior: 'smooth' }); }
+
+/* ========== ANIMATED ADD TO CART LOGIC ========== */
+var acpRunning = false;
+var acpTimers = [];
+
+function playAddToCartAnim(id) {
+  handleAddToCart(id, true); // true পাঠানো হলো যাতে টোস্ট মেসেজ না আসে
+  var acpBtn = document.querySelector('.acp-btn');
+  var acpLive = document.querySelector('.acp-live');
+  if (!acpBtn || acpRunning) return;
+  acpRunning = true;
+  
+  for (var i = 0; i < acpTimers.length; i++) { window.clearTimeout(acpTimers[i]); }
+  acpTimers = [];
+  if(acpLive) acpLive.textContent = '';
+
+  var acpLater = function (fn, ms) { acpTimers.push(window.setTimeout(fn, ms)); };
+  var acpResetAll = function () {
+    acpBtn.classList.remove('is-playing', 's-enter', 's-scan', 's-fold', 's-ship', 's-done', 's-reset', 'is-rm-done', 'belt-run');
+    acpRunning = false;
+  };
+
+  acpBtn.classList.add('is-playing', 's-enter', 'belt-run');
+  acpLater(function () { acpBtn.classList.remove('belt-run'); }, 1250);
+  acpLater(function () { acpBtn.classList.add('s-scan'); }, 1280);
+  acpLater(function () { acpBtn.classList.add('s-fold'); }, 2000);
+  acpLater(function () { acpBtn.classList.add('s-ship', 'belt-run'); }, 3080);
+  acpLater(function () { acpBtn.classList.remove('belt-run'); }, 3530);
+  acpLater(function () {
+    acpBtn.classList.add('s-done');
+    if(acpLive) acpLive.textContent = 'যুক্ত হয়েছে';
+  }, 4300);
+  acpLater(function () { acpBtn.classList.add('s-reset'); }, 5450);
+  acpLater(function () { acpResetAll(); }, 5900);
+}
+
+/* ========== ANIMATED LOGOUT LOGIC ========== */
+function initAnimatedLogout() {
+  var btn = document.getElementById('animatedLogoutBtn');
+  if(!btn) return;
+
+  btn.state = 'default';
+  let updateButtonState = (button, state) => {
+    if (logoutButtonStates[state]) {
+      button.state = state;
+      for (let key in logoutButtonStates[state]) {
+        button.style.setProperty(key, logoutButtonStates[state][key]);
+      }
+    }
+  }
+
+  btn.addEventListener('mouseenter', () => {
+    if (btn.state === 'default') updateButtonState(btn, 'hover');
+  });
+  btn.addEventListener('mouseleave', () => {
+    if (btn.state === 'hover') updateButtonState(btn, 'default');
+  });
+
+  btn.addEventListener('click', () => {
+    if (btn.state === 'default' || btn.state === 'hover') {
+      btn.classList.add('clicked');
+      updateButtonState(btn, 'walking1');
+      setTimeout(() => {
+        btn.classList.add('door-slammed');
+        updateButtonState(btn, 'walking2');
+        setTimeout(() => {
+          btn.classList.add('falling');
+          updateButtonState(btn, 'falling1');
+          setTimeout(() => {
+            updateButtonState(btn, 'falling2');
+            setTimeout(() => {
+              updateButtonState(btn, 'falling3');
+              setTimeout(() => {
+                doLogoutAnimated();
+              }, 1000);
+            }, logoutButtonStates['falling2']['--walking-duration']);
+          }, logoutButtonStates['falling1']['--walking-duration']);
+        }, logoutButtonStates['walking2']['--figure-duration']);
+      }, logoutButtonStates['walking1']['--figure-duration']);
+    }
+  });
+}
+
+const logoutButtonStates = {
+  'default': { '--figure-duration': '100', '--transform-figure': 'none', '--walking-duration': '100', '--transform-arm1': 'none', '--transform-wrist1': 'none', '--transform-arm2': 'none', '--transform-wrist2': 'none', '--transform-leg1': 'none', '--transform-calf1': 'none', '--transform-leg2': 'none', '--transform-calf2': 'none' },
+  'hover': { '--figure-duration': '100', '--transform-figure': 'translateX(1.5px)', '--walking-duration': '100', '--transform-arm1': 'rotate(-5deg)', '--transform-wrist1': 'rotate(-15deg)', '--transform-arm2': 'rotate(5deg)', '--transform-wrist2': 'rotate(6deg)', '--transform-leg1': 'rotate(-10deg)', '--transform-calf1': 'rotate(5deg)', '--transform-leg2': 'rotate(20deg)', '--transform-calf2': 'rotate(-20deg)' },
+  'walking1': { '--figure-duration': '300', '--transform-figure': 'translateX(11px)', '--walking-duration': '300', '--transform-arm1': 'translateX(-4px) translateY(-2px) rotate(120deg)', '--transform-wrist1': 'rotate(-5deg)', '--transform-arm2': 'translateX(4px) rotate(-110deg)', '--transform-wrist2': 'rotate(-5deg)', '--transform-leg1': 'translateX(-3px) rotate(80deg)', '--transform-calf1': 'rotate(-30deg)', '--transform-leg2': 'translateX(4px) rotate(-60deg)', '--transform-calf2': 'rotate(20deg)' },
+  'walking2': { '--figure-duration': '400', '--transform-figure': 'translateX(17px)', '--walking-duration': '300', '--transform-arm1': 'rotate(60deg)', '--transform-wrist1': 'rotate(-15deg)', '--transform-arm2': 'rotate(-45deg)', '--transform-wrist2': 'rotate(6deg)', '--transform-leg1': 'rotate(-5deg)', '--transform-calf1': 'rotate(10deg)', '--transform-leg2': 'rotate(10deg)', '--transform-calf2': 'rotate(-20deg)' },
+  'falling1': { '--figure-duration': '1600', '--walking-duration': '400', '--transform-arm1': 'rotate(-60deg)', '--transform-wrist1': 'none', '--transform-arm2': 'rotate(30deg)', '--transform-wrist2': 'rotate(120deg)', '--transform-leg1': 'rotate(-30deg)', '--transform-calf1': 'rotate(-20deg)', '--transform-leg2': 'rotate(20deg)' },
+  'falling2': { '--walking-duration': '300', '--transform-arm1': 'rotate(-100deg)', '--transform-arm2': 'rotate(-60deg)', '--transform-wrist2': 'rotate(60deg)', '--transform-leg1': 'rotate(80deg)', '--transform-calf1': 'rotate(20deg)', '--transform-leg2': 'rotate(-60deg)' },
+  'falling3': { '--walking-duration': '500', '--transform-arm1': 'rotate(-30deg)', '--transform-wrist1': 'rotate(40deg)', '--transform-arm2': 'rotate(50deg)', '--transform-wrist2': 'none', '--transform-leg1': 'rotate(-30deg)', '--transform-leg2': 'rotate(20deg)', '--transform-calf2': 'none' }
+};
+
+/* =========================================
+   ROMANTIC SUCCESS ANIMATION LOGIC
+========================================= */
+
+function initFlowers() {
+  const ground = document.getElementById('flowerGround');
+  if (!ground || ground.children.length > 0) return;
+
+  let flowerHTML = '';
+  for (let i = 0; i < 12; i++) {
+    flowerHTML += `<div class="flower-container">
+      <div class="flower-top">
+        <div class="flower-petal flower-petal__1"></div><div class="flower-petal flower-petal__2"></div>
+        <div class="flower-petal flower-petal__3"></div><div class="flower-petal flower-petal__4"></div>
+        <div class="flower-petal flower-petal__5"></div><div class="flower-petal flower-petal__6"></div>
+        <div class="flower-petal flower-petal__7"></div><div class="flower-petal flower-petal__8"></div>
+        <div class="flower-circle"></div>
+        <div class="flower-light flower-light__1"></div><div class="flower-light flower-light__2"></div>
+        <div class="flower-light flower-light__3"></div><div class="flower-light flower-light__4"></div>
+        <div class="flower-light flower-light__5"></div><div class="flower-light flower-light__6"></div>
+        <div class="flower-light flower-light__7"></div><div class="flower-light flower-light__8"></div>
+      </div>
+      <div class="flower-bottom">
+        <div class="flower-stem"></div>
+        <div class="flower-leaf flower-leaf__1"></div><div class="flower-leaf flower-leaf__2"></div>
+        <div class="flower-leaf flower-leaf__3"></div><div class="flower-leaf flower-leaf__4"></div>
+        <div class="flower-leaf flower-leaf__5"></div><div class="flower-leaf flower-leaf__6"></div>
+      </div>
+    </div>`;
+  }
+  ground.innerHTML = flowerHTML;
+}
+
+function triggerFlowerBloom() {
+  const flowers = Array.from(document.querySelectorAll('.flower-container'));
+  if (flowers.length === 0) return;
+  
+  flowers.forEach(f => f.classList.remove('animate'));
+  
+  flowers[0].classList.add('animate');
+  setTimeout(() => {
+    for (let i = 1; i <= 2 && i < flowers.length; i++) flowers[i].classList.add('animate');
+    let remaining = flowers.slice(3);
+    const interval = setInterval(() => {
+      if (remaining.length === 0) { clearInterval(interval); return; }
+      const randomIndex = Math.floor(Math.random() * remaining.length);
+      remaining.splice(randomIndex, 1)[0].classList.add('animate');
+    }, 300);
+  }, 1500);
+}
+
+let heartCanvas, heartCtx, heartParticles = [], heartAnimId;
+const heartColors = ['#ff0c46', '#ff4d79', '#ff80bf', '#ff0033', '#e60039'];
+
+function initHeartCanvas() {
+  heartCanvas = document.getElementById('hearts-canvas');
+  if (!heartCanvas) return;
+  heartCtx = heartCanvas.getContext('2d');
+  heartCanvas.width = window.innerWidth;
+  heartCanvas.height = window.innerHeight;
+  
+  heartParticles = [];
+  for (let i = 0; i < 40; i++) {
+    heartParticles.push(createHeart(Math.random() * heartCanvas.width, Math.random() * heartCanvas.height));
+  }
+  if(!heartAnimId) animateHearts();
+}
+
+function createHeart(x, y, isBurst = false) {
+  return {
+    x: x, y: y,
+    size: Math.random() * 14 + 6,
+    color: heartColors[Math.floor(Math.random() * heartColors.length)],
+    alpha: isBurst ? 1 : Math.random() * 0.7 + 0.3,
+    speedY: isBurst ? (Math.random() - 0.7) * 4 : Math.random() * 1.5 + 0.8,
+    speedX: isBurst ? (Math.random() - 0.5) * 4 : Math.sin(Math.random() * Math.PI) * 0.8,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: Math.random() * 0.05 + 0.02,
+    isBurst: isBurst
+  };
+}
+
+function animateHearts() {
+  if (!heartCtx) return;
+  heartCtx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+
+  for (let i = heartParticles.length - 1; i >= 0; i--) {
+    const p = heartParticles[i];
+    p.y -= p.speedY;
+    p.wobble += p.wobbleSpeed;
+    p.x += p.speedX + Math.sin(p.wobble) * 0.5;
+
+    if (p.isBurst) { p.alpha -= 0.015; } 
+    else if (p.y < -30) {
+      p.y = heartCanvas.height + 20;
+      p.x = Math.random() * heartCanvas.width;
+      p.alpha = Math.random() * 0.7 + 0.3;
+    }
+
+    if (p.alpha > 0) {
+      heartCtx.save();
+      heartCtx.globalAlpha = p.alpha;
+      heartCtx.fillStyle = p.color;
+      heartCtx.shadowColor = p.color;
+      heartCtx.shadowBlur = 12;
+      const s = p.size;
+      heartCtx.beginPath();
+      heartCtx.moveTo(p.x, p.y + s * 0.3);
+      heartCtx.bezierCurveTo(p.x, p.y, p.x - s / 2, p.y, p.x - s / 2, p.y + s * 0.3);
+      heartCtx.bezierCurveTo(p.x - s / 2, p.y + (s + s * 0.3) / 2, p.x, p.y + s, p.x, p.y + s);
+      heartCtx.bezierCurveTo(p.x, p.y + s, p.x + s / 2, p.y + (s + s * 0.3) / 2, p.x + s / 2, p.y + s * 0.3);
+      heartCtx.bezierCurveTo(p.x + s / 2, p.y, p.x, p.y, p.x, p.y + s * 0.3);
+      heartCtx.closePath();
+      heartCtx.fill();
+      heartCtx.restore();
+    }
+    if (p.isBurst && p.alpha <= 0) heartParticles.splice(i, 1);
+  }
+  heartAnimId = requestAnimationFrame(animateHearts);
+}
+
+function burstHearts(x, y, count = 20) {
+  for (let i = 0; i < count; i++) {
+    heartParticles.push(createHeart(x, y, true));
+  }
+}
+
+function showSuccess(order) {
+  const payNames = { cod:'ক্যাশ অন ডেলিভারি', bkash:'বিকাশ', nagad:'নগদ' };
+  const waNum = (SETTINGS.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '88');
+  
+  // পণ্যের লিস্ট তৈরি করা
+  var itemsList = order.items.map(function(i){ 
+    return '• ' + i.name + ' (' + i.qty + 'টি)'; 
+  }).join('\n');
+
+  // সুন্দর হোয়াটসঅ্যাপ মেসেজ
+  var waMsg = `🛍️ *নতুন অর্ডার এসেছে!*\n` +
+              `━━━━━━━━━━━━━━━\n` +
+              `🆔 *অর্ডার আইডি:* #${order.orderId}\n\n` +
+              `👤 *কাস্টমার:* ${order.customer.name}\n` +
+              `📞 *ফোন:* ${order.customer.phone}\n` +
+              `📍 *ঠিকানা:* ${order.customer.address}\n\n` +
+              `🛒 *পণ্যসমূহ:*\n${itemsList}\n\n` +
+              `💳 *পেমেন্ট:* ${payNames[order.paymentMethod] || 'ক্যাশ অন ডেলিভারি'}\n` +
+              `🚚 *ডেলিভারি:* ${order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে'}\n` +
+              `💰 *সর্বমোট বিল:* ${money(order.total)}\n` +
+              `━━━━━━━━━━━━━━━\n` +
+              `Lomura Wear`;
+
+  document.getElementById('succWaBtn').href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
+  
+  const fbPage = SETTINGS.facebookPage || 'lomurawear';
+  var fbMsg = '🛍️ নতুন অর্ডার\n\nঅর্ডার: ' + order.orderId + '\nনাম: ' + order.customer.name + '\nফোন: ' + order.customer.phone + '\nমোট: ' + money(order.total);
+  document.getElementById('succMsgBtn').href = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(fbMsg);
+
+  let receiptHtml = `
+    <div class="row"><span>অর্ডার</span><b>#${order.orderId}</b></div>
+    <div class="row"><span>পেমেন্ট</span><b>${payNames[order.paymentMethod] || 'ক্যাশ'}</b></div>
+    <div class="row"><span>ডেলিভারি</span><b>${order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে'}</b></div>
+    <div class="row total"><span>সর্বমোট</span><b>${money(order.total)}</b></div>
+  `;
+  document.getElementById('successReceipt').innerHTML = receiptHtml;
+
+  if(order.paymentMethod === 'cod'){
+    var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
+    document.getElementById('successPolicy').style.display = 'block';
+    document.getElementById('successPolicy').innerHTML = '<b>⚠️ রিটার্ন পলিসি:</b><br>' + rp.replace(/\n/g, '<br>');
+  } else {
+    document.getElementById('successPolicy').style.display = 'none';
+  }
+
+  const overlay = document.getElementById('successOverlay');
+  overlay.classList.add('show');
+  
+  initFlowers();
+  setTimeout(() => {
+    triggerFlowerBloom();
+    initHeartCanvas();
+  }, 100);
+
+  document.getElementById('succMsgBtn').onclick = (e) => { burstHearts(e.clientX, e.clientY, 25); };
+  document.getElementById('succWaBtn').onclick = (e) => { burstHearts(e.clientX, e.clientY, 25); };
+}
+
+function closeSuccessOverlay() {
+  document.getElementById('successOverlay').classList.remove('show');
+  if(heartAnimId) cancelAnimationFrame(heartAnimId);
+  heartAnimId = null;
+  setTimeout(() => {
+    document.getElementById('flowerGround').innerHTML = '';
+    go('orders');
+  }, 500);
+}
+
+window.addEventListener('resize', () => {
+  if(heartCanvas) {
+    heartCanvas.width = window.innerWidth;
+    heartCanvas.height = window.innerHeight;
+  }
+});
 
 /* ========== LIGHTBOX ========== */
 function openLightbox(src){
@@ -1033,18 +1618,22 @@ function toggleWish(id){
 }
 
 /* ========== CART ========== */
-function handleAddToCart(id){
-  if(!isLoggedIn()){ requireLogin(function(){ doAddToCart(id); }); return; }
-  doAddToCart(id);
+function handleAddToCart(id, isAnim){
+  if(!isLoggedIn()){ requireLogin(function(){ doAddToCart(id, isAnim); }); return; }
+  doAddToCart(id, isAnim);
 }
-function doAddToCart(id){
+function doAddToCart(id, isAnim){
   var p = PRODUCTS.find(function(x){ return x.id === id; });
   if(!p) return;
   var ex = CART.find(function(x){ return x.id === id; });
   if(ex) ex.qty++;
   else CART.push({ id:p.id, name:p.name, price:p.price, img:p.img, catName:p.catName, qty:1 });
   saveCart();
-  toast('✅ কার্টে যোগ হয়েছে', 'success');
+  
+  // যদি অ্যানিমেশন চালু থাকে, তবে টোস্ট মেসেজ দেখাবে না
+  if(!isAnim) {
+    toast('✅ কার্টে যোগ হয়েছে', 'success');
+  }
 }
 function updateCartBadge(){
   var count = CART.reduce(function(s, i){ return s + i.qty; }, 0);
@@ -1278,52 +1867,6 @@ function submitOrder(){
     toast('❌ ' + err.message, 'error');
   });
 }
-function showSuccess(order){
-  var payNames = { cod:'ক্যাশ অন ডেলিভারি', bkash:'বিকাশ', nagad:'নগদ' };
-  var waNum = (SETTINGS.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '88');
-  var waMsg = '🛍️ নতুন অর্ডার\n\nঅর্ডার: ' + order.orderId + '\nনাম: ' + order.customer.name + '\nফোন: ' + order.customer.phone + '\nমোট: ' + money(order.total);
-  var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
-
-  var fbPage = SETTINGS.facebookPage || 'lomurawear';
-  var msgLink = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(waMsg);
-
-  var html = '<div style="text-align:center;padding:10px 0 16px">';
-  html += '<div style="font-size:56px;margin-bottom:12px">✅</div>';
-  html += '<h3 style="font-size:18px;margin-bottom:6px">ধন্যবাদ ' + esc(order.customer.name) + '!</h3>';
-  html += '<p style="font-size:14px;color:var(--muted)">অর্ডার কনফার্ম হয়েছে</p></div>';
-  html += '<div style="background:var(--bg);border-radius:12px;padding:14px;font-size:13.5px;margin-bottom:14px;border:1px solid var(--line)">';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>অর্ডার</span><b>#' + order.orderId + '</b></div>';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>পেমেন্ট</span><b>' + (payNames[order.paymentMethod] || 'ক্যাশ') + '</b></div>';
-  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>ডেলিভারি</span><b>' + (order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '</b></div>';
-  html += '<div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--line);font-size:15px"><b>সর্বমোট</b><b>' + money(order.total) + '</b></div></div>';
-
-  if(order.paymentMethod === 'cod'){
-    var rp = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
-    html += '<div style="background:rgba(232,60,60,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:var(--sale);line-height:1.8;border:1px solid rgba(232,60,60,.2)">';
-    html += '<b>⚠️ রিটার্ন পলিসি:</b> ' + rp.replace(/\n/g, '<br>');
-    html += '</div>';
-  } else if(order.paymentMethod !== 'cod'){
-    var num = order.paymentMethod === 'bkash' ? (SETTINGS.bkashNumber || SETTINGS.phone) : (SETTINGS.nagadNumber || SETTINGS.phone);
-    html += '<div style="background:rgba(232,19,110,.08);border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px;color:#a30e4f;line-height:1.8;border:1px solid rgba(232,19,110,.2)">';
-    html += '<b>💳 ' + (order.paymentMethod === 'bkash' ? 'বিকাশ' : 'নগদ') + ' এ টাকা পাঠান:</b><br>';
-    html += 'নম্বর: <b>' + esc(num) + '</b><br>';
-    html += 'পদ্ধতি: <b>Send Money</b><br>';
-    html += 'পরিমাণ: <b>' + money(order.total) + '</b><br>';
-    html += 'পাঠিয়ে স্ক্রিনশট নিচে পাঠান 👇</div>';
-  }
-
-  html += '<p style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:10px">নিচে যেকোনো একটায় স্ক্রিনশট বা মেসেজ পাঠান:</p>';
-  html += '<div class="order-success-btns">';
-  html += '<a href="' + msgLink + '" target="_blank" class="btn-msg">💬 Messenger</a>';
-  html += '<a href="' + waLink + '" target="_blank" class="btn-wa">💬 WhatsApp</a>';
-  html += '</div>';
-  html += '<button class="btn-outline" onclick="closeModal(\'infoOverlay\');go(\'orders\')" style="margin-top:6px">📦 অর্ডার দেখুন</button>';
-
-  $('#infoTitle').textContent = '🎉 অর্ডার সফল!';
-  $('#infoBody').innerHTML = html;
-  openModal('infoOverlay');
-  toast('🎉 সফল!', 'success');
-}
 
 /* ========== ORDERS ========== */
 function renderOrders(){
@@ -1419,10 +1962,46 @@ function renderAccount(){
       '<div class="acc-short" onclick="openAddressBook()"><div class="ic">📍</div><div class="txt"><b>ঠিকানা বই</b></div><div class="arrow">›</div></div>' +
       '<div class="acc-short" onclick="openWishlist()"><div class="ic">❤️</div><div class="txt"><b>পছন্দের তালিকা</b></div><div class="arrow">›</div></div>' +
       '<div class="acc-short" onclick="go(\'settings\')"><div class="ic">⚙️</div><div class="txt"><b>সেটিংস</b></div><div class="arrow">›</div></div>' +
-      '<div class="acc-short" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b>সাহায্য</b></div><div class="arrow">›</div></div>' +
-      '<div class="acc-short" onclick="doLogout()"><div class="ic" style="background:rgba(232,60,60,.1)">🚪</div><div class="txt"><b style="color:var(--sale)">লগআউট</b></div><div class="arrow">›</div></div>';
+      '<div class="acc-short" onclick="openHelp()"><div class="ic">💬</div><div class="txt"><b>সাহায্য</b></div><div class="arrow">›</div></div>';
+      
+    shortcuts.innerHTML += `
+      <div class="logout-btn-container">
+        <button class="logoutButton" id="animatedLogoutBtn">
+          <svg class="doorway" viewBox="0 0 100 100">
+            <path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z" />
+            <path class="bang" d="M40.5 43.7L26.6 31.4l-2.5 6.7zM41.9 50.4l-19.5-4-1.4 6.3zM40 57.4l-17.7 3.9 3.9 5.7z" />
+          </svg>
+          <svg class="figure" viewBox="0 0 100 100">
+            <circle cx="52.1" cy="32.4" r="6.4" />
+            <path d="M50.7 62.8c-1.2 2.5-3.6 5-7.2 4-3.2-.9-4.9-3.5-4-7.8.7-3.4 3.1-13.8 4.1-15.8 1.7-3.4 1.6-4.6 7-3.7 4.3.7 4.6 2.5 4.3 5.4-.4 3.7-2.8 15.1-4.2 17.9z" />
+            <g class="arm1">
+              <path d="M55.5 56.5l-6-9.5c-1-1.5-.6-3.5.9-4.4 1.5-1 3.7-1.1 4.6.4l6.1 10c1 1.5.3 3.5-1.1 4.4-1.5.9-3.5.5-4.5-.9z" />
+              <path class="wrist1" d="M69.4 59.9L58.1 58c-1.7-.3-2.9-1.9-2.6-3.7.3-1.7 1.9-2.9 3.7-2.6l11.4 1.9c1.7.3 2.9 1.9 2.6 3.7-.4 1.7-2 2.9-3.8 2.6z" />
+            </g>
+            <g class="arm2">
+              <path d="M34.2 43.6L45 40.3c1.7-.6 3.5.3 4 2 .6 1.7-.3 4-2 4.5l-10.8 2.8c-1.7.6-3.5-.3-4-2-.6-1.6.3-3.4 2-4z" />
+              <path class="wrist2" d="M27.1 56.2L32 45.7c.7-1.6 2.6-2.3 4.2-1.6 1.6.7 2.3 2.6 1.6 4.2L33 58.8c-.7 1.6-2.6 2.3-4.2 1.6-1.7-.7-2.4-2.6-1.7-4.2z" />
+            </g>
+            <g class="leg1">
+              <path d="M52.1 73.2s-7-5.7-7.9-6.5c-.9-.9-1.2-3.5-.1-4.9 1.1-1.4 3.8-1.9 5.2-.9l7.9 7c1.4 1.1 1.7 3.5.7 4.9-1.1 1.4-4.4 1.5-5.8.4z" />
+              <path class="calf1" d="M52.6 84.4l-1-12.8c-.1-1.9 1.5-3.6 3.5-3.7 2-.1 3.7 1.4 3.8 3.4l1 12.8c.1 1.9-1.5 3.6-3.5 3.7-2 0-3.7-1.5-3.8-3.4z" />
+            </g>
+            <g class="leg2">
+              <path d="M37.8 72.7s1.3-10.2 1.6-11.4 2.4-2.8 4.1-2.6c1.7.2 3.6 2.3 3.4 4l-1.8 11.1c-.2 1.7-1.7 3.3-3.4 3.1-1.8-.2-4.1-2.4-3.9-4.2z" />
+              <path class="calf2" d="M29.5 82.3l9.6-10.9c1.3-1.4 3.6-1.5 5.1-.1 1.5 1.4.4 4.9-.9 6.3l-8.5 9.6c-1.3 1.4-3.6 1.5-5.1.1-1.4-1.3-1.5-3.5-.2-5z" />
+            </g>
+          </svg>
+          <svg class="door" viewBox="0 0 100 100">
+            <path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z" />
+            <circle cx="66" cy="50" r="3.7" />
+          </svg>
+          <span class="button-text">লগ আউট</span>
+        </button>
+      </div>
+    `;
     $('#logoutGroup').style.display = 'block';
   }
+  setTimeout(initAnimatedLogout, 50);
 }
 
 function openProfileEdit(){
@@ -1466,13 +2045,11 @@ function renderAddressList(){
   el.innerHTML = html;
 }
 
-// New function to open Custom Prompt Modal
 function addNewAddress(){
   $('#newAddressText').value = '';
   openModal('addAddressOverlay');
 }
 
-// New function to save from Custom Prompt Modal
 function saveNewAddress(){
   var addr = $('#newAddressText').value.trim();
   if(!addr){ toast('❌ ঠিকানা লিখুন', 'error'); return; }
@@ -1674,7 +2251,14 @@ try { var sl = localStorage.getItem('lomura_lang'); if(sl) LANG = sl; } catch(e)
 CART = loadCart();
 WISHLIST = loadWishlist();
 ADDRESSES = loadAddresses();
-$$('.theme-btn').forEach(function(b){ b.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; });
+
+setTimeout(function(){
+  if(document.documentElement.getAttribute('data-theme') === 'dark') {
+    var toggleBtn = document.getElementById('themeToggle');
+    if(toggleBtn) toggleBtn.classList.add('dark');
+  }
+}, 100);
+
 updateCartBadge();
 updateGreeting();
 renderAccount();
@@ -1734,7 +2318,7 @@ setTimeout(function(){
 
 updateFlashTimer();
 setInterval(updateFlashTimer, 1000);
-console.log('✅ Lomura Wear v9 — Address Custom Modal Updated');
+console.log('✅ Lomura Wear v11 — Animated Add to Cart (No Toast) & Improved WhatsApp Msg');
 </script>
 </body>
-</html>
+  </html>
