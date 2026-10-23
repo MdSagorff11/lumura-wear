@@ -2,9 +2,9 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Lomura Wear — অ্যাডমিন</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--ink:#141414;--ink2:#3d3d3d;--muted:#7c766f;--line:#e9e3db;--bg:#f7f5f2;--white:#fff;--accent:#b8894b;--accent-d:#96703a;--sale:#c0392b;--green:#22a558;--blue:#3b82f6;--purple:#8b5cf6;--gold:#d4a52c}
@@ -18,31 +18,87 @@ ul{list-style:none}
 .logo{font-family:'Playfair Display',serif;font-weight:600}
 .logo span{color:var(--accent)}
 
-/* ====== লগইন অ্যানিমেশন এবং গ্লাস ইফেক্ট ====== */
-.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0f0f0f 0%,#2d2a26 50%,#4a3d2a 100%);z-index:1000;display:grid;place-items:center;padding:20px;overflow:hidden}
-.login-overlay::before, .login-overlay::after {content:'';position:absolute;border-radius:50%;filter:blur(50px);z-index:0;animation:float 10s infinite ease-in-out alternate}
-.login-overlay::before{width:300px;height:300px;background:rgba(184,137,75,0.3);top:10%;left:10%}
-.login-overlay::after{width:200px;height:200px;background:rgba(34,165,88,0.2);bottom:10%;right:10%;animation-delay:-5s}
-@keyframes float{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-50px) scale(1.1)}}
+/* =========================================
+   VAULT LOGIN & ANIMATIONS
+========================================= */
+:root {
+  --vault-bg: #fafafa;
+  --vault-card-bg: rgba(255, 255, 255, 0.85);
+  --vault-text-main: #1e1b4b;
+  --vault-text-muted: #64748b;
+  --vault-accent: #6366f1;
+  --vault-accent-glow: rgba(99, 102, 241, 0.2);
+  --vault-success: #10b981;
+  --vault-success-glow: rgba(16, 185, 129, 0.35);
+  --vault-error: #f43f5e;
+  --vault-error-glow: rgba(244, 63, 94, 0.2);
+  --vault-shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  --vault-shadow-input: 0 4px 12px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --vault-shadow-focus: 0 0 0 3px var(--vault-accent-glow), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --vault-radius-card: 24px;
+  --vault-radius-input: 14px;
+  --vault-font: "Inter", sans-serif;
+}
+[data-theme="dark"] {
+  --vault-bg: #09090b;
+  --vault-card-bg: rgba(24, 24, 27, 0.85);
+  --vault-text-main: #f4f4f5;
+  --vault-text-muted: #a1a1aa;
+  --vault-shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  --vault-shadow-input: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
 
-.login-box{background:rgba(255, 255, 255, 0.95);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.2);border-radius:24px;padding:40px 28px;width:100%;max-width:400px;box-shadow:0 30px 80px rgba(0,0,0,.5);text-align:center;position:relative;z-index:1;transform:translateY(0);transition:transform 0.4s ease, box-shadow 0.4s ease}
-.login-box:hover{transform:translateY(-5px);box-shadow:0 40px 90px rgba(0,0,0,.6)}
-[data-theme="dark"] .login-box{background:rgba(26, 26, 26, 0.95);border:1px solid rgba(255,255,255,0.05)}
-.login-box .logo{font-size:28px;margin-bottom:6px;display:block}
-.login-box p{color:var(--muted);font-size:13.5px;margin-bottom:24px}
-.login-box input{width:100%;padding:15px 18px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;margin-bottom:14px;background:rgba(255,255,255,0.5);color:var(--ink);transition:all 0.3s}
-.login-box input:focus{border-color:var(--accent);background:var(--white);box-shadow:0 0 0 4px rgba(184,137,75,0.1)}
-.login-box button{width:100%;padding:15px;border-radius:12px;background:var(--ink);color:var(--white);font-size:15.5px;font-weight:600;position:relative;overflow:hidden;transition:0.3s}
-.login-box button:hover{transform:scale(1.02);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
-[data-theme="dark"] .login-box button{background:var(--accent);color:#fff}
-.login-hint{font-size:12px;color:var(--muted);margin-top:14px}
-/* ========================================= */
+.login-overlay { position: fixed; inset: 0; background: var(--vault-bg); z-index: 1000; display: flex; align-items: center; justify-content: center; font-family: var(--vault-font); overflow: hidden; }
+.pointer-light { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, var(--vault-accent-glow) 0%, transparent 70%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 0; opacity: 0; transition: opacity 0.5s ease; mix-blend-mode: multiply; }
+[data-theme="dark"] .pointer-light { mix-blend-mode: screen; }
+.noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
+.vault-card { position: relative; z-index: 2; width: 100%; max-width: 400px; background: var(--vault-card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--vault-radius-card); padding: 40px 24px; box-shadow: var(--vault-shadow-card); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s, box-shadow 0.4s; animation: cardEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; overflow: hidden; color: var(--vault-text-main); }
+@keyframes cardEnter { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.vault-card.shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+.vault-card h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; font-family: 'Hind Siliguri', sans-serif; }
+.vault-card p { font-size: 0.85rem; color: var(--vault-text-muted); margin-bottom: 24px; font-family: 'Hind Siliguri', sans-serif; }
+.stage { position: relative; width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.input-stage { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 3; transition: opacity 0.25s ease; width: 100%; }
+.input-stage.hidden { opacity: 0; pointer-events: none; }
+.input-pill { width: 50px; height: 60px; border-radius: var(--vault-radius-input); background: var(--vault-bg); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: var(--vault-shadow-input); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; text-align: center; transition: border-color 0.4s, box-shadow 0.4s; color: var(--vault-text-main); }
+[data-theme="dark"] .input-pill { border-color: rgba(255, 255, 255, 0.1); }
+.input-pill:focus { border-color: var(--vault-accent); box-shadow: var(--vault-shadow-focus); }
+.input-pill.filled { border-color: var(--vault-accent); background: var(--vault-card-bg); }
+.input-pill.error { border-color: var(--vault-error); box-shadow: 0 0 0 3px var(--vault-error-glow); }
 
+.orbit-layer { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; pointer-events: none; z-index: 4; }
+.orbit-layer.active { display: flex; }
+.orbit-ring { position: relative; width: 64px; height: 64px; }
+.orbit-ring.spin { animation: ringSpin 1.6s cubic-bezier(0.6, 0, 0.4, 1) forwards; }
+@keyframes ringSpin { 100% { transform: rotate(360deg); } }
+.orbit-node { position: absolute; top: 50%; left: 50%; width: 50px; height: 60px; margin: -30px 0 0 -25px; border-radius: var(--vault-radius-input); background: var(--vault-bg); border: 1.5px solid var(--vault-accent); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; color: var(--vault-text-main); transform-origin: 25px 30px; }
+.orbit-node.node-fly { animation: nodeFly 1.6s cubic-bezier(0.34, 1.4, 0.64, 1) forwards; }
+@keyframes nodeFly { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 25% { transform: translate(var(--dx), var(--dy)) scale(1.05); opacity: 1; } 75% { transform: translate(var(--dx), var(--dy)) scale(0.95); opacity: 1; } 100% { transform: translate(0, 0) scale(0.3); opacity: 0; } }
+
+.loading-wrap { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 5; }
+.loading-wrap.active { display: flex; }
+.loading-core { position: relative; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+.loading-ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, var(--vault-accent) 70%, transparent 100%); mask: radial-gradient(circle, transparent 60%, black 62%); -webkit-mask: radial-gradient(circle, transparent 60%, black 62%); animation: spin 1.1s linear infinite; }
+.loading-inner { width: 40px; height: 40px; border-radius: 50%; background: var(--vault-bg); border: 1.5px solid rgba(99, 102, 241, 0.25); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: var(--vault-accent); }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.success-wrap { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 6; }
+.success-wrap.active { display: flex; }
+.success-vault { position: relative; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #34d399 0%, var(--vault-success) 55%, #059669 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.18), 0 0 50px var(--vault-success-glow); animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+@keyframes popIn { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+.checkmark { width: 30px; height: 30px; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 48; stroke-dashoffset: 48; animation: drawCheck 0.55s 0.3s forwards; }
+@keyframes drawCheck { to { stroke-dashoffset: 0; } }
+.error-msg { color: var(--vault-error); font-size: 0.8rem; font-weight: 500; opacity: 0; height: 0; transition: all 0.3s; }
+.error-msg.show { opacity: 1; height: 20px; margin-top: 10px; }
+
+/* =========================================
+   MAIN APP STYLES
+========================================= */
 .app{display:none;min-height:100vh;animation:fadeIn 0.5s ease}
 .app.show{display:grid;grid-template-columns:260px 1fr}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ====== সাইডবার গ্লো ইফেক্ট ====== */
 .sidebar{background:#0f0f0f;color:#a8a29a;padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,0.2)}
 .sidebar::-webkit-scrollbar{width:5px}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:10px}
@@ -62,7 +118,6 @@ ul{list-style:none}
 .side-foot{padding:16px 24px;border-top:1px solid rgba(255,255,255,.08);margin-top:16px}
 .side-foot button{width:100%;padding:12px;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#d5cfc7;font-size:14px;font-weight:500;transition:0.3s}
 .side-foot button:hover{background:var(--sale);border-color:var(--sale);color:#fff;box-shadow:0 5px 15px rgba(192,57,43,0.3)}
-/* ========================================= */
 
 .main{padding:24px 28px 60px;overflow-x:hidden;min-width:0;background:var(--bg);position:relative}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap;animation:slideDown 0.5s ease}
@@ -80,7 +135,6 @@ ul{list-style:none}
 .btn-danger:hover{background:#a93226;transform:translateY(-2px);box-shadow:0 5px 15px rgba(192,57,43,0.4)}
 .sidebar-toggle{display:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--white);font-size:20px;align-items:center;justify-content:center}
 
-/* ====== স্ট্যাট কার্ড 3D এফেক্ট ====== */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
 .stat-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:1}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent-d));transform:scaleX(0);transform-origin:left;transition:transform .4s}
@@ -94,7 +148,6 @@ ul{list-style:none}
 .stat-card .ico.red{background:rgba(192,57,43,.1);color:var(--sale)}
 .stat-card h3{font-size:28px;font-weight:700;line-height:1.1;color:var(--ink)}
 .stat-card p{font-size:13.5px;color:var(--muted);margin-top:4px;font-weight:500}
-/* ========================================= */
 
 .panel{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.02);transition:box-shadow 0.3s}
 .panel:hover{box-shadow:0 10px 30px rgba(0,0,0,0.05)}
@@ -153,7 +206,6 @@ tr:hover .product-thumb{transform:scale(1.1)}
 .img-add-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(184,137,75,0.05)}
 .upload-progress{font-size:13px;color:var(--accent-d);margin-top:10px;text-align:center;font-weight:600;min-height:20px}
 
-/* ====== মোডাল অ্যানিমেশন ====== */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,15,15,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);overflow-y:auto}
 .modal-overlay.show{display:flex;animation:fadeIn 0.3s}
 .modal{background:var(--white);border-radius:24px;width:100%;max-width:640px;max-height:94vh;overflow-y:auto;padding:32px;margin:auto;box-shadow:0 30px 60px rgba(0,0,0,0.3);transform:scale(0.95);transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
@@ -162,7 +214,6 @@ tr:hover .product-thumb{transform:scale(1.1)}
 .modal-head h2{font-size:22px;font-weight:700}
 .modal-close{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:20px;color:var(--muted);display:grid;place-items:center;flex-shrink:0;transition:0.3s}
 .modal-close:hover{background:var(--sale);color:#fff;border-color:var(--sale);transform:rotate(90deg)}
-/* ========================================= */
 
 .orders-list{padding:20px}
 .order-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;transition:all 0.3s;position:relative;overflow:hidden}
@@ -274,6 +325,62 @@ tr:hover .product-thumb{transform:scale(1.1)}
 .info-banner b{color:#0369a1}
 [data-theme="dark"] .info-banner b{color:#7dd3fc}
 
+/* ====== ADMIN ANIMATED THEME TOGGLE & LOGOUT ====== */
+.theme-toggle { position: relative; width: 64px; height: 34px; border-radius: 34px; background: #7eb3e3; padding: 0; border: none; cursor: pointer; outline: none; flex-shrink: 0; transition: background 0.6s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); margin-right: 10px; }
+.theme-toggle.dark { background: #1a1c3b; }
+.toggle-track { position: absolute; inset: 0; border-radius: 34px; overflow: hidden; }
+.toggle-clouds { position: absolute; bottom: -5px; left: 0; width: 200%; height: 20px; display: flex; transition: opacity 0.5s; animation: cloudMove 10s linear infinite; }
+.toggle-cloud { width: 50%; height: 100%; background: rgba(255,255,255,0.8); border-radius: 20px; margin: 0 2px; }
+@keyframes cloudMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.toggle-sun { position: absolute; right: 6px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: #fcd34d; box-shadow: 0 0 8px #fcd34d; transition: opacity 0.5s, transform 0.5s; }
+.toggle-moon { position: absolute; left: 6px; top: 5px; font-size: 16px; opacity: 0; transform: translateY(-10px) rotate(-45deg); transition: opacity 0.5s, transform 0.5s; }
+.toggle-stars { position: absolute; inset: 0; opacity: 0; background-image: radial-gradient(1px 1px at 10px 5px, #fff, transparent), radial-gradient(1px 1px at 25px 12px, #fff, transparent), radial-gradient(1px 1px at 40px 8px, #fff, transparent), radial-gradient(1px 1px at 50px 18px, #fff, transparent); transition: opacity 0.5s; }
+.toggle-birds { position: absolute; top: 10px; left: 20px; width: 100%; height: 10px; transition: opacity 0.5s; }
+.bird { position: absolute; width: 6px; height: 4px; animation: flyBird 4s linear infinite; }
+.bird.b2 { animation-delay: -2s; top: 4px; }
+@keyframes flyBird { 0% { left: 100%; opacity: 1; } 80% { left: -20px; opacity: 1; } 100% { left: -20px; opacity: 0; } }
+.toggle-knob { position: absolute; top: 3px; left: 3px; width: 28px; height: 28px; background: #fff; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s; z-index: 2; }
+.theme-toggle.dark .toggle-knob { left: 33px; background: #cbd5e1; }
+.theme-toggle.dark .toggle-sun { opacity: 0; transform: scale(0); }
+.theme-toggle.dark .toggle-moon { opacity: 1; transform: translateY(0) rotate(0deg); }
+.theme-toggle.dark .toggle-stars { opacity: 1; }
+.theme-toggle.dark .toggle-clouds { opacity: 0.2; }
+.theme-toggle.dark .toggle-birds { opacity: 0; }
+
+/* Logout Button */
+.logoutButton { --figure-duration: 100ms; --transform-figure: none; --walking-duration: 100ms; --transform-arm1: none; --transform-wrist1: none; --transform-arm2: none; --transform-wrist2: none; --transform-leg1: none; --transform-calf1: none; --transform-leg2: none; --transform-calf2: none; background: transparent; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 12px; color: #d5cfc7; cursor: pointer; display: block; font-family: inherit; font-size: 14px; font-weight: 600; height: 44px; outline: none; padding: 0 0 0 20px; perspective: 100px; position: relative; text-align: left; width: 140px; -webkit-tap-highlight-color: transparent; transition: border-color 0.3s, box-shadow 0.3s; }
+.logoutButton:hover { border-color: var(--accent); box-shadow: 0 5px 15px rgba(184,137,75,0.1); color: #fff; }
+.logoutButton::before { background-color: #0f0f0f; border-radius: 10px; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; transform: none; transition: transform 50ms ease; width: 100%; z-index: 2; }
+.logoutButton:hover .door { transform: rotateY(20deg); }
+.logoutButton:active::before { transform: scale(0.96); }
+.logoutButton:active .door { transform: rotateY(28deg); }
+.logoutButton.clicked::before { transform: none; }
+.logoutButton.clicked .door { transform: rotateY(35deg); }
+.logoutButton.door-slammed .door { transform: none; transition: transform 100ms ease-in 250ms; }
+.logoutButton.falling { animation: shake 200ms linear; }
+.logoutButton.falling .bang { animation: flash 300ms linear; }
+.logoutButton.falling .figure { animation: spin 1000ms infinite linear; bottom: -1080px; opacity: 0; right: 1px; transition: transform calc(var(--figure-duration) * 1ms) linear, bottom calc(var(--figure-duration) * 1ms) cubic-bezier(0.7, 0.1, 1, 1) 100ms, opacity calc(var(--figure-duration) * 0.25ms) linear calc(var(--figure-duration) * 0.75ms); z-index: 1; }
+.logoutButton .button-text { color: inherit; font-weight: 600; position: relative; z-index: 10; }
+.logoutButton svg { display: block; position: absolute; }
+.logoutButton .figure { bottom: 5px; fill: var(--accent); right: 18px; transform: var(--transform-figure); transition: transform calc(var(--figure-duration) * 1ms) cubic-bezier(0.2, 0.1, 0.8, 0.9); width: 30px; z-index: 4; }
+.logoutButton .door, .logoutButton .doorway { bottom: 4px; fill: #0f0f0f; right: 12px; width: 32px; }
+.logoutButton .door path { fill: var(--accent); stroke: var(--accent); stroke-width: 4; }
+.logoutButton .door { transform: rotateY(20deg); transform-origin: 100% 50%; transform-style: preserve-3d; transition: transform 200ms ease; z-index: 5; }
+.logoutButton .doorway { z-index: 3; }
+.logoutButton .bang { opacity: 0; }
+.logoutButton .arm1, .logoutButton .wrist1, .logoutButton .arm2, .logoutButton .wrist2, .logoutButton .leg1, .logoutButton .calf1, .logoutButton .leg2, .logoutButton .calf2 { transition: transform calc(var(--walking-duration) * 1ms) ease-in-out; }
+.logoutButton .arm1 { transform: var(--transform-arm1); transform-origin: 52% 45%; }
+.logoutButton .wrist1 { transform: var(--transform-wrist1); transform-origin: 59% 55%; }
+.logoutButton .arm2 { transform: var(--transform-arm2); transform-origin: 47% 43%; }
+.logoutButton .wrist2 { transform: var(--transform-wrist2); transform-origin: 35% 47%; }
+.logoutButton .leg1 { transform: var(--transform-leg1); transform-origin: 47% 64.5%; }
+.logoutButton .calf1 { transform: var(--transform-calf1); transform-origin: 55.5% 71.5%; }
+.logoutButton .leg2 { transform: var(--transform-leg2); transform-origin: 43% 63%; }
+.logoutButton .calf2 { transform: var(--transform-calf2); transform-origin: 41.5% 73%; }
+@keyframes spin { from { transform: rotate(0deg) scale(0.94); } to { transform: rotate(359deg) scale(0.94); } }
+@keyframes shake { 0% { transform: rotate(-1deg); } 50% { transform: rotate(2deg); } 100% { transform: rotate(-1deg); } }
+@keyframes flash { 0% { opacity: 0.4; } 100% { opacity: 0; } }
+
 @media (max-width:1024px){
   .app.show{grid-template-columns:1fr}
   .sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:400;transform:translateX(-100%);transition:transform .4s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
@@ -304,14 +411,36 @@ tr:hover .product-thumb{transform:scale(1.1)}
 </head>
 <body>
 
+<!-- SECURE VAULT LOGIN UI -->
 <div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <span class="logo">Lomura <span>Wear</span></span>
-    <p>অ্যাডমিন প্যানেলে প্রবেশ করুন</p>
-    <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="current-password">
-    <button onclick="doLogin()">🔐 লগইন করুন</button>
-    <div class="login-hint">ডিফল্ট পাসওয়ার্ড: <b>admin123</b></div>
-  </div>
+  <div class="pointer-light" id="pointerLight"></div>
+  <div class="noise"></div>
+  <main class="vault-card" id="vaultCard">
+    <h1 id="vaultTitle">Access Code</h1>
+    <p id="vaultSubtitle">Enter your security PIN.</p>
+
+    <div class="stage" id="vaultStage">
+      <div class="input-stage" id="vaultInputStage">
+        <!-- Login boxes dynamically generated -->
+      </div>
+      <div class="orbit-layer" id="vaultOrbitLayer">
+        <div class="orbit-ring" id="vaultOrbitRing"></div>
+      </div>
+      <div class="loading-wrap" id="vaultLoadingWrap">
+        <div class="loading-core">
+          <div class="loading-ring"></div>
+          <div class="loading-inner" id="vaultLoadingPercent">0</div>
+        </div>
+      </div>
+      <div class="success-wrap" id="vaultSuccessWrap">
+        <div class="success-vault">
+          <svg class="checkmark" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+    <div class="error-msg" id="vaultErrorMsg">Incorrect PIN. Please try again.</div>
+    <div style="margin-top:20px; font-size:12px; color:var(--vault-text-muted)">Default PIN: 1234</div>
+  </main>
 </div>
 
 <div class="app" id="app">
@@ -331,8 +460,26 @@ tr:hover .product-thumb{transform:scale(1.1)}
       <a data-section="reports"><span class="ico">📈</span> রিপোর্ট</a>
       <a data-section="settings"><span class="ico">⚙️</span> সেটিংস</a>
     </nav>
-    <div class="side-foot">
-      <button onclick="doLogout()">🚪 লগআউট</button>
+    <div class="side-foot" style="display:flex; justify-content:center; padding: 16px 0;">
+      <button class="logoutButton" id="adminLogoutBtn" onclick="doLogoutAnimated()" style="margin:0;">
+        <svg class="doorway" viewBox="0 0 100 100">
+          <path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z" />
+          <path class="bang" d="M40.5 43.7L26.6 31.4l-2.5 6.7zM41.9 50.4l-19.5-4-1.4 6.3zM40 57.4l-17.7 3.9 3.9 5.7z" />
+        </svg>
+        <svg class="figure" viewBox="0 0 100 100">
+          <circle cx="52.1" cy="32.4" r="6.4" />
+          <path d="M50.7 62.8c-1.2 2.5-3.6 5-7.2 4-3.2-.9-4.9-3.5-4-7.8.7-3.4 3.1-13.8 4.1-15.8 1.7-3.4 1.6-4.6 7-3.7 4.3.7 4.6 2.5 4.3 5.4-.4 3.7-2.8 15.1-4.2 17.9z" />
+          <g class="arm1"><path d="M55.5 56.5l-6-9.5c-1-1.5-.6-3.5.9-4.4 1.5-1 3.7-1.1 4.6.4l6.1 10c1 1.5.3 3.5-1.1 4.4-1.5.9-3.5.5-4.5-.9z" /><path class="wrist1" d="M69.4 59.9L58.1 58c-1.7-.3-2.9-1.9-2.6-3.7.3-1.7 1.9-2.9 3.7-2.6l11.4 1.9c1.7.3 2.9 1.9 2.6 3.7-.4 1.7-2 2.9-3.8 2.6z" /></g>
+          <g class="arm2"><path d="M34.2 43.6L45 40.3c1.7-.6 3.5.3 4 2 .6 1.7-.3 4-2 4.5l-10.8 2.8c-1.7.6-3.5-.3-4-2-.6-1.6.3-3.4 2-4z" /><path class="wrist2" d="M27.1 56.2L32 45.7c.7-1.6 2.6-2.3 4.2-1.6 1.6.7 2.3 2.6 1.6 4.2L33 58.8c-.7 1.6-2.6 2.3-4.2 1.6-1.7-.7-2.4-2.6-1.7-4.2z" /></g>
+          <g class="leg1"><path d="M52.1 73.2s-7-5.7-7.9-6.5c-.9-.9-1.2-3.5-.1-4.9 1.1-1.4 3.8-1.9 5.2-.9l7.9 7c1.4 1.1 1.7 3.5.7 4.9-1.1 1.4-4.4 1.5-5.8.4z" /><path class="calf1" d="M52.6 84.4l-1-12.8c-.1-1.9 1.5-3.6 3.5-3.7 2-.1 3.7 1.4 3.8 3.4l1 12.8c.1 1.9-1.5 3.6-3.5 3.7-2 0-3.7-1.5-3.8-3.4z" /></g>
+          <g class="leg2"><path d="M37.8 72.7s1.3-10.2 1.6-11.4 2.4-2.8 4.1-2.6c1.7.2 3.6 2.3 3.4 4l-1.8 11.1c-.2 1.7-1.7 3.3-3.4 3.1-1.8-.2-4.1-2.4-3.9-4.2z" /><path class="calf2" d="M29.5 82.3l9.6-10.9c1.3-1.4 3.6-1.5 5.1-.1 1.5 1.4.4 4.9-.9 6.3l-8.5 9.6c-1.3 1.4-3.6 1.5-5.1.1-1.4-1.3-1.5-3.5-.2-5z" /></g>
+        </svg>
+        <svg class="door" viewBox="0 0 100 100">
+          <path d="M93.4 86.3H58.6c-1.9 0-3.4-1.5-3.4-3.4V17.1c0-1.9 1.5-3.4 3.4-3.4h34.8c1.9 0 3.4 1.5 3.4 3.4v65.8c0 1.9-1.5 3.4-3.4 3.4z" />
+          <circle cx="66" cy="50" r="3.7" />
+        </svg>
+        <span class="button-text">লগ আউট</span>
+      </button>
     </div>
   </aside>
 
@@ -343,10 +490,21 @@ tr:hover .product-thumb{transform:scale(1.1)}
         <h1 id="pageTitle">ড্যাশবোর্ড</h1>
       </div>
       <div class="actions">
+        <button class="theme-toggle" id="adminThemeToggle" onclick="toggleAdminTheme()" aria-label="Toggle Theme">
+          <div class="toggle-track">
+            <div class="toggle-stars"></div>
+            <div class="toggle-clouds"><div class="toggle-cloud c1"></div><div class="toggle-cloud c2"></div></div>
+            <div class="toggle-moon">🌙</div>
+            <div class="toggle-sun"></div>
+            <div class="toggle-birds"><svg class="bird b1" viewBox="0 0 14 8"><path d="M0 6 Q7 -2 14 6 Q7 3 0 6Z" fill="#fff"/></svg><svg class="bird b2" viewBox="0 0 14 8"><path d="M0 6 Q7 -2 14 6 Q7 3 0 6Z" fill="#fff"/></svg></div>
+          </div>
+          <div class="toggle-knob"></div>
+        </button>
         <a href="index.html" target="_blank" class="btn btn-outline">🌐 সাইট দেখুন</a>
       </div>
     </div>
 
+    <!-- DASHBOARD -->
     <section class="section active" id="section-dashboard">
       <div class="stats-grid">
         <div class="stat-card"><div class="ico gold">👕</div><h3 id="statProducts">০</h3><p>মোট পণ্য</p></div>
@@ -360,6 +518,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- PRODUCTS -->
     <section class="section" id="section-products">
       <div class="panel">
         <div class="panel-head">
@@ -373,6 +532,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- CATEGORIES -->
     <section class="section" id="section-categories">
       <div class="panel">
         <div class="panel-head">
@@ -383,6 +543,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- COUPONS -->
     <section class="section" id="section-coupons">
       <div class="panel">
         <div class="panel-head">
@@ -393,6 +554,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- ORDERS -->
     <section class="section" id="section-orders">
       <div class="panel" style="padding:0;overflow:hidden">
         <div class="panel-head" style="padding:20px 24px">
@@ -404,6 +566,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- CUSTOMERS -->
     <section class="section" id="section-customers">
       <div class="panel">
         <div class="panel-head"><h2>👥 কাস্টমার লিস্ট</h2></div>
@@ -411,6 +574,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- REVIEWS -->
     <section class="section" id="section-reviews">
       <div class="panel">
         <div class="panel-head">
@@ -421,6 +585,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- REPORTS -->
     <section class="section" id="section-reports">
       <div class="stats-grid">
         <div class="stat-card"><div class="ico gold">📅</div><h3 id="repToday">৳০</h3><p>আজকের বিক্রি</p></div>
@@ -438,6 +603,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
       </div>
     </section>
 
+    <!-- SETTINGS -->
     <section class="section" id="section-settings">
       <div class="info-banner">
         <div class="em">💡</div>
@@ -549,6 +715,48 @@ tr:hover .product-thumb{transform:scale(1.1)}
   </main>
 </div>
 
+<!-- DYNAMIC VAULT PASSWORD MODAL (For Settings Change) -->
+<div class="modal-overlay" id="vaultPassModal">
+  <div class="vault-card" id="setVaultCard" style="margin:auto; background:var(--white); color:var(--ink); border:1px solid var(--line); max-width:400px; padding:30px 20px; border-radius:24px;">
+    <h1 id="setVaultTitle" style="font-size:20px; font-weight:700; margin-bottom:5px;">Confirm Password</h1>
+    <p id="setVaultSubtitle" style="font-size:13px; color:var(--muted); margin-bottom:20px;">পাসওয়ার্ডটি নিশ্চিত করতে আবার লিখুন।</p>
+
+    <div class="stage" id="setVaultStage" style="height:120px; width:100%; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+      <div class="input-stage" id="setVaultInputStage" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; width:100%;">
+        <!-- বক্সগুলো এখানে ডাইনামিকভাবে তৈরি হবে -->
+      </div>
+      <div class="orbit-layer" id="setVaultOrbitLayer">
+        <div class="orbit-ring" id="setVaultOrbitRing"></div>
+      </div>
+      <div class="loading-wrap" id="setVaultLoadingWrap">
+        <div class="loading-core">
+          <div class="loading-ring"></div>
+          <div class="loading-inner" id="setVaultLoadingPercent">0</div>
+        </div>
+      </div>
+      <div class="success-wrap" id="setVaultSuccessWrap">
+        <div class="success-vault">
+          <svg class="checkmark" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+    <div class="error-msg" id="setVaultErrorMsg" style="color:var(--sale); font-size:13px; margin-top:10px;">পাসওয়ার্ড মেলেনি!</div>
+  </div>
+</div>
+
+<!-- CUSTOM PASSWORD RESET MODAL (For Customers) -->
+<div class="modal-overlay" id="resetPassModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-head"><h2>🔑 পাসওয়ার্ড রিসেট</h2><button class="modal-close" onclick="closeModal('resetPassModal')">×</button></div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label id="resetPassLabel">কাস্টমারের জন্য নতুন পাসওয়ার্ড দিন</label>
+      <input type="text" id="newCustomerPass" placeholder="কমপক্ষে ৬ অক্ষর">
+    </div>
+    <button class="btn btn-primary" onclick="confirmResetPassword()">✅ আপডেট করুন</button>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
 <div class="modal-overlay" id="productModal">
   <div class="modal">
     <div class="modal-head"><h2 id="productModalTitle">নতুন পণ্য</h2><button class="modal-close" onclick="closeModal('productModal')">×</button></div>
@@ -587,6 +795,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
   </div>
 </div>
 
+<!-- CATEGORY MODAL -->
 <div class="modal-overlay" id="categoryModal">
   <div class="modal" style="max-width:480px">
     <div class="modal-head"><h2 id="categoryModalTitle">নতুন ক্যাটাগরি</h2><button class="modal-close" onclick="closeModal('categoryModal')">×</button></div>
@@ -603,6 +812,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
   </div>
 </div>
 
+<!-- COUPON MODAL -->
 <div class="modal-overlay" id="couponModal">
   <div class="modal" style="max-width:520px">
     <div class="modal-head"><h2 id="couponModalTitle">নতুন কুপন</h2><button class="modal-close" onclick="closeModal('couponModal')">×</button></div>
@@ -625,6 +835,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
   </div>
 </div>
 
+<!-- INFO MODAL -->
 <div class="modal-overlay" id="infoModal">
   <div class="modal">
     <div class="modal-head"><h2 id="infoModalTitle">তথ্য</h2><button class="modal-close" onclick="closeModal('infoModal')">×</button></div>
@@ -632,6 +843,7 @@ tr:hover .product-thumb{transform:scale(1.1)}
   </div>
 </div>
 
+<!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="confirmModal">
   <div class="confirm-box">
     <div class="ico-warn">⚠️</div>
@@ -670,7 +882,7 @@ var SETTINGS = {
   siteName:'Lomura Wear', phone:'', email:'', address:'',
   facebookPage:'61590750957468', whatsApp:'',
   freeShipLimit:2000, dhakaInside:100, dhakaOutside:120,
-  bkashNumber:'', nagadNumber:'', adminPassword:'admin123',
+  bkashNumber:'', nagadNumber:'', adminPassword:'1234',
   returnPolicy: 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।',
   heroSmallText: 'NEW COLLECTION 2025'
 };
@@ -703,33 +915,224 @@ function showConfirm(title, msg, cb){
 function confirmNo(){ closeModal('confirmModal'); confirmCallback = null; }
 function confirmYes(){ closeModal('confirmModal'); if(confirmCallback){ confirmCallback(); confirmCallback = null; } }
 
-function checkAuth(){
-  if(sessionStorage.getItem('lomura_admin') === 'true'){
-    $('#loginOverlay').style.display = 'none';
-    $('#app').classList.add('show');
-    initAdmin();
-  } else {
-    $('#loginOverlay').style.display = 'grid';
-    $('#app').classList.remove('show');
+/* =========================================
+   VAULT LOGIN LOGIC
+========================================= */
+var vState = 'idle';
+var vOtp = '';
+var vInputs = [];
+
+function setupLoginVault() {
+  var stage = document.getElementById('vaultInputStage');
+  if(!stage) return;
+  stage.innerHTML = '';
+  vInputs = [];
+  var passLen = (SETTINGS.adminPassword && SETTINGS.adminPassword.length > 0) ? SETTINGS.adminPassword.length : 4; 
+  
+  for(let i=0; i<passLen; i++) {
+    let input = document.createElement('input');
+    input.type = 'text'; input.className = 'input-pill'; input.maxLength = 1; input.dataset.index = i;
+    input.autocomplete = 'off'; input.inputMode = 'text';
+    
+    input.addEventListener('input', (e) => {
+      if (vState === 'loading' || vState === 'success') return;
+      if (vState === 'error') resetVault(true);
+      const value = e.target.value;
+      e.target.value = value;
+      if (value) {
+        e.target.classList.add('filled');
+        if (i < vInputs.length - 1) vInputs[i + 1].focus();
+        else {
+          vOtp = vInputs.map(inp => inp.value).join('');
+          if (vOtp.length === passLen) triggerVaultVerify();
+        }
+      } else { e.target.classList.remove('filled'); }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        if (vState === 'error') resetVault(true);
+        if (!e.target.value && i > 0) vInputs[i - 1].focus();
+      }
+    });
+    input.addEventListener('focus', () => { if (vState === 'error') resetVault(true); input.select(); });
+    stage.appendChild(input);
+    vInputs.push(input);
   }
 }
-function doLogin(){
-  var pass = $('#loginPass').value.trim();
-  if(pass === SETTINGS.adminPassword){
+
+document.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  var pointerLight = document.getElementById('pointerLight');
+  if(pointerLight) {
+    pointerLight.style.opacity = '1';
+    pointerLight.style.left = `${e.clientX}px`;
+    pointerLight.style.top = `${e.clientY}px`;
+  }
+});
+
+var vTimers = [];
+function triggerVaultVerify() {
+  if (vState === 'loading' || vState === 'success') return;
+  vState = 'loading';
+  vTimers.forEach(t => clearTimeout(t));
+  vTimers = [];
+
+  document.getElementById('vaultInputStage').classList.add('hidden');
+  var orbitRing = document.getElementById('vaultOrbitRing');
+  orbitRing.innerHTML = '';
+  for (let i = 0; i < vOtp.length; i++) {
+    const angle = (i / vOtp.length) * Math.PI * 2 - Math.PI / 2;
+    const node = document.createElement('div');
+    node.className = 'orbit-node';
+    node.textContent = vOtp[i];
+    node.style.setProperty('--dx', `${Math.cos(angle) * 60}px`);
+    node.style.setProperty('--dy', `${Math.sin(angle) * 60}px`);
+    node.style.animationDelay = `${i * 50}ms`;
+    orbitRing.appendChild(node);
+  }
+  document.getElementById('vaultOrbitLayer').classList.add('active');
+  orbitRing.classList.add('spin');
+  document.querySelectorAll('.orbit-node').forEach(n => n.classList.add('node-fly'));
+
+  vTimers.push(setTimeout(() => {
+    document.getElementById('vaultOrbitLayer').classList.remove('active');
+    document.getElementById('vaultInputStage').style.display = 'none';
+    document.getElementById('vaultTitle').textContent = 'Verifying...';
+    document.getElementById('vaultSubtitle').textContent = 'Securely checking your credentials.';
+    document.getElementById('vaultLoadingWrap').classList.add('active');
+
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / 1500, 1);
+      document.getElementById('vaultLoadingPercent').textContent = Math.round((1 - Math.pow(1 - p, 2.2)) * 100);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    vTimers.push(setTimeout(() => {
+      if (vOtp === SETTINGS.adminPassword) { handleVaultSuccess(); } else { handleVaultError(); }
+    }, 1500));
+  }, 1800));
+}
+
+function handleVaultSuccess() {
+  vState = 'success';
+  document.getElementById('vaultLoadingWrap').classList.remove('active');
+  document.getElementById('vaultSuccessWrap').classList.add('active');
+  document.getElementById('vaultCard').classList.add('success-tint');
+
+  vTimers.push(setTimeout(() => {
+    document.getElementById('vaultTitle').textContent = 'Access Granted';
+    document.getElementById('vaultSubtitle').textContent = 'Welcome back. Redirecting to your vault…';
+  }, 250));
+
+  vTimers.push(setTimeout(() => {
     sessionStorage.setItem('lomura_admin', 'true');
     checkAuth();
-    toast('✅ লগইন সফল', 'success');
-  } else {
-    toast('❌ ভুল পাসওয়ার্ড!', 'error');
+  }, 1500));
+}
+
+function handleVaultError() {
+  vState = 'error';
+  document.getElementById('vaultLoadingWrap').classList.remove('active');
+  document.getElementById('vaultCard').classList.add('shake');
+  document.getElementById('vaultErrorMsg').classList.add('show');
+  document.getElementById('vaultTitle').textContent = 'Verification Failed';
+  document.getElementById('vaultSubtitle').textContent = 'The PIN you entered is incorrect.';
+  vInputs.forEach(input => input.classList.add('error'));
+
+  vTimers.push(setTimeout(() => document.getElementById('vaultCard').classList.remove('shake'), 500));
+  vTimers.push(setTimeout(() => { if (vState === 'error') resetVault(false); }, 2000));
+}
+
+function resetVault(immediateFocus) {
+  vTimers.forEach(t => clearTimeout(t));
+  vTimers = [];
+  vState = 'idle';
+  vOtp = '';
+  document.getElementById('vaultCard').classList.remove('shake', 'success-tint');
+  document.getElementById('vaultErrorMsg').classList.remove('show');
+  document.getElementById('vaultTitle').textContent = 'Access Code';
+  document.getElementById('vaultSubtitle').textContent = 'Enter your security PIN.';
+  document.getElementById('vaultOrbitLayer').classList.remove('active');
+  document.getElementById('vaultLoadingWrap').classList.remove('active');
+  document.getElementById('vaultLoadingPercent').textContent = '0';
+  document.getElementById('vaultSuccessWrap').classList.remove('active');
+  vInputs.forEach(input => { input.value = ''; input.classList.remove('error', 'filled'); });
+  document.getElementById('vaultInputStage').style.display = 'flex';
+  document.getElementById('vaultInputStage').classList.remove('hidden');
+  if (immediateFocus !== false && vInputs.length) vInputs[0].focus();
+}
+
+/* =========================================
+   THEME & AUTH LOGIC
+========================================= */
+function toggleAdminTheme() {
+  var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  
+  var toggleBtn = document.getElementById('adminThemeToggle');
+  if(toggleBtn) {
+    if(next === 'dark') toggleBtn.classList.add('dark');
+    else toggleBtn.classList.remove('dark');
   }
 }
-function doLogout(){
-  if(!confirm('লগআউট করবেন?')) return;
-  sessionStorage.removeItem('lomura_admin');
-  checkAuth();
-  toast('লগআউট');
+
+function initAdminLogoutAnim() {
+  var btn = document.getElementById('adminLogoutBtn');
+  if(!btn || btn.dataset.init === 'true') return;
+  btn.dataset.init = 'true';
+
+  var states = {
+    'default': { '--figure-duration': '100', '--transform-figure': 'none', '--walking-duration': '100', '--transform-arm1': 'none', '--transform-wrist1': 'none', '--transform-arm2': 'none', '--transform-wrist2': 'none', '--transform-leg1': 'none', '--transform-calf1': 'none', '--transform-leg2': 'none', '--transform-calf2': 'none' },
+    'hover': { '--figure-duration': '100', '--transform-figure': 'translateX(1.5px)', '--walking-duration': '100', '--transform-arm1': 'rotate(-5deg)', '--transform-wrist1': 'rotate(-15deg)', '--transform-arm2': 'rotate(5deg)', '--transform-wrist2': 'rotate(6deg)', '--transform-leg1': 'rotate(-10deg)', '--transform-calf1': 'rotate(5deg)', '--transform-leg2': 'rotate(20deg)', '--transform-calf2': 'rotate(-20deg)' },
+    'walking1': { '--figure-duration': '300', '--transform-figure': 'translateX(11px)', '--walking-duration': '300', '--transform-arm1': 'translateX(-4px) translateY(-2px) rotate(120deg)', '--transform-wrist1': 'rotate(-5deg)', '--transform-arm2': 'translateX(4px) rotate(-110deg)', '--transform-wrist2': 'rotate(-5deg)', '--transform-leg1': 'translateX(-3px) rotate(80deg)', '--transform-calf1': 'rotate(-30deg)', '--transform-leg2': 'translateX(4px) rotate(-60deg)', '--transform-calf2': 'rotate(20deg)' },
+    'walking2': { '--figure-duration': '400', '--transform-figure': 'translateX(17px)', '--walking-duration': '300', '--transform-arm1': 'rotate(60deg)', '--transform-wrist1': 'rotate(-15deg)', '--transform-arm2': 'rotate(-45deg)', '--transform-wrist2': 'rotate(6deg)', '--transform-leg1': 'rotate(-5deg)', '--transform-calf1': 'rotate(10deg)', '--transform-leg2': 'rotate(10deg)', '--transform-calf2': 'rotate(-20deg)' },
+    'falling1': { '--figure-duration': '1600', '--walking-duration': '400', '--transform-arm1': 'rotate(-60deg)', '--transform-wrist1': 'none', '--transform-arm2': 'rotate(30deg)', '--transform-wrist2': 'rotate(120deg)', '--transform-leg1': 'rotate(-30deg)', '--transform-calf1': 'rotate(-20deg)', '--transform-leg2': 'rotate(20deg)' },
+    'falling2': { '--walking-duration': '300', '--transform-arm1': 'rotate(-100deg)', '--transform-arm2': 'rotate(-60deg)', '--transform-wrist2': 'rotate(60deg)', '--transform-leg1': 'rotate(80deg)', '--transform-calf1': 'rotate(20deg)', '--transform-leg2': 'rotate(-60deg)' },
+    'falling3': { '--walking-duration': '500', '--transform-arm1': 'rotate(-30deg)', '--transform-wrist1': 'rotate(40deg)', '--transform-arm2': 'rotate(50deg)', '--transform-wrist2': 'none', '--transform-leg1': 'rotate(-30deg)', '--transform-leg2': 'rotate(20deg)', '--transform-calf2': 'none' }
+  };
+
+  btn.state = 'default';
+  let updateButtonState = (button, state) => {
+    if (states[state]) {
+      button.state = state;
+      for (let key in states[state]) button.style.setProperty(key, states[state][key]);
+    }
+  }
+
+  btn.addEventListener('mouseenter', () => { if (btn.state === 'default') updateButtonState(btn, 'hover'); });
+  btn.addEventListener('mouseleave', () => { if (btn.state === 'hover') updateButtonState(btn, 'default'); });
+
+  btn.addEventListener('click', () => {
+    if (btn.state === 'default' || btn.state === 'hover') {
+      btn.classList.add('clicked');
+      updateButtonState(btn, 'walking1');
+      setTimeout(() => {
+        btn.classList.add('door-slammed');
+        updateButtonState(btn, 'walking2');
+        setTimeout(() => {
+          btn.classList.add('falling');
+          updateButtonState(btn, 'falling1');
+          setTimeout(() => {
+            updateButtonState(btn, 'falling2');
+            setTimeout(() => {
+              updateButtonState(btn, 'falling3');
+              setTimeout(() => {
+                sessionStorage.removeItem('lomura_admin');
+                checkAuth();
+                toast('লগআউট সম্পন্ন');
+                setTimeout(() => { btn.classList.remove('clicked', 'door-slammed', 'falling'); updateButtonState(btn, 'default'); btn.dataset.init=''; }, 500);
+              }, 1000);
+            }, states['falling2']['--walking-duration']);
+          }, states['falling1']['--walking-duration']);
+        }, states['walking2']['--figure-duration']);
+      }, states['walking1']['--figure-duration']);
+    }
+  });
 }
-$('#loginPass').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
 
 var TITLES = { dashboard:'ড্যাশবোর্ড', products:'পণ্যসমূহ', categories:'ক্যাটাগরি', coupons:'কুপন কোড', orders:'অর্ডার', customers:'কাস্টমার', reviews:'রিভিউ', reports:'রিপোর্ট', settings:'সেটিংস' };
 $$('.side-nav a').forEach(function(link){
@@ -854,6 +1257,9 @@ function loadSettings(){
     if(doc.exists){
       var s = doc.data();
       for(var k in s){ SETTINGS[k] = s[k]; }
+      if(!sessionStorage.getItem('lomura_admin')) {
+        setupLoginVault(); // পাসওয়ার্ড চেঞ্জ হলে লগইন বক্স আপডেট হবে
+      }
     }
   });
 }
@@ -1406,30 +1812,26 @@ function viewOrder(docId){
   openModal('infoModal');
 }
 
+/* ========== CUSTOM PASSWORD RESET LOGIC ========== */
+var resetPhoneTarget = '';
 function resetCustomerPassword(phone, name) {
-  var newPass = prompt('🔑 ' + name + ' এর জন্য নতুন পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর):');
+  resetPhoneTarget = phone;
+  $('#resetPassLabel').textContent = name + ' এর জন্য নতুন পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর):';
+  $('#newCustomerPass').value = '';
+  openModal('resetPassModal');
+}
+function confirmResetPassword() {
+  var newPass = $('#newCustomerPass').value.trim();
+  if(!newPass || newPass.length < 6) { toast('❌ পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে!', 'error'); return; }
   
-  if(!newPass) return;
-  if(newPass.length < 6) {
-    toast('❌ পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে!', 'error');
-    return;
-  }
-
   var hash = 0;
-  for(var i = 0; i < newPass.length; i++){
-    var char = newPass.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
+  for(var i = 0; i < newPass.length; i++){ var char = newPass.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash = hash & hash; }
   var hashedPass = 'h' + Math.abs(hash).toString(36) + '_' + newPass.length;
 
-  db.collection('users').doc(phone).update({ 
-    password: hashedPass 
-  }).then(function() {
-    toast('✅ পাসওয়ার্ড আপডেট হয়েছে! কাস্টমারকে নতুন পাসওয়ার্ডটি জানিয়ে দিন।', 'success');
-  }).catch(function(err) {
-    toast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
-  });
+  db.collection('users').doc(resetPhoneTarget).update({ password: hashedPass }).then(function() {
+    closeModal('resetPassModal');
+    toast('✅ পাসওয়ার্ড আপডেট হয়েছে!', 'success');
+  }).catch(function(err) { toast('❌ আপডেট ব্যর্থ: ' + err.message, 'error'); });
 }
 
 function renderCustomers(){
@@ -1574,36 +1976,174 @@ function renderSettingsForm(){
   $('#setDhakaOutside').value = SETTINGS.dhakaOutside || 120;
   $('#setBkash').value = SETTINGS.bkashNumber || '';
   $('#setNagad').value = SETTINGS.nagadNumber || '';
-  $('#setPassword').value = SETTINGS.adminPassword || 'admin123';
+  $('#setPassword').value = SETTINGS.adminPassword || '1234';
   $('#setReturnPolicy').value = SETTINGS.returnPolicy || 'পণ্য নিতে না চাইলে রিটার্ন ডেলিভারি চার্জ (ঢাকার ভিতরে ১০০৳ / বাইরে ১২০৳) আপনাকে দিতে হবে। তবে আমাদের ভুলে ভুল প্রোডাক্ট গেলে সম্পূর্ণ দায় আমাদের।';
   $('#setHeroSmallText').value = SETTINGS.heroSmallText || 'NEW COLLECTION 2025';
 }
 
+/* =========================================
+   DYNAMIC VAULT FOR SETTINGS PASSWORD CHANGE
+========================================= */
+var setVState = 'idle';
+var setVTargetPass = '';
+var setVInputs = [];
+var pendingSettingsData = null;
+
+function openDynamicVault(targetPass) {
+  setVTargetPass = targetPass;
+  setVState = 'idle';
+  document.getElementById('setVaultErrorMsg').classList.remove('show');
+  document.getElementById('setVaultTitle').textContent = 'Confirm Password';
+  document.getElementById('setVaultSubtitle').textContent = 'পাসওয়ার্ডটি নিশ্চিত করতে আবার লিখুন।';
+  
+  document.getElementById('setVaultOrbitLayer').classList.remove('active');
+  document.getElementById('setVaultLoadingWrap').classList.remove('active');
+  document.getElementById('setVaultSuccessWrap').classList.remove('active');
+  
+  var stage = document.getElementById('setVaultInputStage');
+  stage.innerHTML = '';
+  stage.style.display = 'flex';
+  stage.classList.remove('hidden');
+  setVInputs = [];
+
+  for (let i = 0; i < targetPass.length; i++) {
+    let input = document.createElement('input');
+    input.type = 'text'; input.className = 'input-pill'; input.maxLength = 1; input.dataset.index = i;
+    input.autocomplete = 'off'; input.inputMode = 'text';
+    
+    input.addEventListener('input', (e) => {
+      if (setVState === 'loading' || setVState === 'success') return;
+      if (setVState === 'error') resetDynamicVault();
+      let val = e.target.value;
+      e.target.value = val;
+      if (val) {
+        e.target.classList.add('filled');
+        if (i < setVInputs.length - 1) setVInputs[i + 1].focus();
+        else checkDynamicVault();
+      } else { e.target.classList.remove('filled'); }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        if (setVState === 'error') resetDynamicVault();
+        if (!e.target.value && i > 0) setVInputs[i - 1].focus();
+      }
+    });
+    
+    input.addEventListener('focus', () => { if (setVState === 'error') resetDynamicVault(); input.select(); });
+    stage.appendChild(input);
+    setVInputs.push(input);
+  }
+  
+  openModal('vaultPassModal');
+  setTimeout(() => { if(setVInputs.length) setVInputs[0].focus(); }, 300);
+}
+
+function resetDynamicVault() {
+  setVState = 'idle';
+  document.getElementById('setVaultCard').classList.remove('shake', 'success-tint');
+  document.getElementById('setVaultErrorMsg').classList.remove('show');
+  document.getElementById('setVaultOrbitLayer').classList.remove('active');
+  document.getElementById('setVaultLoadingWrap').classList.remove('active');
+  document.getElementById('setVaultSuccessWrap').classList.remove('active');
+  document.getElementById('setVaultInputStage').style.display = 'flex';
+  document.getElementById('setVaultInputStage').classList.remove('hidden');
+  setVInputs.forEach(inp => { inp.value = ''; inp.classList.remove('error', 'filled'); });
+  if (setVInputs.length) setVInputs[0].focus();
+}
+
+function checkDynamicVault() {
+  if (setVState !== 'idle') return;
+  let enteredOtp = setVInputs.map(inp => inp.value).join('');
+  
+  if (enteredOtp !== setVTargetPass) {
+    setVState = 'error';
+    document.getElementById('setVaultCard').classList.add('shake');
+    document.getElementById('setVaultErrorMsg').classList.add('show');
+    setVInputs.forEach(inp => inp.classList.add('error'));
+    setTimeout(() => document.getElementById('setVaultCard').classList.remove('shake'), 500);
+    setTimeout(() => { if (setVState === 'error') resetDynamicVault(); }, 1500);
+    return;
+  }
+
+  setVState = 'loading';
+  document.getElementById('setVaultInputStage').classList.add('hidden');
+  
+  var orbitRing = document.getElementById('setVaultOrbitRing');
+  orbitRing.innerHTML = '';
+  for (let i = 0; i < enteredOtp.length; i++) {
+    const angle = (i / enteredOtp.length) * Math.PI * 2 - Math.PI / 2;
+    const node = document.createElement('div');
+    node.className = 'orbit-node';
+    node.textContent = enteredOtp[i];
+    node.style.setProperty('--dx', `${Math.cos(angle) * 60}px`);
+    node.style.setProperty('--dy', `${Math.sin(angle) * 60}px`);
+    node.style.animationDelay = `${i * 50}ms`;
+    orbitRing.appendChild(node);
+  }
+  document.getElementById('setVaultOrbitLayer').classList.add('active');
+  orbitRing.classList.add('spin');
+  document.querySelectorAll('#setVaultOrbitRing .orbit-node').forEach(n => n.classList.add('node-fly'));
+
+  setTimeout(() => {
+    document.getElementById('setVaultOrbitLayer').classList.remove('active');
+    document.getElementById('setVaultInputStage').style.display = 'none';
+    document.getElementById('setVaultTitle').textContent = 'Verifying...';
+    document.getElementById('setVaultSubtitle').textContent = 'Securely checking your credentials.';
+    document.getElementById('setVaultLoadingWrap').classList.add('active');
+
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / 1500, 1);
+      document.getElementById('setVaultLoadingPercent').textContent = Math.round((1 - Math.pow(1 - p, 2.2)) * 100);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    setTimeout(() => {
+      setVState = 'success';
+      document.getElementById('setVaultLoadingWrap').classList.remove('active');
+      document.getElementById('setVaultSuccessWrap').classList.add('active');
+      document.getElementById('setVaultTitle').textContent = 'Access Granted';
+      document.getElementById('setVaultSubtitle').textContent = 'Password matched successfully.';
+      
+      setTimeout(() => {
+        closeModal('vaultPassModal');
+        executeSaveSettings(pendingSettingsData); // অ্যানিমেশন শেষে সেটিংস সেভ হবে
+      }, 1500);
+    }, 1500);
+  }, 1600);
+}
+
+/* =========================================
+   SETTINGS SAVE LOGIC
+========================================= */
 function saveAllSettings(){
+  var newPass = $('#setPassword').value.trim() || 'admin123';
+  
   var data = {
-    siteName: $('#setSiteName').value.trim() || 'Lomura Wear',
-    phone: $('#setPhone').value.trim(),
-    email: $('#setEmail').value.trim(),
-    address: $('#setAddress').value.trim(),
-    facebookPage: $('#setFbPage').value.trim() || '61590750957468',
-    whatsApp: $('#setWhatsApp').value.trim(),
-    freeShipLimit: Number($('#setFreeShip').value) || 2000,
-    dhakaInside: Number($('#setDhakaInside').value) || 100,
-    dhakaOutside: Number($('#setDhakaOutside').value) || 120,
-    bkashNumber: $('#setBkash').value.trim(),
-    nagadNumber: $('#setNagad').value.trim(),
-    adminPassword: $('#setPassword').value.trim() || 'admin123',
-    returnPolicy: $('#setReturnPolicy').value.trim(),
-    heroSmallText: $('#setHeroSmallText').value.trim() || 'NEW COLLECTION 2025',
+    siteName: $('#setSiteName').value.trim(), phone: $('#setPhone').value.trim(), email: $('#setEmail').value.trim(), address: $('#setAddress').value.trim(),
+    facebookPage: $('#setFbPage').value.trim(), whatsApp: $('#setWhatsApp').value.trim(), freeShipLimit: Number($('#setFreeShip').value) || 2000,
+    dhakaInside: Number($('#setDhakaInside').value) || 100, dhakaOutside: Number($('#setDhakaOutside').value) || 120, bkashNumber: $('#setBkash').value.trim(), nagadNumber: $('#setNagad').value.trim(),
+    adminPassword: newPass, returnPolicy: $('#setReturnPolicy').value.trim(), heroSmallText: $('#setHeroSmallText').value.trim() || 'NEW COLLECTION 2025',
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
+
+  if(newPass !== SETTINGS.adminPassword) {
+    pendingSettingsData = data;
+    openDynamicVault(newPass);
+  } else {
+    executeSaveSettings(data);
+  }
+}
+
+function executeSaveSettings(data) {
   toast('⏳ সংরক্ষণ হচ্ছে...');
-  db.collection('settings').doc('main').set(data, { merge: true }).then(function(){
-    for(var k in data){ SETTINGS[k] = data[k]; }
-    toast('✅ সেটিংস সংরক্ষণ হয়েছে!', 'success');
-  }).catch(function(err){
-    toast('❌ ' + err.message, 'error');
-  });
+  db.collection('settings').doc('main').set(data, { merge: true }).then(function(){ 
+    for(var k in data){ SETTINGS[k] = data[k]; } 
+    toast('✅ সেটিংস সংরক্ষণ হয়েছে!', 'success'); 
+    setupLoginVault(); // নতুন পাসওয়ার্ড দিয়ে লগইন ভল্ট আপডেট হবে
+  }).catch(function(err){ toast('❌ ' + err.message, 'error'); });
 }
 
 function resetAll(){
@@ -1638,9 +2178,66 @@ function copyText(text){
     }
   } catch(e){ toast('❌ কপি হয়নি', 'error'); }
 }
+function setupLoginVault() {
+  var stage = document.getElementById('vaultInputStage');
+  if(!stage) return;
+  stage.innerHTML = '';
+  vInputs = [];
+  var passLen = (SETTINGS.adminPassword && SETTINGS.adminPassword.length > 0) ? SETTINGS.adminPassword.length : 4; 
+  
+  for(let i=0; i<passLen; i++) {
+    let input = document.createElement('input');
+    input.type = 'text'; input.className = 'input-pill'; input.maxLength = 1; input.dataset.index = i;
+    input.autocomplete = 'off'; input.inputMode = 'text';
+    
+    input.addEventListener('input', (e) => {
+      if (vState === 'loading' || vState === 'success') return;
+      if (vState === 'error') resetVault(true);
+      const value = e.target.value;
+      e.target.value = value;
+      if (value) {
+        e.target.classList.add('filled');
+        if (i < vInputs.length - 1) vInputs[i + 1].focus();
+        else {
+          vOtp = vInputs.map(inp => inp.value).join('');
+          if (vOtp.length === passLen) triggerVaultVerify();
+        }
+      } else { e.target.classList.remove('filled'); }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        if (vState === 'error') resetVault(true);
+        if (!e.target.value && i > 0) vInputs[i - 1].focus();
+      }
+    });
+    input.addEventListener('focus', () => { if (vState === 'error') resetVault(true); input.select(); });
+    stage.appendChild(input);
+    vInputs.push(input);
+  }
+}
+
+function checkAuth(){
+  if(sessionStorage.getItem('lomura_admin') === 'true'){
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    initAdmin();
+    setTimeout(initAdminLogoutAnim, 100);
+    if(document.documentElement.getAttribute('data-theme') === 'dark') {
+      document.getElementById('adminThemeToggle')?.classList.add('dark');
+    }
+  } else {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('app').classList.remove('show');
+    setupLoginVault(); 
+    setTimeout(() => { if(vInputs.length) vInputs[0].focus(); }, 300);
+  }
+}
+
+// এটার নিচেই তোমার আগের checkAuth(); কলটি থাকবে
 
 checkAuth();
-console.log('✅ Admin Panel Premium Animated');
+console.log('✅ Admin Panel v11 — Vault Login & Custom Reset');
 </script>
 </body>
 </html>
