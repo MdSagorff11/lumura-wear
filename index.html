@@ -1520,11 +1520,23 @@ function showSuccess(order) {
               `Lomura Wear`;
 
   document.getElementById('succWaBtn').href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waMsg);
-  
   const fbPage = SETTINGS.facebookPage || 'lomurawear';
-  var fbMsg = '🛍️ নতুন অর্ডার\n\nঅর্ডার: ' + order.orderId + '\nনাম: ' + order.customer.name + '\nফোন: ' + order.customer.phone + '\nমোট: ' + money(order.total);
-  document.getElementById('succMsgBtn').href = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(fbMsg);
 
+// মেসেঞ্জার সুন্দর মেসেজ
+var fbMsg = `🛍️ *নতুন অর্ডার এসেছে!*\n` +
+            `━━━━━━━━━━━━━━━\n` +
+            `🆔 *অর্ডার আইডি:* #${order.orderId}\n\n` +
+            `👤 *কাস্টমার:* ${order.customer.name}\n` +
+            `📞 *ফোন:* ${order.customer.phone}\n` +
+            `📍 *ঠিকানা:* ${order.customer.address}\n\n` +
+            `🛒 *পণ্যসমূহ:*\n${itemsList}\n\n` +
+            `💳 *পেমেন্ট:* ${payNames[order.paymentMethod] || 'ক্যাশ অন ডেলিভারি'}\n` +
+            `🚚 *ডেলিভারি:* ${order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে'}\n` +
+            `💰 *সর্বমোট বিল:* ${money(order.total)}\n` +
+            `━━━━━━━━━━━━━━━\n` +
+            `Lomura Wear`;
+
+document.getElementById('succMsgBtn').href = 'https://m.me/' + fbPage + '?text=' + encodeURIComponent(fbMsg);
   let receiptHtml = `
     <div class="row"><span>অর্ডার</span><b>#${order.orderId}</b></div>
     <div class="row"><span>পেমেন্ট</span><b>${payNames[order.paymentMethod] || 'ক্যাশ'}</b></div>
